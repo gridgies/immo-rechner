@@ -1,0 +1,5 @@
+import AppWithAuthModern from '@/components/AppWithAuthModern';
+
+export default function Home() {
+  return <AppWithAuthModern />;
+}
