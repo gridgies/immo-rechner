@@ -28,6 +28,9 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
   // Month 0 initial investment (negative cashflow)
   const initialCashflow = -eigenkapital;
 
+  // Calculate CONSTANT monthly annuity (same payment every month)
+  const annuitaet = finanzierung * ((inputs.zinssatz + inputs.tilgung) / 12);
+
   // Calculate each month
   for (let month = 1; month <= totalMonths; month++) {
     const date = new Date(startDate);
@@ -41,10 +44,9 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
       currentRent = currentRent * (1 + rentIncrease.prozent);
     }
 
-    // Monthly interest and amortization
+    // Monthly interest and amortization (annuity is CONSTANT)
     const zinsenMonthly = currentDebt * (inputs.zinssatz / 12);
-    const tilgungMonthly = currentDebt * (inputs.tilgung / 12);
-    const annuitaet = zinsenMonthly + tilgungMonthly;
+    const tilgungMonthly = annuitaet - zinsenMonthly;
     const restschuld = currentDebt - tilgungMonthly;
 
     // Cash flows

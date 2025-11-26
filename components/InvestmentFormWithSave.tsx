@@ -422,8 +422,8 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
             </div>
           )}
 
-          <div className="grid lg:grid-cols-[45%_55%] gap-6">
-            {/* Left Column - Input Form */}
+          <div className="grid lg:grid-cols-[40%_60%] gap-6">
+            {/* Left Column - Input Form (40%) */}
             <div className="space-y-4">
               {/* Immobiliendetails Section */}
               <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
@@ -634,29 +634,35 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                     <div className="space-y-1.5">
                       {mieterhoehungen.map((erhoehung, index) => (
                         <div key={index} className="flex gap-1.5 items-center">
-                          <input
-                            type="number"
-                            value={erhoehung.nachMonaten}
-                            onChange={(e) =>
-                              updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
-                            }
-                            placeholder="Monat"
-                            className="w-16 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                          />
-                          <span className="text-xs text-gray-400">:</span>
-                          <input
-                            type="number"
-                            step="0.01"
-                            value={(erhoehung.prozent * 100).toFixed(2)}
-                            onChange={(e) =>
-                              updateMieterhoehung(index, 'prozent', parseFloat(e.target.value) / 100)
-                            }
-                            placeholder="%"
-                            className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                          />
+                          <div className="flex-1">
+                            <input
+                              type="number"
+                              value={erhoehung.nachMonaten}
+                              onChange={(e) =>
+                                updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
+                              }
+                              placeholder="Monat"
+                              className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                            />
+                            <span className="text-[10px] text-gray-500">Monat</span>
+                          </div>
+                          <span className="text-xs text-gray-400">→</span>
+                          <div className="flex-1">
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={(erhoehung.prozent * 100).toFixed(2)}
+                              onChange={(e) =>
+                                updateMieterhoehung(index, 'prozent', parseFloat(e.target.value) / 100)
+                              }
+                              placeholder="15"
+                              className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                            />
+                            <span className="text-[10px] text-gray-500">Erhöhung in %</span>
+                          </div>
                           <button
                             onClick={() => removeMieterhoehung(index)}
-                            className="p-1 text-red-600 hover:bg-red-50 rounded"
+                            className="p-1 text-red-600 hover:bg-red-50 rounded flex-shrink-0"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
