@@ -37,16 +37,16 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
     index === visibleData.length - 1 && showAllMonths && displayData.length === result.monthly.length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Summary Cards */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold mb-5 text-gray-800">
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+        <h2 className="text-base font-semibold mb-4 text-gray-800">
           Zusammenfassung
         </h2>
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-3 gap-4">
           <div className="relative group">
-            <div className="flex items-center gap-1.5 mb-2">
-              <p className="text-sm text-gray-600 font-medium">Gesamtkosten</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <p className="text-xs text-gray-600 font-medium">Gesamtkosten</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -56,13 +56,13 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 Kaufpreis + Nebenkosten (Grunderwerbsteuer, Notar, Makler)
               </div>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-sm font-bold text-[#4B644A]">
               {formatCurrency(result.summary.gesamtkosten)}
             </p>
           </div>
           <div className="relative group">
-            <div className="flex items-center gap-1.5 mb-2">
-              <p className="text-sm text-gray-600 font-medium">Eigenkapital</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <p className="text-xs text-gray-600 font-medium">Eigenkapital</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -72,13 +72,13 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 Ihr eingesetztes Eigenkapital (inkl. Nebenkosten)
               </div>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-sm font-bold text-[#4B644A]">
               {formatCurrency(result.summary.eigenkapital)}
             </p>
           </div>
           <div className="relative group">
-            <div className="flex items-center gap-1.5 mb-2">
-              <p className="text-sm text-gray-600 font-medium">IRR</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <p className="text-xs text-gray-600 font-medium">IRR</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -93,8 +93,8 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             </p>
           </div>
           <div className="relative group">
-            <div className="flex items-center gap-1.5 mb-2">
-              <p className="text-sm text-gray-600 font-medium">Vermögenszuwachs</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <p className="text-xs text-gray-600 font-medium">Vermögenszuwachs</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -109,8 +109,8 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             </p>
           </div>
           <div className="relative group">
-            <div className="flex items-center gap-1.5 mb-2">
-              <p className="text-sm text-gray-600 font-medium">1. Jahr Cashflow</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <p className="text-xs text-gray-600 font-medium">1. Jahr Cashflow</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -129,8 +129,8 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             </p>
           </div>
           <div className="relative group">
-            <div className="flex items-center gap-1.5 mb-2">
-              <p className="text-sm text-gray-600 font-medium">Endwert Immobilie</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <p className="text-xs text-gray-600 font-medium">Endwert Immobilie</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -140,7 +140,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 Geschätzter Verkaufswert der Immobilie am Ende der Haltedauer
               </div>
             </div>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-sm font-bold text-[#4B644A]">
               {formatCurrency(result.summary.finalPropertyValue)}
             </p>
           </div>
@@ -148,17 +148,17 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
       </div>
 
       {/* Data Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-800">
+      <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+        <div className="flex justify-between items-center p-4 border-b border-gray-200">
+          <h2 className="text-base font-semibold text-gray-800">
             Cashflow-Übersicht
           </h2>
           <div className="flex gap-2">
             <button
               onClick={() => setViewMode('monthly')}
-              className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
+              className={`px-3 py-1.5 text-xs rounded font-medium transition-colors ${
                 viewMode === 'monthly'
-                  ? 'bg-[#6B8882] text-white'
+                  ? 'bg-[#7099A3] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -166,9 +166,9 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             </button>
             <button
               onClick={() => setViewMode('annual')}
-              className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
+              className={`px-3 py-1.5 text-xs rounded font-medium transition-colors ${
                 viewMode === 'annual'
-                  ? 'bg-[#6B8882] text-white'
+                  ? 'bg-[#7099A3] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >

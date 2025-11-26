@@ -289,8 +289,445 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
 
   return (
     <>
-      {/* Left Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col h-full overflow-hidden">
+      {/* Left Navigation Sidebar */}
+      <div className="w-52 bg-[#7099A3] flex flex-col h-full overflow-hidden">
+        {/* Logo */}
+        <div className="p-4 border-b border-white/20">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-lg">IR</span>
+            </div>
+            <h1 className="text-base font-semibold text-white">
+              Immobilien Rechner
+            </h1>
+          </div>
+        </div>
+
+        {/* Navigation Items */}
+        <div className="flex-1 overflow-y-auto">
+          <nav className="p-2">
+            {/* Active: Cashflow Calculator */}
+            <div className="px-3 py-2.5 bg-white/10 rounded text-white text-sm font-medium mb-1">
+              📊 Cashflow Rechner
+            </div>
+            
+            {/* Future navigation items */}
+            <div className="px-3 py-2.5 text-white/60 text-sm font-medium hover:bg-white/5 rounded cursor-not-allowed mb-1">
+              📈 Rendite Analyse
+              <span className="text-[10px] ml-2 opacity-50">(bald)</span>
+            </div>
+            
+            <div className="px-3 py-2.5 text-white/60 text-sm font-medium hover:bg-white/5 rounded cursor-not-allowed mb-1">
+              🏘️ Vergleich
+              <span className="text-[10px] ml-2 opacity-50">(bald)</span>
+            </div>
+          </nav>
+
+          {/* Saved Scenarios Section */}
+          <div className="mt-4 border-t border-white/20 pt-4">
+            <button
+              onClick={() => setScenariosOpen(!scenariosOpen)}
+              className="w-full px-4 py-2.5 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
+            >
+              <span className="text-sm font-medium text-white">Szenarien</span>
+              <svg
+                className={`w-4 h-4 text-white transition-transform ${scenariosOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {scenariosOpen && (
+              <div className="pb-2">
+                {loadingScenarios ? (
+                  <div className="px-4 py-2 text-xs text-white/60">Lädt...</div>
+                ) : scenarios.length === 0 ? (
+                  <div className="px-4 py-2 text-xs text-white/60">Keine gespeichert</div>
+                ) : (
+                  <div className="space-y-1 px-2">
+                    {scenarios.map((scenario) => (
+                      <div
+                        key={scenario.id}
+                        className="group hover:bg-white/5 rounded"
+                      >
+                        <div className="flex items-start justify-between gap-2 px-2 py-2">
+                          <button
+                            onClick={() => handleLoadScenario(scenario)}
+                            className="flex-1 text-left"
+                          >
+                            <div className="text-xs font-medium text-white truncate">
+                              {scenario.name}
+                            </div>
+                            <div className="text-[10px] text-white/60 mt-0.5">
+                              €{scenario.kaufpreis.toLocaleString('de-DE')}
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteScenario(scenario.id)}
+                            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/10 rounded transition-opacity"
+                            title="Löschen"
+                          >
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* User Info at Bottom */}
+        <div className="p-3 border-t border-white/20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xs font-medium">
+                  {userEmail.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-xs text-white truncate">
+                {userEmail}
+              </span>
+            </div>
+            <button
+              onClick={onSignOut}
+              className="ml-2 text-white/80 hover:text-white flex-shrink-0"
+              title="Abmelden"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto bg-gray-50">
+        <div className="max-w-7xl mx-auto p-6">
+          {/* Editing Indicator */}
+          {editingScenarioId && (
+            <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
+              Bearbeite: "{scenarioName}"
+            </div>
+          )}
+
+          <div className="grid lg:grid-cols-[45%_55%] gap-6">
+            {/* Left Column - Input Form */}
+            <div className="space-y-4">
+              {/* Immobiliendetails Section */}
+              <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B644A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <circle cx="12" cy="15" r="3"></circle>
+                    <path d="m9 18 3 3 3-3"></path>
+                  </svg>
+                  <h2 className="text-base font-semibold text-gray-800">Immobiliendetails</h2>
+                </div>
+
+                <div className="space-y-2.5">
+                  {/* Kaufpreis */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Kaufpreis (€)
+                    </label>
+                    <input
+                      type="number"
+                      value={kaufpreis}
+                      onChange={(e) => setKaufpreis(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Wohnfläche */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Wohnfläche (m²)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={wohnflaeche}
+                      onChange={(e) => setWohnflaeche(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Nebenkosten */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Nebenkosten (%)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={nebenkostenProzent}
+                      onChange={(e) => setNebenkostenProzent(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Eigenkapital */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Eigenkapital (%)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={eigenkapitalProzent}
+                      onChange={(e) => setEigenkapitalProzent(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Zinssatz */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Zinssatz (% p.a.)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={zinssatz}
+                      onChange={(e) => setZinssatz(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Tilgung */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Tilgung (% p.a.)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={tilgung}
+                      onChange={(e) => setTilgung(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Monatliche Kaltmiete */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Monatliche Kaltmiete (€)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={monatlicheKaltmiete}
+                      onChange={(e) => setMonatlicheKaltmiete(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Hausgeld umlegbar */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Hausgeld umlegbar (€/Monat)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={wohngeldUmlegbar}
+                      onChange={(e) => setWohngeldUmlegbar(e.target.value)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    />
+                  </div>
+
+                  {/* Hausgeld nicht umlegbar */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Hausgeld nicht umlegbar (€/Monat)
+                    </label>
+                    <div className="flex gap-1.5">
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={wohngeldNichtUmlegbar}
+                        onChange={(e) => {
+                          setWohngeldNichtUmlegbar(e.target.value);
+                          setAutoCalculateNichtUmlegbar(false);
+                        }}
+                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                      />
+                      <button
+                        onClick={() => setAutoCalculateNichtUmlegbar(true)}
+                        className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                        title="Auto (30%)"
+                      >
+                        Auto
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Haltedauer */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Haltedauer
+                    </label>
+                    <select
+                      value={haltedauer}
+                      onChange={(e) => setHaltedauer(parseInt(e.target.value) as 10 | 20 | 30)}
+                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                    >
+                      <option value={10}>10 Jahre</option>
+                      <option value={20}>20 Jahre</option>
+                      <option value={30}>30 Jahre</option>
+                    </select>
+                  </div>
+
+                  {/* Wertsteigerung */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Wertsteigerung (%)
+                    </label>
+                    <div className="flex gap-1.5">
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={wertsteigerungProzent}
+                        onChange={(e) => {
+                          setWertsteigerungProzent(e.target.value);
+                          setAutoCalculateWertsteigerung(false);
+                        }}
+                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                      />
+                      <button
+                        onClick={() => setAutoCalculateWertsteigerung(true)}
+                        className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                        title="Auto"
+                      >
+                        Auto
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Mieterhöhungen */}
+                  <div className="pt-2 border-t border-gray-200">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="text-xs font-medium text-gray-700">
+                        Mieterhöhungen
+                      </label>
+                      <button
+                        onClick={addMieterhoehung}
+                        className="px-2 py-1 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87]"
+                      >
+                        + Hinzufügen
+                      </button>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      {mieterhoehungen.map((erhoehung, index) => (
+                        <div key={index} className="flex gap-1.5 items-center">
+                          <input
+                            type="number"
+                            value={erhoehung.nachMonaten}
+                            onChange={(e) =>
+                              updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
+                            }
+                            placeholder="Monat"
+                            className="w-16 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                          <span className="text-xs text-gray-400">:</span>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={(erhoehung.prozent * 100).toFixed(2)}
+                            onChange={(e) =>
+                              updateMieterhoehung(index, 'prozent', parseFloat(e.target.value) / 100)
+                            }
+                            placeholder="%"
+                            className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                          <button
+                            onClick={() => removeMieterhoehung(index)}
+                            className="p-1 text-red-600 hover:bg-red-50 rounded"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {mieterhoehungen.length === 0 && (
+                      <p className="text-xs text-gray-500 text-center py-2">
+                        Keine Mieterhöhungen geplant
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Save Section */}
+                  <div className="pt-2 border-t border-gray-200">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      {editingScenarioId ? 'Szenario aktualisieren' : 'Szenario speichern'}
+                    </label>
+                    <div className="flex gap-1.5">
+                      <input
+                        type="text"
+                        value={scenarioName}
+                        onChange={(e) => setScenarioName(e.target.value)}
+                        placeholder="Szenario Name"
+                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                      />
+                      <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="px-3 py-1.5 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87] disabled:opacity-50"
+                      >
+                        {saving ? '...' : (editingScenarioId ? 'Update' : 'Save')}
+                      </button>
+                      {editingScenarioId && (
+                        <button
+                          onClick={() => {
+                            setEditingScenarioId(null);
+                            setScenarioName('');
+                          }}
+                          className="px-2 py-1.5 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </div>
+                    {saveMessage && (
+                      <p className="mt-1 text-xs text-green-600">{saveMessage}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column - Results */}
+            <div className="space-y-4">
+              {result && <ResultsDisplay result={result} />}
+              {!result && (
+                <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center">
+                  <p className="text-gray-500 text-sm">Füllen Sie die Felder aus, um die Berechnung zu sehen</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
         {/* Logo */}
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center gap-3">
@@ -649,44 +1086,17 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
               </div>
             </div>
           </div>
-        </div>
 
-        {/* User Info at Bottom */}
-        <div className="p-3 border-t border-gray-200 bg-gray-50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-[#7099A3] rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-white text-xs font-medium">
-                  {userEmail.charAt(0).toUpperCase()}
-                </span>
+          {/* Right Column - Results */}
+          <div className="space-y-4">
+            {result && <ResultsDisplay result={result} />}
+            {!result && (
+              <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center">
+                <p className="text-gray-500 text-sm">Füllen Sie die Felder aus, um die Berechnung zu sehen</p>
               </div>
-              <span className="text-xs text-gray-700 truncate max-w-[150px]">
-                {userEmail}
-              </span>
-            </div>
-            <button
-              onClick={onSignOut}
-              className="text-xs text-gray-500 hover:text-gray-700"
-              title="Abmelden"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-            </button>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto bg-gray-50 p-6">
-        {result && <ResultsDisplay result={result} />}
-        {!result && (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500">Füllen Sie die Felder aus, um die Berechnung zu sehen</p>
-          </div>
-        )}
       </div>
     </>
   );
