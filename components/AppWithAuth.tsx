@@ -48,16 +48,16 @@ export default function AppWithAuth() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with user info */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">
+      <div className="bg-[#4B644A] shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+          <h1 className="text-xl font-bold text-white">
             Immobilien Rechner
           </h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{user.email}</span>
+            <span className="text-sm text-white/90">{user.email}</span>
             <button
               onClick={handleSignOut}
-              className="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg"
+              className="px-3 py-1.5 text-sm bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
             >
               Abmelden
             </button>

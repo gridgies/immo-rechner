@@ -130,49 +130,49 @@ export default function SavedScenarios({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <p className="text-gray-600">Lade Szenarien...</p>
+      <div className="bg-white rounded-lg shadow-lg p-4">
+        <p className="text-gray-600 text-sm">Lade Szenarien...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <p className="text-red-600">Fehler: {error}</p>
+      <div className="bg-white rounded-lg shadow-lg p-4">
+        <p className="text-red-600 text-sm">Fehler: {error}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-gray-800">
+    <div className="bg-white rounded-lg shadow-lg p-4">
+      <div className="flex justify-between items-center mb-3">
+        <h2 className="text-base font-semibold text-gray-800">
           Gespeicherte Szenarien
         </h2>
         <button
           onClick={loadScenarios}
-          className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg"
+          className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg"
         >
           Aktualisieren
         </button>
       </div>
 
       {scenarios.length === 0 ? (
-        <p className="text-gray-600 text-center py-8">
+        <p className="text-gray-600 text-center py-8 text-sm">
           Noch keine Szenarien gespeichert. Speichern Sie Ihr erstes Szenario!
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {scenarios.map((scenario) => (
             <div
               key={scenario.id}
-              className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+              className="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition-colors"
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">{scenario.name}</h3>
-                  <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <h3 className="font-semibold text-sm text-gray-900">{scenario.name}</h3>
+                  <div className="mt-1.5 text-xs text-gray-600 space-y-0.5">
                     <p>
                       Kaufpreis: €
                       {scenario.kaufpreis.toLocaleString('de-DE')}
@@ -187,28 +187,51 @@ export default function SavedScenarios({
                       </p>
                     )}
                   </div>
-                  <p className="mt-2 text-xs text-gray-400">
+                  <p className="mt-1.5 text-[10px] text-gray-400">
                     Erstellt: {new Date(scenario.created_at).toLocaleDateString('de-DE')}
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 ml-4">
+                <div className="flex gap-1.5 ml-4">
                   <button
                     onClick={() => handleLoad(scenario)}
-                    className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700"
+                    className="p-2 bg-[#4B644A] text-white rounded-lg hover:bg-[#3a4f39] transition-colors group relative"
+                    title="Laden"
                   >
-                    Laden
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap">
+                      Laden
+                    </span>
                   </button>
                   <button
                     onClick={() => handleEdit(scenario)}
-                    className="px-3 py-1 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700"
+                    className="p-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors group relative"
+                    title="Bearbeiten"
                   >
-                    Bearbeiten
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                      <path d="m15 5 4 4"></path>
+                    </svg>
+                    <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap">
+                      Bearbeiten
+                    </span>
                   </button>
                   <button
                     onClick={() => handleDelete(scenario.id)}
-                    className="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700"
+                    className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors group relative"
+                    title="Löschen"
                   >
-                    Löschen
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18"></path>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+                    <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 px-2 py-1 text-xs text-white bg-gray-900 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap">
+                      Löschen
+                    </span>
                   </button>
                 </div>
               </div>

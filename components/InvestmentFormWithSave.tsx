@@ -247,33 +247,41 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
   const result = getCalculationResult();
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Input Form - 2/3 width */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-              Parameter eingeben
-            </h2>
+    <div className="max-w-[1800px] mx-auto p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-4">
+        {/* Input Form and Results - 40% */}
+        <div className="space-y-4">
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#4B644A]">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <circle cx="12" cy="13" r="3"></circle>
+                <path d="m9 17 1.5-1.5"></path>
+                <path d="m15 11-1.5 1.5"></path>
+              </svg>
+              <h2 className="text-base font-semibold text-gray-800">
+                Immobiliendetails
+              </h2>
+            </div>
 
-            <div className="space-y-4">
-              {/* All input fields... (keeping the same as before) */}
+            <div className="space-y-2.5">
               {/* Kaufpreis */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Kaufpreis (€)
                 </label>
                 <input
                   type="number"
                   value={kaufpreis}
                   onChange={(e) => setKaufpreis(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Wohnfläche */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Wohnfläche (m²)
                 </label>
                 <input
@@ -281,13 +289,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={wohnflaeche}
                   onChange={(e) => setWohnflaeche(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Nebenkosten */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Nebenkosten (%)
                   <span className="text-xs text-gray-500 ml-1">
                     (Grunderwerbsteuer, Notar, Makler)
@@ -298,13 +306,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={nebenkostenProzent}
                   onChange={(e) => setNebenkostenProzent(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Eigenkapital */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Eigenkapital (%)
                 </label>
                 <input
@@ -312,13 +320,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={eigenkapitalProzent}
                   onChange={(e) => setEigenkapitalProzent(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Zinssatz */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Zinssatz (% p.a.)
                 </label>
                 <input
@@ -326,13 +334,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={zinssatz}
                   onChange={(e) => setZinssatz(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Tilgung */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Tilgung (% p.a.)
                 </label>
                 <input
@@ -340,13 +348,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={tilgung}
                   onChange={(e) => setTilgung(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Monatliche Kaltmiete */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Monatliche Kaltmiete (€)
                 </label>
                 <input
@@ -354,13 +362,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={monatlicheKaltmiete}
                   onChange={(e) => setMonatlicheKaltmiete(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Hausgeld */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Hausgeld (€/Monat)
                 </label>
                 <input
@@ -368,13 +376,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={wohngeldUmlegbar}
                   onChange={(e) => setWohngeldUmlegbar(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 />
               </div>
 
               {/* Hausgeld nicht umlegbar */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Hausgeld nicht umlegbar (€/Monat)
                   <span className="text-xs text-gray-500 ml-1">
                     (Standard: 30% von umlegbar)
@@ -389,7 +397,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                       setWohngeldNichtUmlegbar(e.target.value);
                       setAutoCalculateNichtUmlegbar(false);
                     }}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                   />
                   <button
                     onClick={() => setAutoCalculateNichtUmlegbar(true)}
@@ -403,13 +411,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
 
               {/* Haltedauer */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Haltedauer
                 </label>
                 <select
                   value={haltedauer}
                   onChange={(e) => setHaltedauer(parseInt(e.target.value) as 10 | 20 | 30)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                 >
                   <option value={10}>10 Jahre</option>
                   <option value={20}>20 Jahre</option>
@@ -419,7 +427,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
 
               {/* Wertsteigerung */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   Erwartete Wertsteigerung nach {haltedauer} Jahren (%)
                   <span className="text-xs text-gray-500 ml-1">
                     (10J: 45%, 20J: 90%, 30J: 150%)
@@ -434,7 +442,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                       setWertsteigerungProzent(e.target.value);
                       setAutoCalculateWertsteigerung(false);
                     }}
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                   />
                   <button
                     onClick={() => setAutoCalculateWertsteigerung(true)}
@@ -454,7 +462,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   </label>
                   <button
                     onClick={addMieterhoehung}
-                    className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 flex items-center gap-1"
+                    className="px-3 py-1 bg-[#4B644A] text-white text-sm rounded-lg hover:bg-[#3a4f39] flex items-center gap-1"
                   >
                     <span className="text-lg">+</span> Hinzufügen
                   </button>
@@ -471,7 +479,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                             updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
                           }
                           placeholder="Monat"
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                         />
                         <span className="text-xs text-gray-500">Nach Monaten</span>
                       </div>
@@ -485,7 +493,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                             updateMieterhoehung(index, 'prozent', parseFloat(e.target.value) / 100)
                           }
                           placeholder="%"
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                         />
                         <span className="text-xs text-gray-500">Erhöhung (%)</span>
                       </div>
@@ -525,7 +533,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                     value={scenarioName}
                     onChange={(e) => setScenarioName(e.target.value)}
                     placeholder="z.B. Wohnung Prenzlauer Berg"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
                   />
                   <button
                     onClick={handleSave}
@@ -564,8 +572,8 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
           )}
         </div>
 
-        {/* Saved Scenarios - 1/3 width */}
-        <div className="lg:col-span-1">
+        {/* Saved Scenarios - 60% right side */}
+        <div>
           <SavedScenarios onLoadScenario={handleLoadScenario} currentUserId={userId} />
         </div>
       </div>
