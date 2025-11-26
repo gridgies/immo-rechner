@@ -46,27 +46,9 @@ export default function AppWithAuth() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header with user info */}
-      <div className="bg-[#4B644A] shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-white">
-            Immobilien Rechner
-          </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-white/90">{user.email}</span>
-            <button
-              onClick={handleSignOut}
-              className="px-3 py-1.5 text-sm bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
-            >
-              Abmelden
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <InvestmentFormWithSave userId={user.id} />
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
+      {/* InvestmentFormWithSave will render both sidebar and main content */}
+      <InvestmentFormWithSave userId={user.id} userEmail={user.email || ''} onSignOut={handleSignOut} />
     </div>
   );
 }

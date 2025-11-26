@@ -37,110 +37,110 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
     index === visibleData.length - 1 && showAllMonths && displayData.length === result.monthly.length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Summary Cards */}
-      <div className="bg-white rounded-lg shadow-lg p-3">
-        <h2 className="text-base font-semibold mb-2 text-gray-800">
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <h2 className="text-lg font-semibold mb-5 text-gray-800">
           Zusammenfassung
         </h2>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-[#4B644A]/10 p-2 rounded-lg relative group">
-            <div className="flex items-center gap-1 mb-0.5">
-              <p className="text-xs text-gray-600">Gesamtkosten</p>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+        <div className="grid grid-cols-3 gap-6">
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 mb-2">
+              <p className="text-sm text-gray-600 font-medium">Gesamtkosten</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
-              <div className="absolute left-0 top-full mt-1 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 Kaufpreis + Nebenkosten (Grunderwerbsteuer, Notar, Makler)
               </div>
             </div>
-            <p className="text-sm font-semibold text-[#4B644A]">
+            <p className="text-2xl font-bold text-gray-900">
               {formatCurrency(result.summary.gesamtkosten)}
             </p>
           </div>
-          <div className="bg-[#4B644A]/10 p-2 rounded-lg relative group">
-            <div className="flex items-center gap-1 mb-0.5">
-              <p className="text-xs text-gray-600">Eigenkapital</p>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 mb-2">
+              <p className="text-sm text-gray-600 font-medium">Eigenkapital</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
-              <div className="absolute left-0 top-full mt-1 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 Ihr eingesetztes Eigenkapital (inkl. Nebenkosten)
               </div>
             </div>
-            <p className="text-sm font-semibold text-[#4B644A]">
+            <p className="text-2xl font-bold text-gray-900">
               {formatCurrency(result.summary.eigenkapital)}
             </p>
           </div>
-          <div className="bg-[#4B644A]/10 p-2 rounded-lg relative group">
-            <div className="flex items-center gap-1 mb-0.5">
-              <p className="text-xs text-gray-600">IRR</p>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 mb-2">
+              <p className="text-sm text-gray-600 font-medium">IRR</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
-              <div className="absolute left-0 top-full mt-1 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 Internal Rate of Return - Ihre durchschnittliche jährliche Rendite
               </div>
             </div>
-            <p className="text-sm font-semibold text-[#6B9F7F]">
+            <p className="text-2xl font-bold text-[#6B8882]">
               {formatPercent(result.summary.irr)}
             </p>
           </div>
-          <div className="bg-[#4B644A]/10 p-2 rounded-lg relative group">
-            <div className="flex items-center gap-1 mb-0.5">
-              <p className="text-xs text-gray-600">Vermögenszuwachs</p>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 mb-2">
+              <p className="text-sm text-gray-600 font-medium">Vermögenszuwachs</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
-              <div className="absolute left-0 top-full mt-1 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 Gesamter Vermögensaufbau nach {result.summary.finalPropertyValue ? Math.round(result.monthly.length / 12) : 0} Jahren
               </div>
             </div>
-            <p className="text-sm font-semibold text-[#6B9F7F]">
+            <p className="text-2xl font-bold text-[#6B8882]">
               {formatCurrency(result.summary.vermoegensZuwachs)}
             </p>
           </div>
-          <div className="bg-[#4B644A]/10 p-2 rounded-lg relative group">
-            <div className="flex items-center gap-1 mb-0.5">
-              <p className="text-xs text-gray-600">1. Jahr Cashflow (p.a.)</p>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 mb-2">
+              <p className="text-sm text-gray-600 font-medium">1. Jahr Cashflow</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
-              <div className="absolute left-0 top-full mt-1 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 Jährlicher Cashflow im ersten Jahr (Miete minus Kosten)
               </div>
             </div>
             <p
-              className={`text-sm font-semibold ${
-                result.summary.erstjahrCashflowPA < 0 ? 'text-red-600' : 'text-[#6B9F7F]'
+              className={`text-2xl font-bold ${
+                result.summary.erstjahrCashflowPA < 0 ? 'text-red-600' : 'text-[#6B8882]'
               }`}
             >
               {formatCurrency(result.summary.erstjahrCashflowPA)}
             </p>
           </div>
-          <div className="bg-[#4B644A]/10 p-2 rounded-lg relative group">
-            <div className="flex items-center gap-1 mb-0.5">
-              <p className="text-xs text-gray-600">Endwert Immobilie</p>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 mb-2">
+              <p className="text-sm text-gray-600 font-medium">Endwert Immobilie</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
-              <div className="absolute left-0 top-full mt-1 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
                 Geschätzter Verkaufswert der Immobilie am Ende der Haltedauer
               </div>
             </div>
-            <p className="text-sm font-semibold text-[#4B644A]">
+            <p className="text-2xl font-bold text-gray-900">
               {formatCurrency(result.summary.finalPropertyValue)}
             </p>
           </div>
@@ -148,17 +148,17 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
       </div>
 
       {/* Data Table */}
-      <div className="bg-white rounded-lg shadow-lg p-3">
-        <div className="flex justify-between items-center mb-3">
-          <h2 className="text-base font-semibold text-gray-800">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="flex justify-between items-center p-6 border-b border-gray-200">
+          <h2 className="text-lg font-semibold text-gray-800">
             Cashflow-Übersicht
           </h2>
           <div className="flex gap-2">
             <button
               onClick={() => setViewMode('monthly')}
-              className={`px-3 py-1 text-xs rounded-lg font-medium transition-colors ${
+              className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                 viewMode === 'monthly'
-                  ? 'bg-[#4B644A] text-white'
+                  ? 'bg-[#6B8882] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -166,9 +166,9 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             </button>
             <button
               onClick={() => setViewMode('annual')}
-              className={`px-3 py-1 text-xs rounded-lg font-medium transition-colors ${
+              className={`px-4 py-2 text-sm rounded-lg font-medium transition-colors ${
                 viewMode === 'annual'
-                  ? 'bg-[#4B644A] text-white'
+                  ? 'bg-[#6B8882] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -178,86 +178,86 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full text-xs">
-            <thead className="bg-gray-100">
+          <table className="min-w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-2 py-2 text-left font-semibold text-gray-700">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   {viewMode === 'annual' ? 'Jahr' : 'Monat'}
                 </th>
-                <th className="px-2 py-2 text-right font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Miete
                 </th>
-                <th className="px-2 py-2 text-right font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Zinsen
                 </th>
-                <th className="px-2 py-2 text-right font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Tilgung
                 </th>
-                <th className="px-2 py-2 text-right font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Cashflow
                 </th>
-                <th className="px-2 py-2 text-right font-semibold text-gray-700">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Restschuld
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200">
               {visibleData.map((row, index) => {
                 const isLast = isLastRow(index);
                 const isInitial = row.period === 0;
                 return (
                   <tr
                     key={row.period}
-                    className={`border-b hover:bg-gray-50 ${
+                    className={`hover:bg-gray-50 transition-colors ${
                       isLast ? 'bg-yellow-50 font-semibold' : ''
                     } ${isInitial ? 'bg-red-50 font-semibold' : ''}`}
                   >
-                    <td className="px-2 py-2">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {isInitial 
                         ? 'Initial' 
                         : viewMode === 'annual' 
                           ? `Jahr ${row.period}` 
                           : `Monat ${row.period}`}
                     </td>
-                    <td className="px-2 py-2 text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
                       {formatCurrency(row.mieteinnahmen)}
                     </td>
-                    <td className="px-2 py-2 text-right text-red-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-red-600">
                       {formatCurrency(row.zinsen)}
                     </td>
-                    <td className="px-2 py-2 text-right text-blue-600">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-blue-600">
                       {formatCurrency(row.tilgung)}
                     </td>
                     <td
-                      className={`px-2 py-2 text-right font-medium ${
+                      className={`px-6 py-4 whitespace-nowrap text-sm text-right font-medium ${
                         row.cashflow < 0 ? 'text-red-600' : 'text-green-600'
                       }`}
                     >
                       {formatCurrency(row.cashflow)}
                     </td>
-                    <td className="px-2 py-2 text-right">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
                       {formatCurrency(row.restschuld)}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
-            <tfoot className="bg-gray-100 font-semibold">
-              <tr>
-                <td className="px-2 py-2">GESAMT</td>
-                <td className="px-2 py-2 text-right">
+            <tfoot className="bg-gray-50 border-t-2 border-gray-300">
+              <tr className="font-semibold">
+                <td className="px-6 py-4 text-sm text-gray-900">GESAMT</td>
+                <td className="px-6 py-4 text-sm text-right text-gray-900">
                   {formatCurrency(
                     displayData.reduce((sum, row) => sum + row.mieteinnahmen, 0)
                   )}
                 </td>
-                <td className="px-2 py-2 text-right text-red-600">
+                <td className="px-6 py-4 text-sm text-right text-red-600">
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.zinsen, 0))}
                 </td>
-                <td className="px-2 py-2 text-right text-blue-600">
+                <td className="px-6 py-4 text-sm text-right text-blue-600">
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.tilgung, 0))}
                 </td>
                 <td
-                  className={`px-2 py-2 text-right ${
+                  className={`px-6 py-4 text-sm text-right ${
                     displayData.reduce((sum, row) => sum + row.cashflow, 0) < 0
                       ? 'text-red-600'
                       : 'text-green-600'
@@ -265,17 +265,17 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 >
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.cashflow, 0))}
                 </td>
-                <td className="px-2 py-2 text-right">-</td>
+                <td className="px-6 py-4 text-sm text-right text-gray-900">-</td>
               </tr>
             </tfoot>
           </table>
         </div>
 
         {displayData.length > 12 && (
-          <div className="mt-3 text-center">
+          <div className="p-4 text-center border-t border-gray-200 bg-gray-50">
             <button
               onClick={() => setShowAllMonths(!showAllMonths)}
-              className="px-4 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium"
+              className="px-6 py-2 text-sm bg-white border border-gray-300 hover:bg-gray-50 rounded-lg text-gray-700 font-medium transition-colors"
             >
               {showAllMonths
                 ? 'Weniger anzeigen'
@@ -285,15 +285,15 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
         )}
 
         {showAllMonths && displayData.length === result.monthly.length && (
-          <div className="mt-3 space-y-2">
-            <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-xs text-red-800">
+          <div className="p-4 space-y-2 bg-gray-50 border-t border-gray-200">
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-800">
                 <strong>Initial (Zeile 1):</strong> Initiale Investition - Eigenkapital + Nebenkosten (
                 {formatCurrency(result.summary.eigenkapital)} negativer Cashflow zum Zeitpunkt 0)
               </p>
             </div>
-            <div className="p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-xs text-yellow-800">
+            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-yellow-800">
                 <strong>Letzte Zeile:</strong> Enthält den Verkaufserlös der Immobilie (
                 {formatCurrency(result.summary.finalPropertyValue)} - Restschuld)
               </p>

@@ -4,14 +4,16 @@ import { useState, useEffect } from 'react';
 import { InvestmentInputs, Mieterhoehung } from '@/lib/types';
 import { calculateInvestment } from '@/lib/calculator';
 import { createClient } from '@/lib/supabase/client';
+import { ScenarioWithMieterhoehungen } from '@/lib/types/database';
 import ResultsDisplay from './ResultsDisplay';
-import SavedScenarios from './SavedScenarios';
 
 interface InvestmentFormWithSaveProps {
   userId: string;
+  userEmail: string;
+  onSignOut: () => void;
 }
 
-export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSaveProps) {
+export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }: InvestmentFormWithSaveProps) {
   // Form state
   const [kaufpreis, setKaufpreis] = useState<string>('355000');
   const [wohnflaeche, setWohnflaeche] = useState<string>('69.24');
@@ -34,14 +36,23 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [editingScenarioId, setEditingScenarioId] = useState<string | null>(null);
 
-  // Auto-calculate nicht umlegbar when umlegbar changes
+  // Saved scenarios state
+  const [scenarios, setScenarios] = useState<ScenarioWithMieterhoehungen[]>([]);
+  const [scenariosOpen, setScenariosOpen] = useState(true);
+  const [loadingScenarios, setLoadingScenarios] = useState(false);
+
+  // Auto-calculate states
   const [autoCalculateNichtUmlegbar, setAutoCalculateNichtUmlegbar] = useState(true);
-  
-  // Auto-calculate wertsteigerung based on holding period
   const [autoCalculateWertsteigerung, setAutoCalculateWertsteigerung] = useState(true);
 
   const supabase = createClient();
 
+  // Load scenarios on mount
+  useEffect(() => {
+    loadScenarios();
+  }, [userId]);
+
+  // Auto-calculate nicht umlegbar
   useEffect(() => {
     if (autoCalculateNichtUmlegbar && wohngeldUmlegbar) {
       const umlegbar = parseFloat(wohngeldUmlegbar);
@@ -51,7 +62,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
     }
   }, [wohngeldUmlegbar, autoCalculateNichtUmlegbar]);
 
-  // Auto-update wertsteigerung when haltedauer changes
+  // Auto-update wertsteigerung
   useEffect(() => {
     if (autoCalculateWertsteigerung) {
       const defaultValues: { [key: number]: string } = {
@@ -63,54 +74,91 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
     }
   }, [haltedauer, autoCalculateWertsteigerung]);
 
-  // Add new rent increase
+  const loadScenarios = async () => {
+    try {
+      setLoadingScenarios(true);
+      
+      const { data: scenariosData, error: scenariosError } = await supabase
+        .from('scenarios')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (scenariosError) throw scenariosError;
+
+      const scenariosWithMieterhoehungen: ScenarioWithMieterhoehungen[] = await Promise.all(
+        (scenariosData || []).map(async (scenario) => {
+          const { data: mieterhoehungenData } = await supabase
+            .from('mieterhoehungen')
+            .select('*')
+            .eq('scenario_id', scenario.id)
+            .order('nach_monaten', { ascending: true });
+
+          return {
+            ...scenario,
+            mieterhoehungen: mieterhoehungenData || [],
+          };
+        })
+      );
+
+      setScenarios(scenariosWithMieterhoehungen);
+    } catch (err: any) {
+      console.error('Error loading scenarios:', err);
+    } finally {
+      setLoadingScenarios(false);
+    }
+  };
+
   const addMieterhoehung = () => {
     setMieterhoehungen([...mieterhoehungen, { nachMonaten: 12, prozent: 0.15 }]);
   };
 
-  // Remove rent increase
   const removeMieterhoehung = (index: number) => {
     setMieterhoehungen(mieterhoehungen.filter((_, i) => i !== index));
   };
 
-  // Update rent increase
   const updateMieterhoehung = (index: number, field: 'nachMonaten' | 'prozent', value: number) => {
     const updated = [...mieterhoehungen];
     updated[index] = { ...updated[index], [field]: value };
     setMieterhoehungen(updated);
   };
 
-  // Load scenario
-  const handleLoadScenario = (inputs: InvestmentInputs, scenarioId?: string, scenarioName?: string) => {
-    setKaufpreis(inputs.kaufpreis.toString());
-    setWohnflaeche(inputs.wohnflaeche.toString());
-    setNebenkostenProzent((inputs.nebenkostenProzent * 100).toString());
-    setEigenkapitalProzent((inputs.eigenkapitalProzent * 100).toString());
-    setZinssatz((inputs.zinssatz * 100).toString());
-    setTilgung((inputs.tilgung * 100).toString());
-    setMonatlicheKaltmiete(inputs.monatlicheKaltmiete.toString());
-    setWohngeldUmlegbar(inputs.wohngeldUmlegbar.toString());
-    setWohngeldNichtUmlegbar(inputs.wohngeldNichtUmlegbar.toString());
-    setHaltedauer(inputs.haltedauer);
-    setWertsteigerungProzent((inputs.wertsteigerungProzent * 100).toString());
-    setMieterhoehungen(inputs.mieterhoehungen);
+  const handleLoadScenario = (scenario: ScenarioWithMieterhoehungen) => {
+    setKaufpreis(scenario.kaufpreis.toString());
+    setWohnflaeche(scenario.wohnflaeche.toString());
+    setNebenkostenProzent((scenario.nebenkosten_prozent * 100).toString());
+    setEigenkapitalProzent((scenario.eigenkapital_prozent * 100).toString());
+    setZinssatz((scenario.zinssatz * 100).toString());
+    setTilgung((scenario.tilgung * 100).toString());
+    setMonatlicheKaltmiete(scenario.monatliche_kaltmiete.toString());
+    setWohngeldUmlegbar(scenario.wohngeld_umlegbar.toString());
+    setWohngeldNichtUmlegbar(scenario.wohngeld_nicht_umlegbar.toString());
+    setHaltedauer(scenario.haltedauer);
+    setWertsteigerungProzent((scenario.wertsteigerung_prozent * 100).toString());
+    setMieterhoehungen(scenario.mieterhoehungen.map((m) => ({
+      nachMonaten: m.nach_monaten,
+      prozent: m.prozent,
+    })));
     setAutoCalculateNichtUmlegbar(false);
     setAutoCalculateWertsteigerung(false);
-
-    // Set editing mode if scenarioId provided
-    if (scenarioId && scenarioName) {
-      setEditingScenarioId(scenarioId);
-      setScenarioName(scenarioName);
-    } else {
-      setEditingScenarioId(null);
-      setScenarioName('');
-    }
-
-    // Scroll to form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setEditingScenarioId(scenario.id);
+    setScenarioName(scenario.name);
   };
 
-  // Save or update scenario
+  const handleDeleteScenario = async (id: string) => {
+    if (!confirm('Möchten Sie dieses Szenario wirklich löschen?')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase.from('scenarios').delete().eq('id', id);
+      if (error) throw error;
+      loadScenarios();
+    } catch (err: any) {
+      alert('Fehler beim Löschen: ' + err.message);
+    }
+  };
+
   const handleSave = async () => {
     if (!scenarioName.trim()) {
       alert('Bitte geben Sie einen Namen für das Szenario ein');
@@ -122,7 +170,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
 
     try {
       if (editingScenarioId) {
-        // UPDATE existing scenario
+        // Update existing scenario
         const { error: updateError } = await supabase
           .from('scenarios')
           .update({
@@ -143,13 +191,8 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
 
         if (updateError) throw updateError;
 
-        // Delete old rent increases
-        await supabase
-          .from('mieterhoehungen')
-          .delete()
-          .eq('scenario_id', editingScenarioId);
+        await supabase.from('mieterhoehungen').delete().eq('scenario_id', editingScenarioId);
 
-        // Insert new rent increases
         if (mieterhoehungen.length > 0) {
           const { error: mieterhoehungenError } = await supabase
             .from('mieterhoehungen')
@@ -167,7 +210,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
         setSaveMessage('Szenario erfolgreich aktualisiert!');
         setEditingScenarioId(null);
       } else {
-        // INSERT new scenario
+        // Insert new scenario
         const { data: scenarioData, error: scenarioError } = await supabase
           .from('scenarios')
           .insert({
@@ -190,7 +233,6 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
 
         if (scenarioError) throw scenarioError;
 
-        // Insert rent increases
         if (mieterhoehungen.length > 0) {
           const { error: mieterhoehungenError } = await supabase
             .from('mieterhoehungen')
@@ -209,8 +251,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
       }
 
       setScenarioName('');
-
-      // Clear message after 3 seconds
+      loadScenarios();
       setTimeout(() => setSaveMessage(null), 3000);
     } catch (error: any) {
       alert('Fehler beim Speichern: ' + error.message);
@@ -247,24 +288,93 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
   const result = getCalculationResult();
 
   return (
-    <div className="max-w-[1800px] mx-auto p-4">
-      <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-4">
-        {/* Input Form and Results - 40% */}
-        <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#4B644A]">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <circle cx="12" cy="13" r="3"></circle>
-                <path d="m9 17 1.5-1.5"></path>
-                <path d="m15 11-1.5 1.5"></path>
-              </svg>
-              <h2 className="text-base font-semibold text-gray-800">
-                Immobiliendetails
-              </h2>
+    <>
+      {/* Left Sidebar */}
+      <div className="w-80 bg-white border-r border-gray-200 flex flex-col h-full overflow-hidden">
+        {/* Logo */}
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-[#7099A3] rounded flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-lg">IR</span>
             </div>
+            <h1 className="text-base font-semibold text-gray-900">
+              Immobilien Rechner
+            </h1>
+          </div>
+        </div>
 
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Saved Scenarios Dropdown */}
+          <div className="border-b border-gray-200">
+            <button
+              onClick={() => setScenariosOpen(!scenariosOpen)}
+              className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <span className="text-sm font-medium text-gray-700">Gespeicherte Szenarien</span>
+              <svg
+                className={`w-4 h-4 text-gray-500 transition-transform ${scenariosOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            {scenariosOpen && (
+              <div className="pb-2">
+                {loadingScenarios ? (
+                  <div className="px-4 py-2 text-xs text-gray-500">Lade...</div>
+                ) : scenarios.length === 0 ? (
+                  <div className="px-4 py-2 text-xs text-gray-500">Keine Szenarien gespeichert</div>
+                ) : (
+                  <div className="space-y-1">
+                    {scenarios.map((scenario) => (
+                      <div
+                        key={scenario.id}
+                        className="px-4 py-2 hover:bg-gray-50 group"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <button
+                            onClick={() => handleLoadScenario(scenario)}
+                            className="flex-1 text-left"
+                          >
+                            <div className="text-xs font-medium text-gray-900 truncate">
+                              {scenario.name}
+                            </div>
+                            <div className="text-[10px] text-gray-500 mt-0.5">
+                              €{scenario.kaufpreis.toLocaleString('de-DE')}
+                            </div>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteScenario(scenario.id)}
+                            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded transition-opacity"
+                            title="Löschen"
+                          >
+                            <svg className="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Input Form */}
+          <div className="p-4 space-y-3">
+            {/* Editing Indicator */}
+            {editingScenarioId && (
+              <div className="p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
+                Bearbeite: "{scenarioName}"
+              </div>
+            )}
+
+            {/* Input Fields */}
             <div className="space-y-2.5">
               {/* Kaufpreis */}
               <div>
@@ -275,7 +385,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   type="number"
                   value={kaufpreis}
                   onChange={(e) => setKaufpreis(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
@@ -289,7 +399,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={wohnflaeche}
                   onChange={(e) => setWohnflaeche(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
@@ -297,16 +407,13 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   Nebenkosten (%)
-                  <span className="text-xs text-gray-500 ml-1">
-                    (Grunderwerbsteuer, Notar, Makler)
-                  </span>
                 </label>
                 <input
                   type="number"
                   step="0.01"
                   value={nebenkostenProzent}
                   onChange={(e) => setNebenkostenProzent(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
@@ -320,7 +427,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={eigenkapitalProzent}
                   onChange={(e) => setEigenkapitalProzent(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
@@ -334,7 +441,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={zinssatz}
                   onChange={(e) => setZinssatz(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
@@ -348,7 +455,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={tilgung}
                   onChange={(e) => setTilgung(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
@@ -362,21 +469,21 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                   step="0.01"
                   value={monatlicheKaltmiete}
                   onChange={(e) => setMonatlicheKaltmiete(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
-              {/* Hausgeld */}
+              {/* Hausgeld umlegbar */}
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Hausgeld (€/Monat)
+                  Hausgeld umlegbar (€/Monat)
                 </label>
                 <input
                   type="number"
                   step="0.01"
                   value={wohngeldUmlegbar}
                   onChange={(e) => setWohngeldUmlegbar(e.target.value)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 />
               </div>
 
@@ -384,11 +491,8 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   Hausgeld nicht umlegbar (€/Monat)
-                  <span className="text-xs text-gray-500 ml-1">
-                    (Standard: 30% von umlegbar)
-                  </span>
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5">
                   <input
                     type="number"
                     step="0.01"
@@ -397,12 +501,12 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                       setWohngeldNichtUmlegbar(e.target.value);
                       setAutoCalculateNichtUmlegbar(false);
                     }}
-                    className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                    className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                   />
                   <button
                     onClick={() => setAutoCalculateNichtUmlegbar(true)}
-                    className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg"
-                    title="Auto-berechnen (30%)"
+                    className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                    title="Auto (30%)"
                   >
                     Auto
                   </button>
@@ -417,7 +521,7 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                 <select
                   value={haltedauer}
                   onChange={(e) => setHaltedauer(parseInt(e.target.value) as 10 | 20 | 30)}
-                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                  className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 >
                   <option value={10}>10 Jahre</option>
                   <option value={20}>20 Jahre</option>
@@ -428,12 +532,9 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
               {/* Wertsteigerung */}
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Erwartete Wertsteigerung nach {haltedauer} Jahren (%)
-                  <span className="text-xs text-gray-500 ml-1">
-                    (10J: 45%, 20J: 90%, 30J: 150%)
-                  </span>
+                  Wertsteigerung (%)
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5">
                   <input
                     type="number"
                     step="0.01"
@@ -442,12 +543,12 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                       setWertsteigerungProzent(e.target.value);
                       setAutoCalculateWertsteigerung(false);
                     }}
-                    className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                    className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                   />
                   <button
                     onClick={() => setAutoCalculateWertsteigerung(true)}
-                    className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg"
-                    title="Auto-berechnen basierend auf Haltedauer"
+                    className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                    title="Auto"
                   >
                     Auto
                   </button>
@@ -455,95 +556,80 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
               </div>
 
               {/* Mieterhöhungen */}
-              <div className="pt-4 border-t border-gray-200">
-                <div className="flex justify-between items-center mb-3">
-                  <label className="block text-sm font-medium text-gray-700">
+              <div className="pt-2 border-t border-gray-200">
+                <div className="flex justify-between items-center mb-2">
+                  <label className="text-xs font-medium text-gray-700">
                     Mieterhöhungen
                   </label>
                   <button
                     onClick={addMieterhoehung}
-                    className="px-3 py-1 bg-[#4B644A] text-white text-sm rounded-lg hover:bg-[#3a4f39] flex items-center gap-1"
+                    className="px-2 py-1 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87]"
                   >
-                    <span className="text-lg">+</span> Hinzufügen
+                    + Hinzufügen
                   </button>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {mieterhoehungen.map((erhoehung, index) => (
-                    <div key={index} className="flex gap-2 items-center">
-                      <div className="flex-1">
-                        <input
-                          type="number"
-                          value={erhoehung.nachMonaten}
-                          onChange={(e) =>
-                            updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
-                          }
-                          placeholder="Monat"
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
-                        />
-                        <span className="text-xs text-gray-500">Nach Monaten</span>
-                      </div>
-                      <span className="text-gray-400">:</span>
-                      <div className="flex-1">
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={(erhoehung.prozent * 100).toFixed(2)}
-                          onChange={(e) =>
-                            updateMieterhoehung(index, 'prozent', parseFloat(e.target.value) / 100)
-                          }
-                          placeholder="%"
-                          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
-                        />
-                        <span className="text-xs text-gray-500">Erhöhung (%)</span>
-                      </div>
+                    <div key={index} className="flex gap-1.5 items-center">
+                      <input
+                        type="number"
+                        value={erhoehung.nachMonaten}
+                        onChange={(e) =>
+                          updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
+                        }
+                        placeholder="Monat"
+                        className="w-16 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                      />
+                      <span className="text-xs text-gray-400">:</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={(erhoehung.prozent * 100).toFixed(2)}
+                        onChange={(e) =>
+                          updateMieterhoehung(index, 'prozent', parseFloat(e.target.value) / 100)
+                        }
+                        placeholder="%"
+                        className="flex-1 px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                      />
                       <button
                         onClick={() => removeMieterhoehung(index)}
-                        className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
-                        title="Entfernen"
+                        className="p-1 text-red-600 hover:bg-red-50 rounded"
                       >
-                        ×
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
                       </button>
                     </div>
                   ))}
                 </div>
 
                 {mieterhoehungen.length === 0 && (
-                  <p className="text-sm text-gray-500 text-center py-4">
+                  <p className="text-xs text-gray-500 text-center py-2">
                     Keine Mieterhöhungen geplant
                   </p>
                 )}
               </div>
 
               {/* Save Section */}
-              <div className="pt-4 border-t border-gray-200">
-                {editingScenarioId && (
-                  <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-sm text-blue-800">
-                      <strong>Bearbeitungsmodus:</strong> Sie bearbeiten gerade "{scenarioName}"
-                    </p>
-                  </div>
-                )}
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="pt-2 border-t border-gray-200">
+                <label className="block text-xs font-medium text-gray-700 mb-1">
                   {editingScenarioId ? 'Szenario aktualisieren' : 'Szenario speichern'}
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5">
                   <input
                     type="text"
                     value={scenarioName}
                     onChange={(e) => setScenarioName(e.target.value)}
-                    placeholder="z.B. Wohnung Prenzlauer Berg"
-                    className="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4B644A] focus:border-transparent"
+                    placeholder="Szenario Name"
+                    className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                   />
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 py-1.5 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87] disabled:opacity-50"
                   >
-                    {saving 
-                      ? (editingScenarioId ? 'Aktualisiert...' : 'Speichert...')
-                      : (editingScenarioId ? 'Aktualisieren' : 'Speichern')
-                    }
+                    {saving ? '...' : (editingScenarioId ? 'Update' : 'Save')}
                   </button>
                   {editingScenarioId && (
                     <button
@@ -551,32 +637,57 @@ export default function InvestmentFormWithSave({ userId }: InvestmentFormWithSav
                         setEditingScenarioId(null);
                         setScenarioName('');
                       }}
-                      className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+                      className="px-2 py-1.5 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300"
                     >
-                      Abbrechen
+                      Cancel
                     </button>
                   )}
                 </div>
                 {saveMessage && (
-                  <p className="mt-2 text-sm text-green-600">{saveMessage}</p>
+                  <p className="mt-1 text-xs text-green-600">{saveMessage}</p>
                 )}
               </div>
             </div>
           </div>
-
-          {/* Results */}
-          {result && (
-            <div>
-              <ResultsDisplay result={result} />
-            </div>
-          )}
         </div>
 
-        {/* Saved Scenarios - 60% right side */}
-        <div>
-          <SavedScenarios onLoadScenario={handleLoadScenario} currentUserId={userId} />
+        {/* User Info at Bottom */}
+        <div className="p-3 border-t border-gray-200 bg-gray-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 bg-[#7099A3] rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xs font-medium">
+                  {userEmail.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-xs text-gray-700 truncate max-w-[150px]">
+                {userEmail}
+              </span>
+            </div>
+            <button
+              onClick={onSignOut}
+              className="text-xs text-gray-500 hover:text-gray-700"
+              title="Abmelden"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Main Content Area */}
+      <div className="flex-1 overflow-y-auto bg-gray-50 p-6">
+        {result && <ResultsDisplay result={result} />}
+        {!result && (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-500">Füllen Sie die Felder aus, um die Berechnung zu sehen</p>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
