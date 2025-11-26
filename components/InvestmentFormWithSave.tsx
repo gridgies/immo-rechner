@@ -17,8 +17,11 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
   // Form state
   const [kaufpreis, setKaufpreis] = useState<string>('355000');
   const [wohnflaeche, setWohnflaeche] = useState<string>('69.24');
+  const [flaeche, setFlaeche] = useState<string>('69.24'); // Fläche in m²
   const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('11.57');
   const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('20');
+  const [eigenkapitalAbsolut, setEigenkapitalAbsolut] = useState<string>(''); // Absolute eigenkapital
+  const [eigenkapitalSource, setEigenkapitalSource] = useState<'prozent' | 'absolut'>('prozent'); // Track which was edited last
   const [zinssatz, setZinssatz] = useState<string>('3.5');
   const [tilgung, setTilgung] = useState<string>('1');
   const [monatlicheKaltmiete, setMonatlicheKaltmiete] = useState<string>('861');
@@ -73,6 +76,24 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
       setWertsteigerungProzent(defaultValues[haltedauer]);
     }
   }, [haltedauer, autoCalculateWertsteigerung]);
+
+  // Bidirectional eigenkapital syncing
+  useEffect(() => {
+    const kp = parseFloat(kaufpreis) || 0;
+    const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
+    
+    if (eigenkapitalSource === 'prozent') {
+      // User edited %, calculate absolut
+      const prozent = (parseFloat(eigenkapitalProzent) || 0) / 100;
+      const absolut = kp * prozent + nk;
+      setEigenkapitalAbsolut(absolut.toFixed(2));
+    } else {
+      // User edited absolut, calculate %
+      const absolut = parseFloat(eigenkapitalAbsolut) || 0;
+      const prozent = kp > 0 ? ((absolut - nk) / kp) * 100 : 0;
+      setEigenkapitalProzent(Math.max(0, prozent).toFixed(2));
+    }
+  }, [kaufpreis, nebenkostenProzent, eigenkapitalProzent, eigenkapitalAbsolut, eigenkapitalSource]);
 
   const loadScenarios = async () => {
     try {
@@ -265,7 +286,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
     try {
       const inputs: InvestmentInputs = {
         kaufpreis: parseFloat(kaufpreis) || 0,
-        wohnflaeche: parseFloat(wohnflaeche) || 0,
+        wohnflaeche: parseFloat(flaeche) || 0, // Use flaeche (m²) field
         nebenkostenProzent: (parseFloat(nebenkostenProzent) || 0) / 100,
         eigenkapitalProzent: (parseFloat(eigenkapitalProzent) || 0) / 100,
         zinssatz: (parseFloat(zinssatz) || 0) / 100,
@@ -437,249 +458,352 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                   <h2 className="text-base font-semibold text-gray-800">Immobiliendetails</h2>
                 </div>
 
-                <div className="space-y-2.5">
-                  {/* Kaufpreis */}
+                <div className="space-y-4">
+                  {/* ========== KATEGORIE 1: KAUFPREIS & FINANZIERUNG ========== */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Kaufpreis (€)
-                    </label>
-                    <input
-                      type="number"
-                      value={kaufpreis}
-                      onChange={(e) => setKaufpreis(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3 pb-2 border-b border-gray-200">
+                      Kaufpreis & Finanzierung
+                    </h3>
+                    
+                    <div className="space-y-2.5">
+                      {/* Kaufpreis */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Kaufpreis (€)
+                        </label>
+                        <input
+                          type="number"
+                          value={kaufpreis}
+                          onChange={(e) => setKaufpreis(e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        />
+                      </div>
 
-                  {/* Wohnfläche */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Wohnfläche (m²)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={wohnflaeche}
-                      onChange={(e) => setWohnflaeche(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                      {/* Fläche */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Fläche (m²)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={flaeche}
+                          onChange={(e) => setFlaeche(e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        />
+                      </div>
 
-                  {/* Nebenkosten */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Nebenkosten (%)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={nebenkostenProzent}
-                      onChange={(e) => setNebenkostenProzent(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                      {/* €/m² - Calculated */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          €/m²
+                        </label>
+                        <input
+                          type="text"
+                          value={(() => {
+                            const kp = parseFloat(kaufpreis) || 0;
+                            const fl = parseFloat(flaeche) || 0;
+                            return fl > 0 ? (kp / fl).toFixed(2) : '0.00';
+                          })()}
+                          readOnly
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded bg-gray-50 text-gray-600 cursor-not-allowed"
+                        />
+                      </div>
 
-                  {/* Eigenkapital */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Eigenkapital (%)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={eigenkapitalProzent}
-                      onChange={(e) => setEigenkapitalProzent(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                      {/* Nebenkosten */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Nebenkosten (%)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={nebenkostenProzent}
+                          onChange={(e) => setNebenkostenProzent(e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        />
+                      </div>
 
-                  {/* Zinssatz */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Zinssatz (% p.a.)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={zinssatz}
-                      onChange={(e) => setZinssatz(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                      {/* Gesamtkosten - Calculated */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Gesamtkosten
+                        </label>
+                        <input
+                          type="text"
+                          value={(() => {
+                            const kp = parseFloat(kaufpreis) || 0;
+                            const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
+                            return (kp + nk).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                          })()}
+                          readOnly
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded bg-gray-50 text-gray-600 cursor-not-allowed"
+                        />
+                      </div>
 
-                  {/* Tilgung */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Tilgung (% p.a.)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={tilgung}
-                      onChange={(e) => setTilgung(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                      {/* Eigenkapital - Side by side */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Eigenkapital (%)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={eigenkapitalProzent}
+                            onChange={(e) => {
+                              setEigenkapitalProzent(e.target.value);
+                              setEigenkapitalSource('prozent');
+                            }}
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Eigenkapital (€)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={eigenkapitalAbsolut}
+                            onChange={(e) => {
+                              setEigenkapitalAbsolut(e.target.value);
+                              setEigenkapitalSource('absolut');
+                            }}
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                        </div>
+                      </div>
 
-                  {/* Monatliche Kaltmiete */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Monatliche Kaltmiete (€)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={monatlicheKaltmiete}
-                      onChange={(e) => setMonatlicheKaltmiete(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                      {/* Fremdfinanzierung - Calculated */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Fremdfinanzierung
+                        </label>
+                        <input
+                          type="text"
+                          value={(() => {
+                            const kp = parseFloat(kaufpreis) || 0;
+                            const ekProzent = (parseFloat(eigenkapitalProzent) || 0) / 100;
+                            const fremd = kp * (1 - ekProzent);
+                            return fremd.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                          })()}
+                          readOnly
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded bg-gray-50 text-gray-600 cursor-not-allowed"
+                        />
+                      </div>
 
-                  {/* Hausgeld umlegbar */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Hausgeld umlegbar (€/Monat)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={wohngeldUmlegbar}
-                      onChange={(e) => setWohngeldUmlegbar(e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    />
-                  </div>
+                      {/* Zinssatz */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Zinssatz (% p.a.)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={zinssatz}
+                          onChange={(e) => setZinssatz(e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        />
+                      </div>
 
-                  {/* Hausgeld nicht umlegbar */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Hausgeld nicht umlegbar (€/Monat)
-                    </label>
-                    <div className="flex gap-1.5">
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={wohngeldNichtUmlegbar}
-                        onChange={(e) => {
-                          setWohngeldNichtUmlegbar(e.target.value);
-                          setAutoCalculateNichtUmlegbar(false);
-                        }}
-                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                      />
-                      <button
-                        onClick={() => setAutoCalculateNichtUmlegbar(true)}
-                        className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                        title="Auto (30%)"
-                      >
-                        Auto
-                      </button>
+                      {/* Tilgung */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Tilgung (% p.a.)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={tilgung}
+                          onChange={(e) => setTilgung(e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Haltedauer */}
+                  {/* ========== KATEGORIE 2: MIETEINNAHMEN & HAUSGELD ========== */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Haltedauer
-                    </label>
-                    <select
-                      value={haltedauer}
-                      onChange={(e) => setHaltedauer(parseInt(e.target.value) as 10 | 20 | 30)}
-                      className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                    >
-                      <option value={10}>10 Jahre</option>
-                      <option value={20}>20 Jahre</option>
-                      <option value={30}>30 Jahre</option>
-                    </select>
-                  </div>
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3 pb-2 border-b border-gray-200">
+                      Mieteinnahmen & Hausgeld
+                    </h3>
+                    
+                    <div className="space-y-2.5">
+                      {/* Monatliche Kaltmiete */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Monatliche Kaltmiete (€)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={monatlicheKaltmiete}
+                          onChange={(e) => setMonatlicheKaltmiete(e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        />
+                      </div>
 
-                  {/* Wertsteigerung */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">
-                      Wertsteigerung (%)
-                    </label>
-                    <div className="flex gap-1.5">
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={wertsteigerungProzent}
-                        onChange={(e) => {
-                          setWertsteigerungProzent(e.target.value);
-                          setAutoCalculateWertsteigerung(false);
-                        }}
-                        className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                      />
-                      <button
-                        onClick={() => setAutoCalculateWertsteigerung(true)}
-                        className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                        title="Auto"
-                      >
-                        Auto
-                      </button>
-                    </div>
-                  </div>
+                      {/* Hausgeld */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Hausgeld (€/Monat)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={wohngeldUmlegbar}
+                          onChange={(e) => setWohngeldUmlegbar(e.target.value)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        />
+                      </div>
 
-                  {/* Mieterhöhungen */}
-                  <div className="pt-2 border-t border-gray-200">
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="text-xs font-medium text-gray-700">
-                        Mieterhöhungen
-                      </label>
-                      <button
-                        onClick={addMieterhoehung}
-                        className="px-2 py-1 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87]"
-                      >
-                        + Hinzufügen
-                      </button>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      {mieterhoehungen.map((erhoehung, index) => (
-                        <div key={index} className="flex gap-1.5 items-center">
-                          <div className="flex-1">
-                            <input
-                              type="number"
-                              value={erhoehung.nachMonaten}
-                              onChange={(e) =>
-                                updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
-                              }
-                              placeholder="Monat"
-                              className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                            />
-                            <span className="text-[10px] text-gray-500">Monat</span>
-                          </div>
-                          <span className="text-xs text-gray-400">→</span>
-                          <div className="flex-1">
-                            <input
-                              type="number"
-                              step="0.01"
-                              value={(erhoehung.prozent * 100).toFixed(2)}
-                              onChange={(e) =>
-                                updateMieterhoehung(index, 'prozent', parseFloat(e.target.value) / 100)
-                              }
-                              placeholder="15"
-                              className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                            />
-                            <span className="text-[10px] text-gray-500">Erhöhung in %</span>
-                          </div>
+                      {/* Hausgeld nicht umlegbar */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Hausgeld nicht umlegbar (€/Monat)
+                        </label>
+                        <div className="flex gap-1.5">
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={wohngeldNichtUmlegbar}
+                            onChange={(e) => {
+                              setWohngeldNichtUmlegbar(e.target.value);
+                              setAutoCalculateNichtUmlegbar(false);
+                            }}
+                            className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
                           <button
-                            onClick={() => removeMieterhoehung(index)}
-                            className="p-1 text-red-600 hover:bg-red-50 rounded flex-shrink-0"
+                            onClick={() => setAutoCalculateNichtUmlegbar(true)}
+                            className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                            title="Auto (30%)"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                            Auto
                           </button>
                         </div>
-                      ))}
-                    </div>
+                      </div>
 
-                    {mieterhoehungen.length === 0 && (
-                      <p className="text-xs text-gray-500 text-center py-2">
-                        Keine Mieterhöhungen geplant
-                      </p>
-                    )}
+                      {/* Mieterhöhungen */}
+                      <div className="pt-2">
+                        <div className="flex justify-between items-center mb-2">
+                          <label className="text-xs font-medium text-gray-700">
+                            Mieterhöhungen
+                          </label>
+                          <button
+                            onClick={addMieterhoehung}
+                            className="px-2 py-1 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87]"
+                          >
+                            + Hinzufügen
+                          </button>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          {mieterhoehungen.map((erhoehung, index) => (
+                            <div key={index} className="flex gap-1.5 items-center">
+                              <div className="flex-1">
+                                <input
+                                  type="number"
+                                  value={erhoehung.nachMonaten}
+                                  onChange={(e) =>
+                                    updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
+                                  }
+                                  placeholder="Monat"
+                                  className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                                />
+                                <span className="text-[10px] text-gray-500">Monat</span>
+                              </div>
+                              <span className="text-xs text-gray-400">→</span>
+                              <div className="flex-1">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  max="100"
+                                  value={erhoehung.prozent * 100}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === '' || !isNaN(parseFloat(value))) {
+                                      updateMieterhoehung(index, 'prozent', value === '' ? 0 : parseFloat(value) / 100);
+                                    }
+                                  }}
+                                  placeholder="15"
+                                  className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                                />
+                                <span className="text-[10px] text-gray-500">Erhöhung in %</span>
+                              </div>
+                              <button
+                                onClick={() => removeMieterhoehung(index)}
+                                className="p-1 text-red-600 hover:bg-red-50 rounded flex-shrink-0"
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        {mieterhoehungen.length === 0 && (
+                          <p className="text-xs text-gray-500 text-center py-2">
+                            Keine Mieterhöhungen geplant
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Save Section */}
+                  {/* ========== KATEGORIE 3: GEPLANTE HALTEDAUER & WERTSTEIGERUNG ========== */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3 pb-2 border-b border-gray-200">
+                      Geplante Haltedauer & Wertsteigerung
+                    </h3>
+                    
+                    <div className="space-y-2.5">
+                      {/* Haltedauer */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Haltedauer
+                        </label>
+                        <select
+                          value={haltedauer}
+                          onChange={(e) => setHaltedauer(parseInt(e.target.value) as 10 | 20 | 30)}
+                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                        >
+                          <option value={10}>10 Jahre</option>
+                          <option value={20}>20 Jahre</option>
+                          <option value={30}>30 Jahre</option>
+                        </select>
+                      </div>
+
+                      {/* Wertsteigerung */}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">
+                          Wertsteigerung (%)
+                        </label>
+                        <div className="flex gap-1.5">
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={wertsteigerungProzent}
+                            onChange={(e) => {
+                              setWertsteigerungProzent(e.target.value);
+                              setAutoCalculateWertsteigerung(false);
+                            }}
+                            className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                          <button
+                            onClick={() => setAutoCalculateWertsteigerung(true)}
+                            className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                            title="Auto"
+                          >
+                            Auto
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="pt-2 border-t border-gray-200">
                     <label className="block text-xs font-medium text-gray-700 mb-1">
                       {editingScenarioId ? 'Szenario aktualisieren' : 'Szenario speichern'}

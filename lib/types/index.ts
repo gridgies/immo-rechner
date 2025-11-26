@@ -47,6 +47,7 @@ export interface InvestmentSummary {
   irr: number;
   totalCashflow: number;
   finalPropertyValue: number;
+  restschuldEnde: number; // Restschuld at end of holding period
 }
 
 // Complete calculation result

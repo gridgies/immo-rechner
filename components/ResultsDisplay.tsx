@@ -88,7 +88,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 Internal Rate of Return - Ihre durchschnittliche jährliche Rendite
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#6B8882]">
+            <p className="text-sm font-bold text-[#4B644A]">
               {formatPercent(result.summary.irr)}
             </p>
           </div>
@@ -100,11 +100,12 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
-              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                Gesamter Vermögensaufbau nach {result.summary.finalPropertyValue ? Math.round(result.monthly.length / 12) : 0} Jahren
+              <div className="absolute left-0 top-full mt-1 w-64 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <div className="font-semibold mb-1">Summe aller Cashflows (inkl. EK und Verkauf)</div>
+                <div>Gesamtertrag Ihrer Investition nach {result.summary.finalPropertyValue ? Math.round(result.monthly.length / 12) : 0} Jahren</div>
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#6B8882]">
+            <p className="text-sm font-bold text-[#4B644A]">
               {formatCurrency(result.summary.vermoegensZuwachs)}
             </p>
           </div>
@@ -121,7 +122,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
               </div>
             </div>
             <p
-              className={`text-2xl font-bold ${
+              className={`text-sm font-bold ${
                 result.summary.erstjahrCashflowPA < 0 ? 'text-red-600' : 'text-[#6B8882]'
               }`}
             >
@@ -142,6 +143,23 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             </div>
             <p className="text-sm font-bold text-[#4B644A]">
               {formatCurrency(result.summary.finalPropertyValue)}
+            </p>
+          </div>
+          <div className="relative group">
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <p className="text-xs text-gray-600 font-medium">Restschuld Ende</p>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 16v-4"></path>
+                <path d="M12 8h.01"></path>
+              </svg>
+              <div className="absolute left-0 top-full mt-1 w-64 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                <div className="font-semibold mb-1">Restschuld am Ende der Haltedauer</div>
+                <div>Verbliebene Darlehensschuld nach {result.summary.finalPropertyValue ? Math.round(result.monthly.length / 12) : 0} Jahren</div>
+              </div>
+            </div>
+            <p className="text-sm font-bold text-[#4B644A]">
+              {formatCurrency(result.summary.restschuldEnde)}
             </p>
           </div>
         </div>
@@ -181,22 +199,22 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
           <table className="min-w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   {viewMode === 'annual' ? 'Jahr' : 'Monat'}
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Miete
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Zinsen
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Tilgung
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Cashflow
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Restschuld
                 </th>
               </tr>
@@ -212,30 +230,30 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                       isLast ? 'bg-yellow-50 font-semibold' : ''
                     } ${isInitial ? 'bg-red-50 font-semibold' : ''}`}
                   >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                       {isInitial 
                         ? 'Initial' 
                         : viewMode === 'annual' 
                           ? `Jahr ${row.period}` 
                           : `Monat ${row.period}`}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-900">
                       {formatCurrency(row.mieteinnahmen)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-red-600">
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-red-600">
                       {formatCurrency(row.zinsen)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-blue-600">
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-blue-600">
                       {formatCurrency(row.tilgung)}
                     </td>
                     <td
-                      className={`px-6 py-4 whitespace-nowrap text-sm text-right font-medium ${
+                      className={`px-4 py-2 whitespace-nowrap text-sm text-right font-medium ${
                         row.cashflow < 0 ? 'text-red-600' : 'text-green-600'
                       }`}
                     >
                       {formatCurrency(row.cashflow)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-900">
                       {formatCurrency(row.restschuld)}
                     </td>
                   </tr>
@@ -244,20 +262,20 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             </tbody>
             <tfoot className="bg-gray-50 border-t-2 border-gray-300">
               <tr className="font-semibold">
-                <td className="px-6 py-4 text-sm text-gray-900">GESAMT</td>
-                <td className="px-6 py-4 text-sm text-right text-gray-900">
+                <td className="px-4 py-2 text-sm text-gray-900">GESAMT</td>
+                <td className="px-4 py-2 text-sm text-right text-gray-900">
                   {formatCurrency(
                     displayData.reduce((sum, row) => sum + row.mieteinnahmen, 0)
                   )}
                 </td>
-                <td className="px-6 py-4 text-sm text-right text-red-600">
+                <td className="px-4 py-2 text-sm text-right text-red-600">
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.zinsen, 0))}
                 </td>
-                <td className="px-6 py-4 text-sm text-right text-blue-600">
+                <td className="px-4 py-2 text-sm text-right text-blue-600">
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.tilgung, 0))}
                 </td>
                 <td
-                  className={`px-6 py-4 text-sm text-right ${
+                  className={`px-4 py-2 text-sm text-right ${
                     displayData.reduce((sum, row) => sum + row.cashflow, 0) < 0
                       ? 'text-red-600'
                       : 'text-green-600'
@@ -265,7 +283,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 >
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.cashflow, 0))}
                 </td>
-                <td className="px-6 py-4 text-sm text-right text-gray-900">-</td>
+                <td className="px-4 py-2 text-sm text-right text-gray-900">-</td>
               </tr>
             </tfoot>
           </table>

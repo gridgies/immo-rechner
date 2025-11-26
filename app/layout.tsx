@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Immobilien Rechner",
   description: "Real estate investment calculator for beginners",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

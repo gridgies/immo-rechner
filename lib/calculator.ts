@@ -111,16 +111,15 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
     .reduce((sum, m) => sum + m.cashflow, 0);
   const erstjahrCashflowPM = erstjahrCashflowPA / 12;
 
-  const totalTilgung = monthly.slice(1).reduce((sum, m) => sum + m.tilgung, 0); // Skip month 0
-  const totalCashflowWithoutSale = monthly
-    .slice(1, -1) // Skip month 0 and last month
-    .reduce((sum, m) => sum + m.cashflow, 0);
-  const vermoegensZuwachs = totalTilgung + totalCashflowWithoutSale;
-
+  // Vermögenszuwachs = Total of ALL cashflows (including Month 0 and final sale)
   const totalCashflow = monthly.reduce((sum, m) => sum + m.cashflow, 0);
+  const vermoegensZuwachs = totalCashflow; // This is the true wealth accumulation
 
   // Calculate IRR (Internal Rate of Return)
   const irr = calculateIRR(monthly);
+
+  // Get final restschuld (last month's remaining debt)
+  const restschuldEnde = monthly[monthly.length - 1].restschuld;
 
   const summary: InvestmentSummary = {
     gesamtkosten,
@@ -132,6 +131,7 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
     irr,
     totalCashflow,
     finalPropertyValue,
+    restschuldEnde,
   };
 
   return {
