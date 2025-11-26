@@ -4,6 +4,7 @@ export interface InvestmentInputs {
   wohnflaeche: number;
   nebenkostenProzent: number; // e.g., 0.1157 for 11.57%
   eigenkapitalProzent: number; // e.g., 0.2 for 20%
+  eigenkapitalAbsolut?: number; // Optional: absolute eigenkapital value (overrides percentage)
   zinssatz: number; // p.a., e.g., 0.035 for 3.5%
   tilgung: number; // p.a., e.g., 0.01 for 1%
   monatlicheKaltmiete: number;

@@ -300,6 +300,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
         wohnflaeche: parseFloat(flaeche) || 0, // Use flaeche (m²) field
         nebenkostenProzent: (parseFloat(nebenkostenProzent) || 0) / 100,
         eigenkapitalProzent: (parseFloat(eigenkapitalProzent) || 0) / 100,
+        eigenkapitalAbsolut: parseFloat(eigenkapitalAbsolut) || undefined, // Pass absolute value
         zinssatz: (parseFloat(zinssatz) || 0) / 100,
         tilgung: (parseFloat(tilgung) || 0) / 100,
         monatlicheKaltmiete: parseFloat(monatlicheKaltmiete) || 0,
@@ -585,6 +586,21 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                           />
                         </div>
                       </div>
+
+                      {/* Validation warning if eigenkapital < nebenkosten */}
+                      {(() => {
+                        const kp = parseFloat(kaufpreis) || 0;
+                        const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
+                        const ek = parseFloat(eigenkapitalAbsolut) || 0;
+                        if (ek > 0 && ek < nk) {
+                          return (
+                            <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-800">
+                              ⚠️ Eigenkapital (€{ek.toLocaleString('de-DE', {maximumFractionDigits: 0})}) muss mindestens die Nebenkosten (€{nk.toLocaleString('de-DE', {maximumFractionDigits: 0})}) decken. Bitte anpassen.
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
 
                       {/* Fremdfinanzierung - Calculated */}
                       <div>
