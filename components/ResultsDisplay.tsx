@@ -78,14 +78,14 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
           </div>
           <div className="relative group">
             <div className="flex items-center gap-1.5 mb-1.5">
-              <p className="text-xs text-gray-600 font-medium">IRR</p>
+              <p className="text-xs text-gray-600 font-medium">Eigenkapitalrendite</p>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
                 <path d="M12 8h.01"></path>
               </svg>
               <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                Internal Rate of Return - Ihre durchschnittliche jährliche Rendite
+                IRR (Internal Rate of Return) - Ihre durchschnittliche jährliche Rendite auf das eingesetzte Eigenkapital
               </div>
             </div>
             <p className="text-sm font-bold text-[#4B644A]">
@@ -206,6 +206,9 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                   Miete
                 </th>
                 <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Annuität
+                </th>
+                <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Zinsen
                 </th>
                 <th className="px-4 py-2 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -240,6 +243,9 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-900">
                       {formatCurrency(row.mieteinnahmen)}
                     </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-700">
+                      {formatCurrency(row.annuitaet)}
+                    </td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-red-600">
                       {formatCurrency(row.zinsen)}
                     </td>
@@ -267,6 +273,9 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                   {formatCurrency(
                     displayData.reduce((sum, row) => sum + row.mieteinnahmen, 0)
                   )}
+                </td>
+                <td className="px-4 py-2 text-sm text-right text-gray-700">
+                  {formatCurrency(displayData.reduce((sum, row) => sum + row.annuitaet, 0))}
                 </td>
                 <td className="px-4 py-2 text-sm text-right text-red-600">
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.zinsen, 0))}

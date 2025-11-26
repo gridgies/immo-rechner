@@ -95,6 +95,17 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
     }
   }, [kaufpreis, nebenkostenProzent, eigenkapitalProzent, eigenkapitalAbsolut, eigenkapitalSource]);
 
+  // Initialize eigenkapitalAbsolut on first load
+  useEffect(() => {
+    if (!eigenkapitalAbsolut) {
+      const kp = parseFloat(kaufpreis) || 0;
+      const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
+      const prozent = (parseFloat(eigenkapitalProzent) || 0) / 100;
+      const absolut = kp * prozent + nk;
+      setEigenkapitalAbsolut(absolut.toFixed(2));
+    }
+  }, []);
+
   const loadScenarios = async () => {
     try {
       setLoadingScenarios(true);
@@ -466,31 +477,31 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                     </h3>
                     
                     <div className="space-y-2.5">
-                      {/* Kaufpreis */}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Kaufpreis (€)
-                        </label>
-                        <input
-                          type="number"
-                          value={kaufpreis}
-                          onChange={(e) => setKaufpreis(e.target.value)}
-                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                        />
-                      </div>
-
-                      {/* Fläche */}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Fläche (m²)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={flaeche}
-                          onChange={(e) => setFlaeche(e.target.value)}
-                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                        />
+                      {/* Kaufpreis and Fläche - side by side */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Kaufpreis (€)
+                          </label>
+                          <input
+                            type="number"
+                            value={kaufpreis}
+                            onChange={(e) => setKaufpreis(e.target.value)}
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Fläche (m²)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={flaeche}
+                            onChange={(e) => setFlaeche(e.target.value)}
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                        </div>
                       </div>
 
                       {/* €/m² - Calculated */}
