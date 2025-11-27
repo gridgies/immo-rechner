@@ -608,8 +608,10 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                           type="text"
                           value={(() => {
                             const kp = parseFloat(kaufpreis) || 0;
-                            const ekProzent = (parseFloat(eigenkapitalProzent) || 0) / 100;
-                            const fremd = kp * (1 - ekProzent);
+                            const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
+                            const gesamtkosten = kp + nk;
+                            const ek = parseFloat(eigenkapitalAbsolut) || 0;
+                            const fremd = gesamtkosten - ek;
                             return fremd.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                           })()}
                           readOnly

@@ -13,12 +13,14 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
   // Basic calculations
   const kaufnebenkosten = inputs.kaufpreis * inputs.nebenkostenProzent;
   const gesamtkosten = inputs.kaufpreis + kaufnebenkosten;
-  const finanzierung = inputs.kaufpreis * (1 - inputs.eigenkapitalProzent);
   
   // Use eigenkapitalAbsolut if provided, otherwise calculate from percentage
   const eigenkapital = inputs.eigenkapitalAbsolut !== undefined 
     ? inputs.eigenkapitalAbsolut 
     : inputs.kaufpreis * inputs.eigenkapitalProzent + kaufnebenkosten;
+  
+  // Fremdfinanzierung = Gesamtkosten - Eigenkapital
+  const finanzierung = gesamtkosten - eigenkapital;
 
   // Calculate monthly payments
   const totalMonths = inputs.haltedauer * 12;
