@@ -14,25 +14,22 @@ interface InvestmentFormWithSaveProps {
 }
 
 export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }: InvestmentFormWithSaveProps) {
-  // Form state
-  const [kaufpreis, setKaufpreis] = useState<string>('355000');
-  const [wohnflaeche, setWohnflaeche] = useState<string>('69.24');
-  const [flaeche, setFlaeche] = useState<string>('69.24'); // Fläche in m²
-  const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('11.57');
-  const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('20');
+  // Form state - empty for new users
+  const [kaufpreis, setKaufpreis] = useState<string>('');
+  const [wohnflaeche, setWohnflaeche] = useState<string>('');
+  const [flaeche, setFlaeche] = useState<string>(''); // Fläche in m²
+  const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('');
+  const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('');
   const [eigenkapitalAbsolut, setEigenkapitalAbsolut] = useState<string>(''); // Absolute eigenkapital
   const [eigenkapitalSource, setEigenkapitalSource] = useState<'prozent' | 'absolut'>('prozent'); // Track which was edited last
-  const [zinssatz, setZinssatz] = useState<string>('3.5');
-  const [tilgung, setTilgung] = useState<string>('1');
-  const [monatlicheKaltmiete, setMonatlicheKaltmiete] = useState<string>('861');
-  const [wohngeldUmlegbar, setWohngeldUmlegbar] = useState<string>('150');
-  const [wohngeldNichtUmlegbar, setWohngeldNichtUmlegbar] = useState<string>('150');
+  const [zinssatz, setZinssatz] = useState<string>('');
+  const [tilgung, setTilgung] = useState<string>('');
+  const [monatlicheKaltmiete, setMonatlicheKaltmiete] = useState<string>('');
+  const [wohngeldUmlegbar, setWohngeldUmlegbar] = useState<string>('');
+  const [wohngeldNichtUmlegbar, setWohngeldNichtUmlegbar] = useState<string>('');
   const [haltedauer, setHaltedauer] = useState<10 | 20 | 30>(30);
-  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>('150');
-  const [mieterhoehungen, setMieterhoehungen] = useState<Mieterhoehung[]>([
-    { nachMonaten: 12, prozent: 0.15 },
-    { nachMonaten: 24, prozent: 0.15 },
-  ]);
+  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>('');
+  const [mieterhoehungen, setMieterhoehungen] = useState<Mieterhoehung[]>([]);
 
   const [scenarioName, setScenarioName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -620,32 +617,32 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                         />
                       </div>
 
-                      {/* Zinssatz */}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Zinssatz (% p.a.)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={zinssatz}
-                          onChange={(e) => setZinssatz(e.target.value)}
-                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                        />
-                      </div>
-
-                      {/* Tilgung */}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Tilgung (% p.a.)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={tilgung}
-                          onChange={(e) => setTilgung(e.target.value)}
-                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                        />
+                      {/* Zinssatz and Tilgung - side by side */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Zinssatz (% p.a.)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={zinssatz}
+                            onChange={(e) => setZinssatz(e.target.value)}
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Tilgung (% p.a.)
+                          </label>
+                          <input
+                            type="number"
+                            step="0.01"
+                            value={tilgung}
+                            onChange={(e) => setTilgung(e.target.value)}
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -671,52 +668,64 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                         />
                       </div>
 
-                      {/* Hausgeld */}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Hausgeld (€/Monat)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={wohngeldUmlegbar}
-                          onChange={(e) => setWohngeldUmlegbar(e.target.value)}
-                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                        />
-                      </div>
-
-                      {/* Hausgeld nicht umlegbar */}
-                      <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Hausgeld nicht umlegbar (€/Monat)
-                        </label>
-                        <div className="flex gap-1.5">
+                      {/* Hausgeld and Hausgeld nicht umlegbar - side by side */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Hausgeld (€/Monat)
+                          </label>
                           <input
                             type="number"
                             step="0.01"
-                            value={wohngeldNichtUmlegbar}
-                            onChange={(e) => {
-                              setWohngeldNichtUmlegbar(e.target.value);
-                              setAutoCalculateNichtUmlegbar(false);
-                            }}
-                            className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                            value={wohngeldUmlegbar}
+                            onChange={(e) => setWohngeldUmlegbar(e.target.value)}
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                           />
-                          <button
-                            onClick={() => setAutoCalculateNichtUmlegbar(true)}
-                            className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                            title="Auto (30%)"
-                          >
-                            Auto
-                          </button>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                            Hausgeld nicht umlegbar (€/Monat)
+                          </label>
+                          <div className="flex gap-1.5">
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={wohngeldNichtUmlegbar}
+                              onChange={(e) => {
+                                setWohngeldNichtUmlegbar(e.target.value);
+                                setAutoCalculateNichtUmlegbar(false);
+                              }}
+                              className="flex-1 px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                            />
+                            <button
+                              onClick={() => setAutoCalculateNichtUmlegbar(true)}
+                              className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
+                              title="Auto (30%)"
+                            >
+                              Auto
+                            </button>
+                          </div>
                         </div>
                       </div>
 
                       {/* Mieterhöhungen */}
                       <div className="pt-2">
                         <div className="flex justify-between items-center mb-2">
-                          <label className="text-xs font-medium text-gray-700">
-                            Mieterhöhungen
-                          </label>
+                          <div className="flex items-center gap-1.5">
+                            <label className="text-xs font-medium text-gray-700">
+                              Mieterhöhungen
+                            </label>
+                            <div className="relative group">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 cursor-help">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                              </svg>
+                              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                                Bitte lokalen Mietspiegel und Kappungsgrenze beachten
+                              </div>
+                            </div>
+                          </div>
                           <button
                             onClick={addMieterhoehung}
                             className="px-2 py-1 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87]"

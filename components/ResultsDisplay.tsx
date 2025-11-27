@@ -241,16 +241,16 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                           : `Monat ${row.period}`}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-900">
-                      {formatCurrency(row.mieteinnahmen)}
+                      {isInitial && row.mieteinnahmen === 0 ? '-' : formatCurrency(row.mieteinnahmen)}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-700">
-                      {formatCurrency(row.annuitaet)}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-red-600">
-                      {formatCurrency(row.zinsen)}
+                      {isInitial && row.annuitaet === 0 ? '-' : formatCurrency(row.annuitaet)}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-blue-600">
-                      {formatCurrency(row.tilgung)}
+                      {isInitial && row.zinsen === 0 ? '-' : formatCurrency(row.zinsen)}
+                    </td>
+                    <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-blue-600">
+                      {isInitial && row.tilgung === 0 ? '-' : formatCurrency(row.tilgung)}
                     </td>
                     <td
                       className={`px-4 py-2 whitespace-nowrap text-sm text-right font-medium ${
@@ -260,7 +260,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                       {formatCurrency(row.cashflow)}
                     </td>
                     <td className="px-4 py-2 whitespace-nowrap text-sm text-right text-gray-900">
-                      {formatCurrency(row.restschuld)}
+                      {isInitial && row.restschuld === 0 ? '-' : formatCurrency(row.restschuld)}
                     </td>
                   </tr>
                 );
@@ -277,7 +277,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
                 <td className="px-4 py-2 text-sm text-right text-gray-700">
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.annuitaet, 0))}
                 </td>
-                <td className="px-4 py-2 text-sm text-right text-red-600">
+                <td className="px-4 py-2 text-sm text-right text-blue-600">
                   {formatCurrency(displayData.reduce((sum, row) => sum + row.zinsen, 0))}
                 </td>
                 <td className="px-4 py-2 text-sm text-right text-blue-600">
@@ -306,7 +306,7 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
             >
               {showAllMonths
                 ? 'Weniger anzeigen'
-                : `Alle ${displayData.length} ${viewMode === 'annual' ? 'Jahre' : 'Monate'} anzeigen`}
+                : `Alle ${displayData.length - 1} ${viewMode === 'annual' ? 'Jahre' : 'Monate'} anzeigen`}
             </button>
           </div>
         )}
