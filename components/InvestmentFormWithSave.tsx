@@ -139,7 +139,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
   };
 
   const addMieterhoehung = () => {
-    setMieterhoehungen([...mieterhoehungen, { nachMonaten: 12, prozent: 0.15 }]);
+    setMieterhoehungen([...mieterhoehungen, { nachMonaten: 0, prozent: 0 }]);
   };
 
   const removeMieterhoehung = (index: number) => {
@@ -237,7 +237,6 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
         }
 
         setSaveMessage('Szenario erfolgreich aktualisiert!');
-        setEditingScenarioId(null);
       } else {
         // Insert new scenario
         const { data: scenarioData, error: scenarioError } = await supabase
@@ -277,6 +276,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
         }
 
         setSaveMessage('Szenario erfolgreich gespeichert!');
+        setEditingScenarioId(null);
       }
 
       setScenarioName('');
