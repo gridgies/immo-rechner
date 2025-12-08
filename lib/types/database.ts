@@ -12,6 +12,8 @@ export interface Database {
           wohnflaeche: number;
           nebenkosten_prozent: number;
           eigenkapital_prozent: number;
+          eigenkapital_absolut: number;
+          eigenkapital_source: 'prozent' | 'absolut';
           zinssatz: number;
           tilgung: number;
           monatliche_kaltmiete: number;
@@ -30,6 +32,8 @@ export interface Database {
           wohnflaeche: number;
           nebenkosten_prozent: number;
           eigenkapital_prozent: number;
+          eigenkapital_absolut: number;
+          eigenkapital_source: 'prozent' | 'absolut';
           zinssatz: number;
           tilgung: number;
           monatliche_kaltmiete: number;
@@ -48,6 +52,8 @@ export interface Database {
           wohnflaeche?: number;
           nebenkosten_prozent?: number;
           eigenkapital_prozent?: number;
+          eigenkapital_absolut?: number;
+          eigenkapital_source?: 'prozent' | 'absolut';
           zinssatz?: number;
           tilgung?: number;
           monatliche_kaltmiete?: number;
@@ -95,6 +101,8 @@ export interface ScenarioWithMieterhoehungen {
   wohnflaeche: number;
   nebenkosten_prozent: number;
   eigenkapital_prozent: number;
+  eigenkapital_absolut: number;
+  eigenkapital_source: 'prozent' | 'absolut';
   zinssatz: number;
   tilgung: number;
   monatliche_kaltmiete: number;

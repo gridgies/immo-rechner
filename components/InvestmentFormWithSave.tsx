@@ -155,15 +155,17 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
   const handleLoadScenario = (scenario: ScenarioWithMieterhoehungen) => {
     setKaufpreis(scenario.kaufpreis.toString());
     setWohnflaeche(scenario.wohnflaeche.toString());
-    setNebenkostenProzent((scenario.nebenkosten_prozent * 100).toString());
-    setEigenkapitalProzent((scenario.eigenkapital_prozent * 100).toString());
-    setZinssatz((scenario.zinssatz * 100).toString());
-    setTilgung((scenario.tilgung * 100).toString());
+    setNebenkostenProzent((scenario.nebenkosten_prozent * 100).toFixed(2));
+    setEigenkapitalProzent((scenario.eigenkapital_prozent * 100).toFixed(2));
+    setEigenkapitalAbsolut(scenario.eigenkapital_absolut.toFixed(2));
+    setEigenkapitalSource(scenario.eigenkapital_source);
+    setZinssatz((scenario.zinssatz * 100).toFixed(2));
+    setTilgung((scenario.tilgung * 100).toFixed(2));
     setMonatlicheKaltmiete(scenario.monatliche_kaltmiete.toString());
     setWohngeldUmlegbar(scenario.wohngeld_umlegbar.toString());
     setWohngeldNichtUmlegbar(scenario.wohngeld_nicht_umlegbar.toString());
     setHaltedauer(scenario.haltedauer);
-    setWertsteigerungProzent((scenario.wertsteigerung_prozent * 100).toString());
+    setWertsteigerungProzent((scenario.wertsteigerung_prozent * 100).toFixed(2));
     setMieterhoehungen(scenario.mieterhoehungen.map((m) => ({
       nachMonaten: m.nach_monaten,
       prozent: m.prozent,
@@ -208,6 +210,8 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
             wohnflaeche: parseFloat(wohnflaeche) || 0,
             nebenkosten_prozent: (parseFloat(nebenkostenProzent) || 0) / 100,
             eigenkapital_prozent: (parseFloat(eigenkapitalProzent) || 0) / 100,
+            eigenkapital_absolut: parseFloat(eigenkapitalAbsolut) || 0,
+            eigenkapital_source: eigenkapitalSource,
             zinssatz: (parseFloat(zinssatz) || 0) / 100,
             tilgung: (parseFloat(tilgung) || 0) / 100,
             monatliche_kaltmiete: parseFloat(monatlicheKaltmiete) || 0,
@@ -248,6 +252,8 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
             wohnflaeche: parseFloat(wohnflaeche) || 0,
             nebenkosten_prozent: (parseFloat(nebenkostenProzent) || 0) / 100,
             eigenkapital_prozent: (parseFloat(eigenkapitalProzent) || 0) / 100,
+            eigenkapital_absolut: parseFloat(eigenkapitalAbsolut) || 0,
+            eigenkapital_source: eigenkapitalSource,
             zinssatz: (parseFloat(zinssatz) || 0) / 100,
             tilgung: (parseFloat(tilgung) || 0) / 100,
             monatliche_kaltmiete: parseFloat(monatlicheKaltmiete) || 0,
