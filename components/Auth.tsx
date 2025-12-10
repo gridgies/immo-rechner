@@ -6,12 +6,14 @@ import { Home, Mail, Lock, ArrowRight } from 'lucide-react';
 
 interface AuthProps {
   onAuthSuccess: () => void;
+  onBack?: () => void;
 }
 
-export default function Auth({ onAuthSuccess }: AuthProps) {
+export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -37,7 +39,25 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
           onAuthSuccess();
         }
       } else {
-        // Sign up
+        // Sign up - validate invite code first
+        if (!inviteCode.trim()) {
+          throw new Error('Bitte geben Sie einen Einladungscode ein');
+        }
+
+        // Validate invite code
+        const { data: isValid, error: codeError } = await supabase.rpc('use_invite_code', {
+          invite_code: inviteCode.trim().toUpperCase(),
+        });
+
+        if (codeError) {
+          throw new Error('Fehler bei der Validierung des Einladungscodes');
+        }
+
+        if (!isValid) {
+          throw new Error('Ungültiger oder bereits verwendeter Einladungscode');
+        }
+
+        // Invite code is valid, proceed with signup
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -59,6 +79,16 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
+        {/* Back Button */}
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="mb-4 text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1 transition-colors"
+          >
+            ← Zurück zur Startseite
+          </button>
+        )}
+        
         {/* Header with Icon */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
@@ -72,7 +102,7 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
           <p className="text-gray-600">
             {isLogin
               ? 'Melden Sie sich an, um Ihre Szenarien zu speichern'
-              : 'Erstellen Sie ein Konto, um Szenarien zu speichern'}
+              : 'Beta-Zugang mit Einladungscode'}
           </p>
         </div>
 
@@ -136,6 +166,35 @@ export default function Auth({ onAuthSuccess }: AuthProps) {
                 />
               </div>
             </div>
+
+            {/* Invite Code Field - Only show during signup */}
+            {!isLogin && (
+              <div>
+                <label htmlFor="inviteCode" className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Einladungscode
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                    </svg>
+                  </div>
+                  <input
+                    id="inviteCode"
+                    name="inviteCode"
+                    type="text"
+                    required={!isLogin}
+                    value={inviteCode}
+                    onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
+                    className="w-full pl-10 h-11 px-4 text-sm border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900 uppercase"
+                    placeholder="BETA2024"
+                  />
+                </div>
+                <p className="mt-1.5 text-xs text-gray-500">
+                  Nur für ausgewählte Beta-Tester. Noch keinen Code? Kontaktiere uns!
+                </p>
+              </div>
+            )}
 
             {/* Submit Button */}
             <button
