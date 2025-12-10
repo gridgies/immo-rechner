@@ -57,6 +57,8 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
     if (autoCalculateNichtUmlegbar && wohngeldUmlegbar) {
       const umlegbar = parseFloat(wohngeldUmlegbar);
       if (!isNaN(umlegbar)) {
+        // Default assumption: ~30% of total Hausgeld is nicht umlegbar
+        // User can override this with actual value if known
         setWohngeldNichtUmlegbar((umlegbar * 0.3).toFixed(2));
       }
     }
@@ -679,9 +681,20 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                       {/* Hausgeld and Hausgeld nicht umlegbar - side by side */}
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Hausgeld (€/Monat)
-                          </label>
+                          <div className="flex items-center gap-1 mb-1">
+                            <label className="block text-xs font-medium text-gray-700">
+                              Hausgeld gesamt (€/Monat)
+                            </label>
+                            <div className="relative group">
+                              <svg className="w-3.5 h-3.5 text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16v-4M12 8h.01"></path>
+                              </svg>
+                              <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                                Gesamtes monatliches Hausgeld laut Nebenkostenabrechnung
+                              </div>
+                            </div>
+                          </div>
                           <input
                             type="number"
                             step="0.01"
@@ -691,9 +704,21 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Hausgeld nicht umlegbar (€/Monat)
-                          </label>
+                          <div className="flex items-center gap-1 mb-1">
+                            <label className="block text-xs font-medium text-gray-700">
+                              Nicht umlegbar (€/Monat)
+                            </label>
+                            <div className="relative group">
+                              <svg className="w-3.5 h-3.5 text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16v-4M12 8h.01"></path>
+                              </svg>
+                              <div className="absolute left-0 top-full mt-1 w-64 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                                <div className="font-semibold mb-1">Tatsächlicher nicht umlegbarer Anteil</div>
+                                <div>z.B. Verwaltung, Instandhaltungsrücklage, Versicherung. Falls unbekannt: Auto nutzt 30% als Schätzung.</div>
+                              </div>
+                            </div>
+                          </div>
                           <div className="flex gap-1.5">
                             <input
                               type="number"
@@ -708,7 +733,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                             <button
                               onClick={() => setAutoCalculateNichtUmlegbar(true)}
                               className="px-2 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded"
-                              title="Auto (30%)"
+                              title="Auto (Schätzung: 30%)"
                             >
                               Auto
                             </button>
