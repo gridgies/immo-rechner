@@ -187,7 +187,7 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                     value={inviteCode}
                     onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                     className="w-full pl-10 h-11 px-4 text-sm border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900 uppercase"
-                    placeholder="BETA2024"
+                    placeholder="BETA2025"
                   />
                 </div>
                 <p className="mt-1.5 text-xs text-gray-500">

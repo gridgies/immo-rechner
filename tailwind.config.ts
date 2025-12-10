@@ -11,15 +11,15 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#4B644A", // Dark green
+          DEFAULT: "#7199a2", // Teal - your brand color
           foreground: "#ffffff",
         },
         secondary: {
-          DEFAULT: "#9FB8AD", // Light green for buttons
-          foreground: "#1f2937",
+          DEFAULT: "#7199a2", // Same as primary for consistency
+          foreground: "#ffffff",
         },
         accent: {
-          DEFAULT: "#7A9B8E", // Medium green
+          DEFAULT: "#5d7e87", // Darker teal
           foreground: "#ffffff",
         },
         success: {

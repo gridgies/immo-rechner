@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, CheckCircle2, TrendingUp, Shield, FileText, BarChart3 } from 'lucide-react';
+import { ArrowRight, CheckCircle2, TrendingUp, Shield, FileText, BarChart3, Mail } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -9,6 +10,50 @@ interface LandingPageProps {
 
 export default function LandingPage({ onGetStarted }: LandingPageProps) {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
+  const [waitlistEmail, setWaitlistEmail] = useState('');
+  const [waitlistName, setWaitlistName] = useState('');
+  const [waitlistMessage, setWaitlistMessage] = useState('');
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+  const [waitlistError, setWaitlistError] = useState<string | null>(null);
+
+  const supabase = createClient();
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setWaitlistLoading(true);
+    setWaitlistError(null);
+
+    try {
+      const { error } = await supabase
+        .from('waitlist')
+        .insert({
+          email: waitlistEmail.toLowerCase().trim(),
+          name: waitlistName.trim() || null,
+          message: waitlistMessage.trim() || null,
+        });
+
+      if (error) {
+        if (error.code === '23505') {
+          // Unique constraint violation
+          throw new Error('Diese E-Mail ist bereits auf der Warteliste');
+        }
+        throw error;
+      }
+
+      setWaitlistSuccess(true);
+      setWaitlistEmail('');
+      setWaitlistName('');
+      setWaitlistMessage('');
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => setWaitlistSuccess(false), 5000);
+    } catch (error: any) {
+      setWaitlistError(error.message || 'Ein Fehler ist aufgetreten');
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
 
   const features = [
     {
@@ -65,7 +110,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             {/* Beta Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium mb-6">
               <span className="w-2 h-2 bg-yellow-600 rounded-full animate-pulse"></span>
-              Private Beta – Nur auf Einladung
+              Private Beta
             </div>
             
             <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight">
@@ -264,6 +309,135 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           <div className="mt-6 flex items-center justify-center gap-2 text-white/80 text-sm">
             <CheckCircle2 className="h-4 w-4" />
             <span>Kostenlos • Exklusiv • Früher Zugang zu neuen Features</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Waitlist Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Noch kein Einladungscode?
+            </h2>
+            <p className="text-xl text-gray-600">
+              Trage dich in die Warteliste ein und wir benachrichtigen dich, sobald neue Plätze verfügbar sind.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+            {waitlistSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle2 className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  Erfolgreich eingetragen!
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Wir haben deine Anfrage erhalten und melden uns, sobald ein Platz frei wird.
+                </p>
+                <button
+                  onClick={() => setWaitlistSuccess(false)}
+                  className="text-[#7199a2] hover:underline text-sm font-medium"
+                >
+                  Weitere Person eintragen
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleWaitlistSubmit} className="space-y-6">
+                {waitlistError && (
+                  <div className="rounded-lg bg-red-50 border border-red-200 p-4">
+                    <p className="text-sm text-red-800 font-medium">{waitlistError}</p>
+                  </div>
+                )}
+
+                {/* Email Field */}
+                <div>
+                  <label htmlFor="waitlist-email" className="block text-sm font-medium text-gray-700 mb-2">
+                    E-Mail-Adresse *
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <Mail className="h-5 w-5 text-gray-400" />
+                    </div>
+                    <input
+                      id="waitlist-email"
+                      type="email"
+                      required
+                      value={waitlistEmail}
+                      onChange={(e) => setWaitlistEmail(e.target.value)}
+                      className="w-full pl-11 pr-4 py-3 text-sm border-2 border-gray-200 rounded-lg focus:border-[#7199a2] focus:ring-0 transition-colors bg-white text-gray-900"
+                      placeholder="deine@email.de"
+                    />
+                  </div>
+                </div>
+
+                {/* Name Field (Optional) */}
+                <div>
+                  <label htmlFor="waitlist-name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Name (optional)
+                  </label>
+                  <input
+                    id="waitlist-name"
+                    type="text"
+                    value={waitlistName}
+                    onChange={(e) => setWaitlistName(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-lg focus:border-[#7199a2] focus:ring-0 transition-colors bg-white text-gray-900"
+                    placeholder="Max Mustermann"
+                  />
+                </div>
+
+                {/* Message Field (Optional) */}
+                <div>
+                  <label htmlFor="waitlist-message" className="block text-sm font-medium text-gray-700 mb-2">
+                    Nachricht (optional)
+                  </label>
+                  <textarea
+                    id="waitlist-message"
+                    rows={3}
+                    value={waitlistMessage}
+                    onChange={(e) => setWaitlistMessage(e.target.value)}
+                    className="w-full px-4 py-3 text-sm border-2 border-gray-200 rounded-lg focus:border-[#7199a2] focus:ring-0 transition-colors bg-white text-gray-900 resize-none"
+                    placeholder="Erzähl uns kurz, warum du am Beta-Test interessiert bist..."
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={waitlistLoading}
+                  className="w-full py-4 bg-[#7199a2] text-white rounded-lg hover:bg-[#5d7e87] transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium text-lg flex items-center justify-center gap-2"
+                >
+                  {waitlistLoading ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      Auf Warteliste eintragen
+                      <ArrowRight className="h-5 w-5" />
+                    </>
+                  )}
+                </button>
+
+                <p className="text-xs text-center text-gray-500">
+                  Wir respektieren deine Privatsphäre. Keine Spam-Mails, versprochen!
+                </p>
+              </form>
+            )}
+          </div>
+
+          {/* Alternative: Already have a code */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 mb-4">
+              Du hast bereits einen Einladungscode?
+            </p>
+            <button
+              onClick={onGetStarted}
+              className="text-[#7199a2] hover:text-[#5d7e87] font-medium transition-colors inline-flex items-center gap-2"
+            >
+              Direkt anmelden
+              <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </section>
