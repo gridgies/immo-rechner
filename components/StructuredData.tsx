@@ -7,7 +7,7 @@ export default function StructuredData() {
         "@id": "https://immo-rechner.net/#website",
         "url": "https://immo-rechner.net",
         "name": "Immobilien Rechner",
-        "description": "Kostenloser Rechner für Immobilieninvestitionen - IRR, Cashflow und Rendite berechnen",
+        "description": "Kostenloser Rechner für Immobilieninvestitionen - IRR, Cashflow und Rendite berechnen für den deutschen Immobilienmarkt",
         "inLanguage": "de-DE",
       },
       {
@@ -22,15 +22,22 @@ export default function StructuredData() {
           "price": "0",
           "priceCurrency": "EUR"
         },
-        "description": "Analysiere potentielle Immobilieninvestitionen in Minuten. Berechne IRR, Cashflow und Rendite für deine erste oder nächste Immobilieninvestition.",
+        "description": "Analysiere potenzielle Immobilieninvestitionen in Minuten. Berechne IRR (Internal Rate of Return), monatlichen Cashflow und Vermögenszuwachs über 10-30 Jahre für deine erste oder nächste Immobilieninvestition.",
         "featureList": [
           "IRR Berechnung (Internal Rate of Return)",
-          "Monatlicher Cashflow",
+          "Monatlicher Cashflow Analyse",
           "Vermögenszuwachs über 10-30 Jahre",
           "Mieterhöhungen planbar",
-          "Szenarien speichern und vergleichen"
+          "Szenarien speichern und vergleichen",
+          "Kaufnebenkosten Berechnung",
+          "Eigenkapitalrendite",
+          "Tilgungsplan"
         ],
         "inLanguage": "de-DE",
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "Immobilieninvestoren, Erstkäufer, Kapitalanleger"
+        }
       },
       {
         "@type": "Organization",
