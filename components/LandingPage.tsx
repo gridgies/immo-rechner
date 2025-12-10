@@ -116,7 +116,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight">
               Analysiere potentielle{' '}
               <span className="bg-gradient-to-r from-[#7099A3] to-[#5d7e87] bg-clip-text text-transparent">
-                Immobilieninvestitionen
+                Immobilien
               </span>{' '}
               in Minuten
             </h1>
