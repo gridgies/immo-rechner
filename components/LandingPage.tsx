@@ -163,22 +163,11 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                   Immobilien Rechner
                 </div>
               </div>
-              {/* Placeholder for screenshot - you'll replace this with actual screenshot */}
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 aspect-[16/10]">
-                <div className="h-full bg-white rounded-lg shadow-sm border border-gray-200 flex items-center justify-center">
-                  <div className="text-center space-y-4">
-                    <div className="w-16 h-16 bg-[#7099A3]/10 rounded-full flex items-center justify-center mx-auto">
-                      <BarChart3 className="h-8 w-8 text-[#7099A3]" />
-                    </div>
-                    <div className="text-gray-600 text-lg font-medium">
-                      Screenshot des Rechners kommt hier
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      Cashflow-Analyse • IRR Berechnung • Szenario-Verwaltung
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <img 
+                src="/screenshot.png" 
+                alt="Immobilien Rechner Interface" 
+                className="w-full h-auto"
+              />
             </div>
           </div>
         </div>
