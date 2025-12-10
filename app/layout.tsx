@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
   verification: {
     // Add your Google Search Console verification code here after setup
-    google: '<meta name="google-site-verification" content="i8ewISMSiFpXzWV6AiMbtBXNF88AjtIAB7temNoET-M" />',
+    google: 'i8ewISMSiFpXzWV6AiMbtBXNF88AjtIAB7temNoET-M',
   },
 };
 
