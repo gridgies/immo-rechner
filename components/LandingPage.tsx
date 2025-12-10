@@ -165,14 +165,14 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                 </div>
               </div>
               {/* Screenshot with Next.js Image optimization */}
-              <div className="relative w-full aspect-[16/10]">
+              <div className="relative w-full aspect-[16/10] bg-gradient-to-br from-gray-50 to-gray-100">
                 <Image
                   src="/screenshot.png"
                   alt="Immobilien Rechner Interface - IRR und Cashflow Berechnung"
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                  className="object-cover"
+                  className="object-contain"
                   quality={85}
                 />
               </div>
