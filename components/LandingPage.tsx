@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowRight, CheckCircle2, TrendingUp, Shield, FileText, BarChart3, Mail } from 'lucide-react';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 
 interface LandingPageProps {
@@ -163,12 +164,18 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                   Immobilien Rechner
                 </div>
               </div>
-              {/* ERSETZE DEN PLACEHOLDER MIT ECHTEM SCREENSHOT */}
-              <img 
-                src="/screenshot.png" 
-                alt="Immobilien Rechner Interface - IRR und Cashflow Berechnung"
-                className="w-full h-auto"
-              />
+              {/* Screenshot with Next.js Image optimization */}
+              <div className="relative w-full aspect-[16/10]">
+                <Image
+                  src="/screenshot.png"
+                  alt="Immobilien Rechner Interface - IRR und Cashflow Berechnung"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+                  className="object-cover"
+                  quality={85}
+                />
+              </div>
             </div>
           </div>
         </div>
