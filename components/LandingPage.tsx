@@ -97,7 +97,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
               onClick={onGetStarted}
               className="px-4 py-2 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-sm font-medium"
             >
-              Anmelden
+              Kostenlos starten
             </button>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight">
               Analysiere potentielle{' '}
               <span className="bg-gradient-to-r from-[#7099A3] to-[#5d7e87] bg-clip-text text-transparent">
-                Immobilien
+                Immobilieninvestitionen
               </span>{' '}
               in Minuten
             </h1>
@@ -129,12 +129,12 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                 onClick={onGetStarted}
                 className="group px-8 py-4 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-all text-lg font-medium flex items-center gap-2 shadow-lg hover:shadow-xl"
               >
-                Beta-Zugang anfordern
+                Kostenlos starten
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <span>Limitiert auf 20 Beta-Tester</span>
+                <span>Einladungscode erforderlich</span>
               </div>
             </div>
           </div>
@@ -163,9 +163,10 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                   Immobilien Rechner
                 </div>
               </div>
+              {/* ERSETZE DEN PLACEHOLDER MIT ECHTEM SCREENSHOT */}
               <img 
                 src="/screenshot.png" 
-                alt="Immobilien Rechner Interface" 
+                alt="Immobilien Rechner Interface - IRR und Cashflow Berechnung"
                 className="w-full h-auto"
               />
             </div>
@@ -292,12 +293,12 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             onClick={onGetStarted}
             className="group px-8 py-4 bg-white text-[#7099A3] rounded-lg hover:bg-gray-50 transition-all text-lg font-medium inline-flex items-center gap-2 shadow-xl"
           >
-            Beta-Zugang anfordern
+            Jetzt anmelden
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </button>
           <div className="mt-6 flex items-center justify-center gap-2 text-white/80 text-sm">
             <CheckCircle2 className="h-4 w-4" />
-            <span>Kostenlos • Exklusiv • Früher Zugang zu neuen Features</span>
+            <span>Kostenlos • Mit Einladungscode • Früher Zugang zu neuen Features</span>
           </div>
         </div>
       </section>

@@ -10,7 +10,7 @@ interface AuthProps {
 }
 
 export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false); // Start with signup/register
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [inviteCode, setInviteCode] = useState('');
@@ -108,6 +108,40 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
 
         {/* Auth Card */}
         <div className="bg-white rounded-2xl shadow-xl border-0 p-8">
+          {/* Tab Navigation */}
+          <div className="flex gap-2 mb-6 p-1 bg-gray-100 rounded-lg">
+            <button
+              type="button"
+              onClick={() => {
+                setIsLogin(false);
+                setError(null);
+                setMessage(null);
+              }}
+              className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
+                !isLogin
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Registrieren
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsLogin(true);
+                setError(null);
+                setMessage(null);
+              }}
+              className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
+                isLogin
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Anmelden
+            </button>
+          </div>
+
           <form className="space-y-5" onSubmit={handleSubmit}>
             {error && (
               <div className="rounded-xl bg-red-50 border border-red-200 p-4 animate-fade-in">
@@ -213,21 +247,39 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
             </button>
           </form>
 
-          {/* Toggle Login/Register */}
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setError(null);
-                setMessage(null);
-              }}
-              className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
-            >
-              {isLogin
-                ? 'Noch kein Konto? Jetzt registrieren'
-                : 'Bereits registriert? Anmelden'}
-            </button>
+          {/* Helper Text */}
+          <div className="mt-6 text-center text-sm text-gray-600">
+            {isLogin ? (
+              <p>
+                Noch kein Konto?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsLogin(false);
+                    setError(null);
+                    setMessage(null);
+                  }}
+                  className="text-[#7199a2] hover:text-[#5d7e87] font-medium"
+                >
+                  Jetzt registrieren
+                </button>
+              </p>
+            ) : (
+              <p>
+                Bereits registriert?{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsLogin(true);
+                    setError(null);
+                    setMessage(null);
+                  }}
+                  className="text-[#7199a2] hover:text-[#5d7e87] font-medium"
+                >
+                  Anmelden
+                </button>
+              </p>
+            )}
           </div>
         </div>
 
