@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: "Immobilien Rechner | IRR & Cashflow Berechnung für Immobilieninvestitionen",
@@ -84,7 +85,10 @@ export default function RootLayout({
         <link rel="canonical" href="https://immo-rechner.net" />
         <meta name="theme-color" content="#7199a2" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
