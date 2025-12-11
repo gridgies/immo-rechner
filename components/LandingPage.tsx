@@ -291,7 +291,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             Noch Plätze verfügbar
           </div>
           <h2 className="text-4xl font-bold text-white mb-6">
-            Werde einer der ersten 20 Beta-Tester
+            Werde einer der ersten 30 Beta-Tester
           </h2>
           <p className="text-xl text-white/90 mb-8">
             Erhalte exklusiven Zugang und hilf uns, das beste Tool für Immobilieninvestoren zu bauen.
