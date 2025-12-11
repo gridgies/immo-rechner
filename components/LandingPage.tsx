@@ -98,7 +98,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
               onClick={onGetStarted}
               className="px-4 py-2 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-sm font-medium"
             >
-              Kostenlos starten
+              Anmelden
             </button>
           </div>
         </div>

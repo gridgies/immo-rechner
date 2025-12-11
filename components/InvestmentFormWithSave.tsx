@@ -19,6 +19,14 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
   const [wohnflaeche, setWohnflaeche] = useState<string>('');
   const [flaeche, setFlaeche] = useState<string>(''); // Fläche in m²
   const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('');
+  
+  // Nebenkosten breakdown
+  const [nebenkostenExpanded, setNebenkostenExpanded] = useState(false);
+  const [grunderwerb, setGrunderwerb] = useState<string>('6.0');
+  const [makler, setMakler] = useState<string>('3.57');
+  const [notar, setNotar] = useState<string>('1.5');
+  const [grundbuch, setGrundbuch] = useState<string>('0.5');
+  
   const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('');
   const [eigenkapitalAbsolut, setEigenkapitalAbsolut] = useState<string>(''); // Absolute eigenkapital
   const [eigenkapitalSource, setEigenkapitalSource] = useState<'prozent' | 'absolut'>('prozent'); // Track which was edited last
@@ -63,6 +71,17 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
       }
     }
   }, [wohngeldUmlegbar, autoCalculateNichtUmlegbar]);
+
+  // Auto-calculate total nebenkostenProzent from breakdown
+  useEffect(() => {
+    const total = (
+      (parseFloat(grunderwerb) || 0) +
+      (parseFloat(makler) || 0) +
+      (parseFloat(notar) || 0) +
+      (parseFloat(grundbuch) || 0)
+    ).toFixed(2);
+    setNebenkostenProzent(total);
+  }, [grunderwerb, makler, notar, grundbuch]);
 
   // Auto-update wertsteigerung
   useEffect(() => {
@@ -527,18 +546,128 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                         />
                       </div>
 
-                      {/* Nebenkosten */}
+                      {/* Nebenkosten - Expandable */}
                       <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">
-                          Nebenkosten (%)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={nebenkostenProzent}
-                          onChange={(e) => setNebenkostenProzent(e.target.value)}
-                          className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                        />
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-medium text-gray-700">
+                            Nebenkosten
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => setNebenkostenExpanded(!nebenkostenExpanded)}
+                            className="text-xs text-[#7099A3] hover:text-[#5d7e87] font-medium"
+                          >
+                            {nebenkostenExpanded ? '▼ Einklappen' : '▶ Details'}
+                          </button>
+                        </div>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={`${nebenkostenProzent}%`}
+                            readOnly
+                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded bg-gray-50 text-gray-600 cursor-not-allowed"
+                          />
+                          <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-500">
+                            {(() => {
+                              const kp = parseFloat(kaufpreis) || 0;
+                              const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
+                              return nk.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '€';
+                            })()}
+                          </span>
+                        </div>
+                        
+                        {/* Expandable breakdown */}
+                        {nebenkostenExpanded && (
+                          <div className="mt-2 space-y-2 p-3 bg-gray-50 rounded border border-gray-200">
+                            {/* Grunderwerb */}
+                            <div className="grid grid-cols-2 gap-2 items-center">
+                              <label className="text-xs text-gray-600">Grunderwerbsteuer:</label>
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  value={grunderwerb}
+                                  onChange={(e) => setGrunderwerb(e.target.value)}
+                                  className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">%</span>
+                              </div>
+                              <span className="col-span-2 text-right text-xs text-gray-500">
+                                {(() => {
+                                  const kp = parseFloat(kaufpreis) || 0;
+                                  const amount = kp * ((parseFloat(grunderwerb) || 0) / 100);
+                                  return amount.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '€';
+                                })()}
+                              </span>
+                            </div>
+
+                            {/* Makler */}
+                            <div className="grid grid-cols-2 gap-2 items-center">
+                              <label className="text-xs text-gray-600">Maklerprovision:</label>
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  value={makler}
+                                  onChange={(e) => setMakler(e.target.value)}
+                                  className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">%</span>
+                              </div>
+                              <span className="col-span-2 text-right text-xs text-gray-500">
+                                {(() => {
+                                  const kp = parseFloat(kaufpreis) || 0;
+                                  const amount = kp * ((parseFloat(makler) || 0) / 100);
+                                  return amount.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '€';
+                                })()}
+                              </span>
+                            </div>
+
+                            {/* Notar */}
+                            <div className="grid grid-cols-2 gap-2 items-center">
+                              <label className="text-xs text-gray-600">Notarkosten:</label>
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  value={notar}
+                                  onChange={(e) => setNotar(e.target.value)}
+                                  className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">%</span>
+                              </div>
+                              <span className="col-span-2 text-right text-xs text-gray-500">
+                                {(() => {
+                                  const kp = parseFloat(kaufpreis) || 0;
+                                  const amount = kp * ((parseFloat(notar) || 0) / 100);
+                                  return amount.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '€';
+                                })()}
+                              </span>
+                            </div>
+
+                            {/* Grundbuch */}
+                            <div className="grid grid-cols-2 gap-2 items-center">
+                              <label className="text-xs text-gray-600">Grundbuchkosten:</label>
+                              <div className="relative">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  value={grundbuch}
+                                  onChange={(e) => setGrundbuch(e.target.value)}
+                                  className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400">%</span>
+                              </div>
+                              <span className="col-span-2 text-right text-xs text-gray-500">
+                                {(() => {
+                                  const kp = parseFloat(kaufpreis) || 0;
+                                  const amount = kp * ((parseFloat(grundbuch) || 0) / 100);
+                                  return amount.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + '€';
+                                })()}
+                              </span>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       {/* Gesamtkosten - Calculated */}

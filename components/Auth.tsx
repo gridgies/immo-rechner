@@ -39,13 +39,13 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
           onAuthSuccess();
         }
       } else {
-        // Sign up - validate invite code first
+        // Sign up - validate invite code first (don't consume yet!)
         if (!inviteCode.trim()) {
           throw new Error('Bitte geben Sie einen Einladungscode ein');
         }
 
-        // Validate invite code
-        const { data: isValid, error: codeError } = await supabase.rpc('use_invite_code', {
+        // Step 1: Validate invite code (doesn't consume it)
+        const { data: isValid, error: codeError } = await supabase.rpc('validate_invite_code', {
           invite_code: inviteCode.trim().toUpperCase(),
         });
 
@@ -54,10 +54,10 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
         }
 
         if (!isValid) {
-          throw new Error('Ungültiger oder bereits verwendeter Einladungscode');
+          throw new Error('Ungültiger oder bereits vollständig verwendeter Einladungscode');
         }
 
-        // Invite code is valid, proceed with signup
+        // Step 2: Try to sign up
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -65,8 +65,19 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
 
         if (error) throw error;
         
+        // Step 3: Only if signup successful, consume the code
         if (data.user) {
-          setMessage('Registrierung erfolgreich! Bitte überprüfen Sie Ihre E-Mail zur Bestätigung.');
+          const { error: consumeError } = await supabase.rpc('consume_invite_code', {
+            invite_code: inviteCode.trim().toUpperCase(),
+            user_email: email,
+          });
+
+          if (consumeError) {
+            console.error('Error consuming invite code:', consumeError);
+            // Don't throw - user is already created, just log the error
+          }
+
+          setMessage('Registrierung erfolgreich! Du kannst dich jetzt anmelden.');
         }
       }
     } catch (error: any) {
