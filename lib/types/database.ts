@@ -9,7 +9,8 @@ export interface Database {
           user_id: string;
           name: string;
           kaufpreis: number;
-          wohnflaeche: number;
+          wohnflaeche: number | null;
+          flaeche: number | null;
           nebenkosten_prozent: number;
           eigenkapital_prozent: number;
           eigenkapital_absolut: number;
@@ -29,7 +30,8 @@ export interface Database {
           user_id: string;
           name: string;
           kaufpreis: number;
-          wohnflaeche: number;
+          wohnflaeche?: number | null;
+          flaeche?: number | null;
           nebenkosten_prozent: number;
           eigenkapital_prozent: number;
           eigenkapital_absolut: number;
@@ -49,7 +51,8 @@ export interface Database {
           user_id?: string;
           name?: string;
           kaufpreis?: number;
-          wohnflaeche?: number;
+          wohnflaeche?: number | null;
+          flaeche?: number | null;
           nebenkosten_prozent?: number;
           eigenkapital_prozent?: number;
           eigenkapital_absolut?: number;
@@ -98,7 +101,8 @@ export interface ScenarioWithMieterhoehungen {
   user_id: string;
   name: string;
   kaufpreis: number;
-  wohnflaeche: number;
+  wohnflaeche: number | null;
+  flaeche: number | null;
   nebenkosten_prozent: number;
   eigenkapital_prozent: number;
   eigenkapital_absolut: number;
