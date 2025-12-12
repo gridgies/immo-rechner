@@ -40,7 +40,7 @@ export default function AppWithAuth() {
   // If user is logged in, show calculator
   if (user) {
     return (
-      <div className="flex h-screen bg-gray-50 overflow-hidden">
+      <div className="flex h-screen bg-gray-50">
         <InvestmentFormWithSave userId={user.id} userEmail={user.email || ''} onSignOut={handleSignOut} />
       </div>
     );
