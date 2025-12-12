@@ -687,37 +687,62 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                         />
                       </div>
 
-                      {/* Eigenkapital - Side by side */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Eigenkapital (%)
-                          </label>
-                          <input
-                            type="number"
-                            step="0.01"
-                            value={eigenkapitalProzent}
-                            onChange={(e) => {
-                              setEigenkapitalProzent(e.target.value);
-                              setEigenkapitalSource('prozent');
-                            }}
-                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                          />
+                      {/* Eigenkapital - Side by side with clear explanation */}
+                      <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                              Eigenkapital vom Kaufpreis (%)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={eigenkapitalProzent}
+                              onChange={(e) => {
+                                setEigenkapitalProzent(e.target.value);
+                                setEigenkapitalSource('prozent');
+                              }}
+                              className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                            />
+                            <p className="mt-0.5 text-xs text-gray-500">
+                              {(() => {
+                                const kp = parseFloat(kaufpreis) || 0;
+                                const prozent = parseFloat(eigenkapitalProzent) || 0;
+                                const betrag = (kp * prozent) / 100;
+                                return `${prozent}% von ${kp.toLocaleString('de-DE', {maximumFractionDigits: 0})}€ = ${betrag.toLocaleString('de-DE', {maximumFractionDigits: 0})}€`;
+                              })()}
+                            </p>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-700 mb-1">
+                              Eigenkapital gesamt (€)
+                            </label>
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={eigenkapitalAbsolut}
+                              onChange={(e) => {
+                                setEigenkapitalAbsolut(e.target.value);
+                                setEigenkapitalSource('absolut');
+                              }}
+                              className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                            />
+                            <p className="mt-0.5 text-xs text-gray-500">
+                              Inkl. Nebenkosten
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Eigenkapital (€)
-                          </label>
-                          <input
-                            type="number"
-                            step="0.01"
-                            value={eigenkapitalAbsolut}
-                            onChange={(e) => {
-                              setEigenkapitalAbsolut(e.target.value);
-                              setEigenkapitalSource('absolut');
-                            }}
-                            className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                          />
+
+                        {/* Explanation box */}
+                        <div className="p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
+                          <strong>ℹ️ Berechnung:</strong> Eigenkapital gesamt = {eigenkapitalProzent || '0'}% vom Kaufpreis 
+                          {(() => {
+                            const kp = parseFloat(kaufpreis) || 0;
+                            const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
+                            const prozent = parseFloat(eigenkapitalProzent) || 0;
+                            const anteil = (kp * prozent) / 100;
+                            return ` (${anteil.toLocaleString('de-DE', {maximumFractionDigits: 0})}€) + Nebenkosten (${nk.toLocaleString('de-DE', {maximumFractionDigits: 0})}€) = ${(anteil + nk).toLocaleString('de-DE', {maximumFractionDigits: 0})}€`;
+                          })()}
                         </div>
                       </div>
 
@@ -729,7 +754,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                         if (ek > 0 && ek < nk) {
                           return (
                             <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-800">
-                              ⚠️ Eigenkapital (€{ek.toLocaleString('de-DE', {maximumFractionDigits: 0})}) muss mindestens die Nebenkosten (€{nk.toLocaleString('de-DE', {maximumFractionDigits: 0})}) decken. Bitte anpassen.
+                              ⚠️ Eigenkapital gesamt (€{ek.toLocaleString('de-DE', {maximumFractionDigits: 0})}) muss mindestens die Nebenkosten (€{nk.toLocaleString('de-DE', {maximumFractionDigits: 0})}) decken.
                             </div>
                           );
                         }
