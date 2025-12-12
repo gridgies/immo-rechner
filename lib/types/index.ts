@@ -1,10 +1,12 @@
 // Input parameters from user
 export interface InvestmentInputs {
   kaufpreis: number;
-  wohnflaeche: number;
+  wohnflaeche: number | null;
+  flaeche: number | null;
   nebenkostenProzent: number; // e.g., 0.1157 for 11.57%
   eigenkapitalProzent: number; // e.g., 0.2 for 20%
   eigenkapitalAbsolut?: number; // Optional: absolute eigenkapital value (overrides percentage)
+  eigenkapitalSource?: 'prozent' | 'absolut'; // Track which was edited last
   zinssatz: number; // p.a., e.g., 0.035 for 3.5%
   tilgung: number; // p.a., e.g., 0.01 for 1%
   monatlicheKaltmiete: number;
