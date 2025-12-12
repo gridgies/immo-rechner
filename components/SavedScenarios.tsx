@@ -70,6 +70,7 @@ export default function SavedScenarios({
     const inputs: InvestmentInputs = {
       kaufpreis: scenario.kaufpreis,
       wohnflaeche: scenario.wohnflaeche,
+      flaeche: scenario.flaeche,
       nebenkostenProzent: scenario.nebenkosten_prozent,
       eigenkapitalProzent: scenario.eigenkapital_prozent,
       zinssatz: scenario.zinssatz,
@@ -92,6 +93,7 @@ export default function SavedScenarios({
     const inputs: InvestmentInputs = {
       kaufpreis: scenario.kaufpreis,
       wohnflaeche: scenario.wohnflaeche,
+      flaeche: scenario.flaeche,
       nebenkostenProzent: scenario.nebenkosten_prozent,
       eigenkapitalProzent: scenario.eigenkapital_prozent,
       zinssatz: scenario.zinssatz,

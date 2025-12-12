@@ -57,7 +57,8 @@ export default function InvestmentForm() {
     try {
       const inputs: InvestmentInputs = {
         kaufpreis: parseFloat(kaufpreis) || 0,
-        wohnflaeche: parseFloat(wohnflaeche) || 0,
+        wohnflaeche: parseFloat(wohnflaeche) || null,
+        flaeche: null, // Not used in this component
         nebenkostenProzent: (parseFloat(nebenkostenProzent) || 0) / 100,
         eigenkapitalProzent: (parseFloat(eigenkapitalProzent) || 0) / 100,
         zinssatz: (parseFloat(zinssatz) || 0) / 100,
