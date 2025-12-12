@@ -9,16 +9,14 @@ import InvestmentFormWithSave from './InvestmentFormWithSave';
 
 export default function AppWithAuth() {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const [showAuth, setShowAuth] = useState(false);
 
   const supabase = createClient();
 
   useEffect(() => {
-    // Check current session
+    // Check current session (runs in background, doesn't block render)
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      setLoading(false);
     });
 
     // Listen for auth changes
@@ -39,25 +37,19 @@ export default function AppWithAuth() {
     setShowAuth(false); // Show landing page after sign out
   };
 
-  if (loading) {
+  // If user is logged in, show calculator
+  if (user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-600">Lädt...</p>
+      <div className="flex h-screen bg-gray-50 overflow-hidden">
+        <InvestmentFormWithSave userId={user.id} userEmail={user.email || ''} onSignOut={handleSignOut} />
       </div>
     );
   }
 
-  if (!user) {
-    if (showAuth) {
-      return <Auth onAuthSuccess={() => {}} onBack={() => setShowAuth(false)} />;
-    }
-    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
+  // Not logged in - show landing page immediately (no loading screen!)
+  if (showAuth) {
+    return <Auth onAuthSuccess={() => {}} onBack={() => setShowAuth(false)} />;
   }
 
-  return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* InvestmentFormWithSave will render both sidebar and main content */}
-      <InvestmentFormWithSave userId={user.id} userEmail={user.email || ''} onSignOut={handleSignOut} />
-    </div>
-  );
+  return <LandingPage onGetStarted={() => setShowAuth(true)} />;
 }
