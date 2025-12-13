@@ -458,16 +458,28 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
               <h3 className="font-semibold mb-4">Produkt</h3>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li>Funktionen</li>
-                <li>Preise</li>
                 <li>Dokumentation</li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Rechtliches</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>Datenschutz</li>
-                <li>Impressum</li>
-                <li>AGB</li>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a 
+                    href="/datenschutz" 
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Datenschutz
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="/impressum" 
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    Impressum
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

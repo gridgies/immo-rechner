@@ -10,7 +10,9 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: [
           '/api/',
-          '/calculator', // Protected page
+          '/impressum',
+          '/datenschutz',
+          '/auth/',
         ],
       },
       {
