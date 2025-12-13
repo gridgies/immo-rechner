@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { ScenarioWithMieterhoehungen } from '@/lib/types/database';
-import { InvestmentInputs, Mieterhoehung } from '@/lib/types';
+import { InvestmentInputs } from '@/lib/types';
 
 interface SavedScenariosProps {
   onLoadScenario: (inputs: InvestmentInputs, scenarioId?: string, scenarioName?: string) => void;
@@ -33,28 +33,14 @@ export default function SavedScenarios({
 
       if (scenariosError) throw scenariosError;
 
-      // Load rent increases for each scenario
-      const scenariosWithMieterhoehungen: ScenarioWithMieterhoehungen[] = await Promise.all(
-        (scenariosData || []).map(async (scenario) => {
-          const { data: mieterhoehungenData, error: mieterhoehungenError } = await supabase
-            .from('mieterhoehungen')
-            .select('*')
-            .eq('scenario_id', scenario.id)
-            .order('nach_monaten', { ascending: true });
+      // Map to ScenarioWithMieterhoehungen format (with default values for new fields)
+      const scenariosWithDefaults: ScenarioWithMieterhoehungen[] = (scenariosData || []).map(scenario => ({
+        ...scenario,
+        miet_steigerung_prozent: scenario.miet_steigerung_prozent ?? 0.02,
+        hausgeld_steigerung_prozent: scenario.hausgeld_steigerung_prozent ?? 0.02,
+      }));
 
-          if (mieterhoehungenError) {
-            console.error('Error loading rent increases:', mieterhoehungenError);
-            return { ...scenario, mieterhoehungen: [] };
-          }
-
-          return {
-            ...scenario,
-            mieterhoehungen: mieterhoehungenData || [],
-          };
-        })
-      );
-
-      setScenarios(scenariosWithMieterhoehungen);
+      setScenarios(scenariosWithDefaults);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -80,10 +66,8 @@ export default function SavedScenarios({
       wohngeldNichtUmlegbar: scenario.wohngeld_nicht_umlegbar,
       haltedauer: scenario.haltedauer,
       wertsteigerungProzent: scenario.wertsteigerung_prozent,
-      mieterhoehungen: scenario.mieterhoehungen.map((m) => ({
-        nachMonaten: m.nach_monaten,
-        prozent: m.prozent,
-      })),
+      mietSteigerungProzent: scenario.miet_steigerung_prozent,
+      hausgeldSteigerungProzent: scenario.hausgeld_steigerung_prozent,
     };
 
     onLoadScenario(inputs);
@@ -103,10 +87,8 @@ export default function SavedScenarios({
       wohngeldNichtUmlegbar: scenario.wohngeld_nicht_umlegbar,
       haltedauer: scenario.haltedauer,
       wertsteigerungProzent: scenario.wertsteigerung_prozent,
-      mieterhoehungen: scenario.mieterhoehungen.map((m) => ({
-        nachMonaten: m.nach_monaten,
-        prozent: m.prozent,
-      })),
+      mietSteigerungProzent: scenario.miet_steigerung_prozent,
+      hausgeldSteigerungProzent: scenario.hausgeld_steigerung_prozent,
     };
 
     // Pass scenario id and name for edit mode
@@ -183,11 +165,9 @@ export default function SavedScenarios({
                       Eigenkapital: {(scenario.eigenkapital_prozent * 100).toFixed(1)}%
                     </p>
                     <p>Haltedauer: {scenario.haltedauer} Jahre</p>
-                    {scenario.mieterhoehungen.length > 0 && (
-                      <p>
-                        Mieterhöhungen: {scenario.mieterhoehungen.length}
-                      </p>
-                    )}
+                    <p>
+                      Mietsteigerung: {(scenario.miet_steigerung_prozent * 100).toFixed(1)}% p.a.
+                    </p>
                   </div>
                   <p className="mt-1.5 text-[10px] text-gray-400">
                     Erstellt: {new Date(scenario.created_at).toLocaleDateString('de-DE')}

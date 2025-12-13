@@ -1,3 +1,4 @@
+// Legacy type - kept for backwards compatibility
 export interface Mieterhoehung {
   nach_monaten: number;
   prozent: number;
@@ -16,7 +17,10 @@ export interface ScenarioInput {
   wohngeld_nicht_umlegbar: number;
   haltedauer: 10 | 20 | 30;
   wertsteigerung_prozent: number;
-  mieterhoehungen: Mieterhoehung[];
+  miet_steigerung_prozent: number;
+  hausgeld_steigerung_prozent: number;
+  // Legacy - kept for backwards compatibility
+  mieterhoehungen?: Mieterhoehung[];
 }
 
 export interface MonthlyData {
