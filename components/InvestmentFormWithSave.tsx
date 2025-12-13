@@ -37,11 +37,11 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
   const [wohngeldUmlegbar, setWohngeldUmlegbar] = useState<string>('200');
   const [wohngeldNichtUmlegbar, setWohngeldNichtUmlegbar] = useState<string>('60');
   const [haltedauer, setHaltedauer] = useState<10 | 20 | 30>(20);
-  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>('90');
+  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>('80');
   
   // New: Annual increase percentages (simple and intuitive)
   const [mietSteigerungProzent, setMietSteigerungProzent] = useState<string>('2');
-  const [hausgeldSteigerungProzent, setHausgeldSteigerungProzent] = useState<string>('2');
+  const [hausgeldSteigerungProzent, setHausgeldSteigerungProzent] = useState<string>('2.5');
 
   const [scenarioName, setScenarioName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -94,8 +94,8 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
   useEffect(() => {
     if (autoCalculateWertsteigerung) {
       const defaultValues: { [key: number]: string } = {
-        10: '45',
-        20: '90',
+        10: '40',
+        20: '80',
         30: '150',
       };
       setWertsteigerungProzent(defaultValues[haltedauer]);
@@ -757,9 +757,19 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                         <div className="space-y-2.5">
                           {/* Eigenkapital - Bidirectional */}
                           <div>
-                            <label className="block text-xs font-medium text-gray-700 mb-1">
-                              Eigenkapital
-                            </label>
+                            <div className="flex items-center gap-1 mb-1">
+                              <label className="block text-xs font-medium text-gray-700">
+                                Eigenkapital
+                              </label>
+                              <div className="relative group">
+                                <svg className="w-3.5 h-3.5 text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div className="absolute left-0 top-full mt-1 w-64 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                                  Die % beziehen sich auf den Kaufpreis. Die Kaufnebenkosten müssen immer als Eigenkapital mitgebracht werden.
+                                </div>
+                              </div>
+                            </div>
                             <div className="grid grid-cols-2 gap-2">
                               <div>
                                 <input
@@ -773,7 +783,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                                   className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                                   placeholder="20"
                                 />
-                                <span className="text-[10px] text-gray-500">in %</span>
+                                <span className="text-[10px] text-gray-500">in % vom Kaufpreis</span>
                               </div>
                               <div>
                                 <input
@@ -786,7 +796,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                                   className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                                   placeholder="60000"
                                 />
-                                <span className="text-[10px] text-gray-500">in €</span>
+                                <span className="text-[10px] text-gray-500">in € (inkl. Nebenkosten)</span>
                               </div>
                             </div>
                           </div>
@@ -838,7 +848,7 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                           {/* Wohngeld/Hausgeld */}
                           <div>
                             <label className="block text-xs font-medium text-gray-700 mb-1">
-                              Hausgeld umlegbar (€/Monat)
+                              Hausgeld gesamt (€/Monat)
                             </label>
                             <input
                               type="number"
