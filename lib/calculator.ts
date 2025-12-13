@@ -29,6 +29,7 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
   // Initial state (Month 0 - setup)
   let currentDebt = finanzierung;
   let currentRent = inputs.monatlicheKaltmiete;
+  let currentHausgeld = inputs.wohngeldNichtUmlegbar;
   const startDate = new Date();
 
   // Month 0 initial investment (negative cashflow)
@@ -37,17 +38,19 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
   // Calculate CONSTANT monthly annuity (same payment every month)
   const annuitaet = finanzierung * ((inputs.zinssatz + inputs.tilgung) / 12);
 
+  // Annual increase rates (default to 0 if not set)
+  const mietSteigerung = inputs.mietSteigerungProzent || 0;
+  const hausgeldSteigerung = inputs.hausgeldSteigerungProzent || 0;
+
   // Calculate each month
   for (let month = 1; month <= totalMonths; month++) {
     const date = new Date(startDate);
     date.setMonth(date.getMonth() + month);
 
-    // Check if there's a rent increase this month
-    const rentIncrease = inputs.mieterhoehungen.find(
-      (m) => m.nachMonaten === month
-    );
-    if (rentIncrease) {
-      currentRent = currentRent * (1 + rentIncrease.prozent);
+    // Apply annual increases at the start of each year (month 12, 24, 36, etc.)
+    if (month > 1 && month % 12 === 1) {
+      currentRent = currentRent * (1 + mietSteigerung);
+      currentHausgeld = currentHausgeld * (1 + hausgeldSteigerung);
     }
 
     // Monthly interest and amortization (annuity is CONSTANT)
@@ -57,7 +60,7 @@ export function calculateInvestment(inputs: InvestmentInputs): CalculationResult
 
     // Cash flows
     const mieteinnahmen = currentRent;
-    const wohngeldNichtUmlegbar = inputs.wohngeldNichtUmlegbar;
+    const wohngeldNichtUmlegbar = currentHausgeld;
     const cashflow = mieteinnahmen - annuitaet - wohngeldNichtUmlegbar;
 
     // Vermögenszuwachs (equity buildup)

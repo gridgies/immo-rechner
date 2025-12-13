@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { InvestmentInputs, Mieterhoehung } from '@/lib/types';
+import { InvestmentInputs } from '@/lib/types';
 import { calculateInvestment } from '@/lib/calculator';
 import { createClient } from '@/lib/supabase/client';
 import { ScenarioWithMieterhoehungen } from '@/lib/types/database';
@@ -15,11 +15,11 @@ interface InvestmentFormWithSaveProps {
 }
 
 export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }: InvestmentFormWithSaveProps) {
-  // Form state - empty for new users
-  const [kaufpreis, setKaufpreis] = useState<string>('');
-  const [wohnflaeche, setWohnflaeche] = useState<string>('');
+  // Form state - sensible default values for demo
+  const [kaufpreis, setKaufpreis] = useState<string>('300000');
+  const [wohnflaeche, setWohnflaeche] = useState<string>('70');
   const [flaeche, setFlaeche] = useState<string>(''); // Fläche in m²
-  const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('');
+  const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('11.57');
   
   // Nebenkosten breakdown - SIMPLIFIED for mobile
   const [nebenkostenExpanded, setNebenkostenExpanded] = useState(false);
@@ -28,17 +28,20 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
   const [notar, setNotar] = useState<string>('1.5');
   const [grundbuch, setGrundbuch] = useState<string>('0.5');
   
-  const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('');
+  const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('20');
   const [eigenkapitalAbsolut, setEigenkapitalAbsolut] = useState<string>(''); // Absolute eigenkapital
   const [eigenkapitalSource, setEigenkapitalSource] = useState<'prozent' | 'absolut'>('prozent'); // Track which was edited last
-  const [zinssatz, setZinssatz] = useState<string>('');
-  const [tilgung, setTilgung] = useState<string>('');
-  const [monatlicheKaltmiete, setMonatlicheKaltmiete] = useState<string>('');
-  const [wohngeldUmlegbar, setWohngeldUmlegbar] = useState<string>('');
-  const [wohngeldNichtUmlegbar, setWohngeldNichtUmlegbar] = useState<string>('');
-  const [haltedauer, setHaltedauer] = useState<10 | 20 | 30>(30);
-  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>('');
-  const [mieterhoehungen, setMieterhoehungen] = useState<Mieterhoehung[]>([]);
+  const [zinssatz, setZinssatz] = useState<string>('3.5');
+  const [tilgung, setTilgung] = useState<string>('2');
+  const [monatlicheKaltmiete, setMonatlicheKaltmiete] = useState<string>('900');
+  const [wohngeldUmlegbar, setWohngeldUmlegbar] = useState<string>('200');
+  const [wohngeldNichtUmlegbar, setWohngeldNichtUmlegbar] = useState<string>('60');
+  const [haltedauer, setHaltedauer] = useState<10 | 20 | 30>(20);
+  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>('90');
+  
+  // New: Annual increase percentages (simple and intuitive)
+  const [mietSteigerungProzent, setMietSteigerungProzent] = useState<string>('2');
+  const [hausgeldSteigerungProzent, setHausgeldSteigerungProzent] = useState<string>('2');
 
   const [scenarioName, setScenarioName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -140,41 +143,19 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
 
       if (scenariosError) throw scenariosError;
 
-      const scenariosWithMieterhoehungen: ScenarioWithMieterhoehungen[] = await Promise.all(
-        (scenariosData || []).map(async (scenario) => {
-          const { data: mieterhoehungenData } = await supabase
-            .from('mieterhoehungen')
-            .select('*')
-            .eq('scenario_id', scenario.id)
-            .order('nach_monaten', { ascending: true });
+      // Map to ScenarioWithMieterhoehungen format (with default values for new fields)
+      const scenariosWithDefaults: ScenarioWithMieterhoehungen[] = (scenariosData || []).map(scenario => ({
+        ...scenario,
+        miet_steigerung_prozent: scenario.miet_steigerung_prozent ?? 0.02,
+        hausgeld_steigerung_prozent: scenario.hausgeld_steigerung_prozent ?? 0.02,
+      }));
 
-          return {
-            ...scenario,
-            mieterhoehungen: mieterhoehungenData || [],
-          };
-        })
-      );
-
-      setScenarios(scenariosWithMieterhoehungen);
+      setScenarios(scenariosWithDefaults);
     } catch (err: any) {
       console.error('Error loading scenarios:', err);
     } finally {
       setLoadingScenarios(false);
     }
-  };
-
-  const addMieterhoehung = () => {
-    setMieterhoehungen([...mieterhoehungen, { nachMonaten: 0, prozent: 0 }]);
-  };
-
-  const removeMieterhoehung = (index: number) => {
-    setMieterhoehungen(mieterhoehungen.filter((_, i) => i !== index));
-  };
-
-  const updateMieterhoehung = (index: number, field: 'nachMonaten' | 'prozent', value: number) => {
-    const updated = [...mieterhoehungen];
-    updated[index] = { ...updated[index], [field]: value };
-    setMieterhoehungen(updated);
   };
 
   const handleLoadScenario = (scenario: ScenarioWithMieterhoehungen) => {
@@ -193,12 +174,9 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
     setHaltedauer(scenario.haltedauer as 10 | 20 | 30);
     setWertsteigerungProzent((scenario.wertsteigerung_prozent * 100).toFixed(2));
     
-    // Load mieterhoehungen
-    const loadedMieterhoehungen = scenario.mieterhoehungen?.map(m => ({
-      nachMonaten: m.nach_monaten,
-      prozent: m.prozent,
-    })) || [];
-    setMieterhoehungen(loadedMieterhoehungen);
+    // Load new annual increase fields (with defaults for old scenarios)
+    setMietSteigerungProzent(((scenario.miet_steigerung_prozent ?? 0.02) * 100).toFixed(1));
+    setHausgeldSteigerungProzent(((scenario.hausgeld_steigerung_prozent ?? 0.02) * 100).toFixed(1));
     
     setScenarioName(scenario.name);
     setEditingScenarioId(scenario.id);
@@ -255,32 +233,17 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
             wohngeld_nicht_umlegbar: parseFloat(wohngeldNichtUmlegbar) || 0,
             haltedauer,
             wertsteigerung_prozent: (parseFloat(wertsteigerungProzent) || 0) / 100,
+            miet_steigerung_prozent: (parseFloat(mietSteigerungProzent) || 0) / 100,
+            hausgeld_steigerung_prozent: (parseFloat(hausgeldSteigerungProzent) || 0) / 100,
           })
           .eq('id', editingScenarioId);
 
         if (updateError) throw updateError;
 
-        // Delete old mieterhoehungen and insert new ones
-        await supabase.from('mieterhoehungen').delete().eq('scenario_id', editingScenarioId);
-        
-        if (mieterhoehungen.length > 0) {
-          const { error: mieterhoehungenError } = await supabase
-            .from('mieterhoehungen')
-            .insert(
-              mieterhoehungen.map((m) => ({
-                scenario_id: editingScenarioId,
-                nach_monaten: m.nachMonaten,
-                prozent: m.prozent,
-              }))
-            );
-
-          if (mieterhoehungenError) throw mieterhoehungenError;
-        }
-
         setSaveMessage('Szenario erfolgreich aktualisiert!');
       } else {
         // Create new scenario
-        const { data: scenarioData, error: scenarioError } = await supabase
+        const { error: scenarioError } = await supabase
           .from('scenarios')
           .insert({
             user_id: userId,
@@ -299,25 +262,11 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
             wohngeld_nicht_umlegbar: parseFloat(wohngeldNichtUmlegbar) || 0,
             haltedauer,
             wertsteigerung_prozent: (parseFloat(wertsteigerungProzent) || 0) / 100,
-          })
-          .select()
-          .single();
+            miet_steigerung_prozent: (parseFloat(mietSteigerungProzent) || 0) / 100,
+            hausgeld_steigerung_prozent: (parseFloat(hausgeldSteigerungProzent) || 0) / 100,
+          });
 
         if (scenarioError) throw scenarioError;
-
-        if (mieterhoehungen.length > 0) {
-          const { error: mieterhoehungenError } = await supabase
-            .from('mieterhoehungen')
-            .insert(
-              mieterhoehungen.map((m) => ({
-                scenario_id: scenarioData.id,
-                nach_monaten: m.nachMonaten,
-                prozent: m.prozent,
-              }))
-            );
-
-          if (mieterhoehungenError) throw mieterhoehungenError;
-        }
 
         setSaveMessage('Szenario erfolgreich gespeichert!');
         setEditingScenarioId(null);
@@ -347,6 +296,8 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
       const wu = parseFloat(wohngeldUmlegbar) || 0;
       const wnu = parseFloat(wohngeldNichtUmlegbar) || 0;
       const wp = (parseFloat(wertsteigerungProzent) || 0) / 100;
+      const msp = (parseFloat(mietSteigerungProzent) || 0) / 100;
+      const hsp = (parseFloat(hausgeldSteigerungProzent) || 0) / 100;
 
       if (kp <= 0 || mkm <= 0) return null;
 
@@ -365,7 +316,8 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
         wohngeldNichtUmlegbar: wnu,
         haltedauer: haltedauer,
         wertsteigerungProzent: wp,
-        mieterhoehungen: mieterhoehungen,
+        mietSteigerungProzent: msp,
+        hausgeldSteigerungProzent: hsp,
       };
 
       return calculateInvestment(inputs);
@@ -922,79 +874,56 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
                             </div>
                           </div>
 
-                          {/* Mieterhöhungen */}
+                          {/* Jährliche Steigerungen */}
                           <div className="pt-2 border-t border-gray-200">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-1">
-                                <label className="text-xs font-medium text-gray-700">
-                                  Mieterhöhungen
-                                </label>
-                                <div className="relative group">
-                                  <svg className="w-3.5 h-3.5 text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                  </svg>
-                                  <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                                    Bitte lokalen Mietspiegel und Kappungsgrenze beachten
-                                  </div>
+                            <div className="flex items-center gap-1 mb-2">
+                              <label className="text-xs font-medium text-gray-700">
+                                Jährliche Steigerungen
+                              </label>
+                              <div className="relative group">
+                                <svg className="w-3.5 h-3.5 text-gray-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <div className="absolute left-0 top-full mt-1 w-56 p-2.5 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                                  Pauschale jährliche Annahmen für Miet- und Hausgeldentwicklung
                                 </div>
                               </div>
-                              <button
-                                onClick={addMieterhoehung}
-                                className="px-2 py-1 bg-[#7099A3] text-white text-xs rounded hover:bg-[#5d7e87]"
-                              >
-                                + Hinzufügen
-                              </button>
                             </div>
 
-                            <div className="space-y-1.5">
-                              {mieterhoehungen.map((erhoehung, index) => (
-                                <div key={index} className="flex gap-1.5 items-center">
-                                  <div className="flex-1">
-                                    <input
-                                      type="number"
-                                      value={erhoehung.nachMonaten}
-                                      onChange={(e) =>
-                                        updateMieterhoehung(index, 'nachMonaten', parseInt(e.target.value))
-                                      }
-                                      placeholder="Monat"
-                                      className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                                    />
-                                    <span className="text-[10px] text-gray-500">Monat</span>
-                                  </div>
-                                  <span className="text-xs text-gray-400">→</span>
-                                  <div className="flex-1">
-                                    <input
-                                      type="number"
-                                      step="0.01"
-                                      min="0"
-                                      max="100"
-                                      value={erhoehung.prozent * 100}
-                                      onChange={(e) => {
-                                        const value = e.target.value;
-                                        if (value === '' || !isNaN(parseFloat(value))) {
-                                          updateMieterhoehung(index, 'prozent', value === '' ? 0 : parseFloat(value) / 100);
-                                        }
-                                      }}
-                                      placeholder="15"
-                                      className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
-                                    />
-                                    <span className="text-[10px] text-gray-500">Erhöhung in %</span>
-                                  </div>
-                                  <button
-                                    onClick={() => removeMieterhoehung(index)}
-                                    className="p-1 text-red-600 hover:bg-red-50 rounded flex-shrink-0"
-                                  >
-                                    <X className="w-3.5 h-3.5" />
-                                  </button>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div>
+                                <label className="block text-[10px] text-gray-600 mb-0.5">
+                                  Mietsteigerung p.a.
+                                </label>
+                                <div className="relative">
+                                  <input
+                                    type="number"
+                                    step="0.1"
+                                    value={mietSteigerungProzent}
+                                    onChange={(e) => setMietSteigerungProzent(e.target.value)}
+                                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none pr-6"
+                                    placeholder="2"
+                                  />
+                                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-500">%</span>
                                 </div>
-                              ))}
+                              </div>
+                              <div>
+                                <label className="block text-[10px] text-gray-600 mb-0.5">
+                                  Hausgeldsteigerung p.a.
+                                </label>
+                                <div className="relative">
+                                  <input
+                                    type="number"
+                                    step="0.1"
+                                    value={hausgeldSteigerungProzent}
+                                    onChange={(e) => setHausgeldSteigerungProzent(e.target.value)}
+                                    className="w-full px-2.5 py-1.5 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none pr-6"
+                                    placeholder="2"
+                                  />
+                                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-500">%</span>
+                                </div>
+                              </div>
                             </div>
-
-                            {mieterhoehungen.length === 0 && (
-                              <p className="text-xs text-gray-500 text-center py-2">
-                                Keine Mieterhöhungen geplant
-                              </p>
-                            )}
                           </div>
                         </div>
                       </div>

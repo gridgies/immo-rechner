@@ -22,6 +22,8 @@ export interface Database {
           wohngeld_nicht_umlegbar: number;
           haltedauer: 10 | 20 | 30;
           wertsteigerung_prozent: number;
+          miet_steigerung_prozent: number;
+          hausgeld_steigerung_prozent: number;
           created_at: string;
           updated_at: string;
         };
@@ -43,6 +45,8 @@ export interface Database {
           wohngeld_nicht_umlegbar: number;
           haltedauer: 10 | 20 | 30;
           wertsteigerung_prozent: number;
+          miet_steigerung_prozent?: number;
+          hausgeld_steigerung_prozent?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -64,10 +68,13 @@ export interface Database {
           wohngeld_nicht_umlegbar?: number;
           haltedauer?: 10 | 20 | 30;
           wertsteigerung_prozent?: number;
+          miet_steigerung_prozent?: number;
+          hausgeld_steigerung_prozent?: number;
           created_at?: string;
           updated_at?: string;
         };
       };
+      // Legacy table - kept for backwards compatibility but no longer used
       mieterhoehungen: {
         Row: {
           id: string;
@@ -95,7 +102,7 @@ export interface Database {
   };
 }
 
-// Scenario with rent increases
+// Scenario type (simplified - no longer includes mieterhoehungen array)
 export interface ScenarioWithMieterhoehungen {
   id: string;
   user_id: string;
@@ -114,9 +121,12 @@ export interface ScenarioWithMieterhoehungen {
   wohngeld_nicht_umlegbar: number;
   haltedauer: 10 | 20 | 30;
   wertsteigerung_prozent: number;
+  miet_steigerung_prozent: number;
+  hausgeld_steigerung_prozent: number;
   created_at: string;
   updated_at: string;
-  mieterhoehungen: {
+  // Legacy field - kept for backwards compatibility
+  mieterhoehungen?: {
     id: string;
     nach_monaten: number;
     prozent: number;

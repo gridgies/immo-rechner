@@ -14,9 +14,14 @@ export interface InvestmentInputs {
   wohngeldNichtUmlegbar: number; // monthly
   haltedauer: 10 | 20 | 30; // years
   wertsteigerungProzent: number; // e.g., 1.5 for 150% increase (2.5x)
-  mieterhoehungen: Mieterhoehung[];
+  // Annual percentage increases
+  mietSteigerungProzent: number; // e.g., 0.02 for 2% annual rent increase
+  hausgeldSteigerungProzent: number; // e.g., 0.02 for 2% annual Hausgeld increase
+  // Legacy support (kept for backwards compatibility with old saved scenarios)
+  mieterhoehungen?: Mieterhoehung[];
 }
 
+// Legacy: Individual rent increase (kept for backwards compatibility)
 export interface Mieterhoehung {
   nachMonaten: number; // e.g., 12, 24, 36
   prozent: number; // e.g., 0.15 for 15%
