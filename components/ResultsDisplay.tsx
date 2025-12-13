@@ -37,13 +37,13 @@ export default function ResultsDisplay({ result }: ResultsDisplayProps) {
     index === visibleData.length - 1 && showAllMonths && displayData.length === result.monthly.length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 md:space-y-4 w-full overflow-hidden">
       {/* Summary Cards */}
-      <div className="bg-white rounded-lg shadow border border-gray-200 p-4">
-        <h2 className="text-base font-semibold mb-4 text-gray-800">
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-3 md:p-4">
+        <h2 className="text-base font-semibold mb-3 md:mb-4 text-gray-800">
           Zusammenfassung
         </h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
           <div className="relative group">
             <div className="flex items-center gap-1.5 mb-1.5">
               <p className="text-xs text-gray-600 font-medium">Gesamtkosten</p>

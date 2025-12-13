@@ -563,27 +563,27 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
+      <div className="flex-1 flex flex-col h-full overflow-hidden w-full">
         {/* Top Navbar - Responsive & Clean */}
-        <nav className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
-          <div className="px-4 md:px-6 py-3">
+        <nav className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm w-full">
+          <div className="px-3 md:px-6 py-3">
             <div className="flex items-center justify-between">
               {/* Left: Mobile Hamburger Menu Button */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 md:gap-3 min-w-0">
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
                   aria-label="Menu"
                 >
                   <Menu className="w-5 h-5 text-gray-700" />
                 </button>
                 
                 {/* Mobile: Show Logo */}
-                <div className="flex items-center gap-2 md:hidden">
-                  <svg className="w-6 h-6 text-[#7099A3]" fill="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center gap-2 md:hidden min-w-0">
+                  <svg className="w-5 h-5 text-[#7099A3] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                   </svg>
-                  <h1 className="text-lg font-bold text-gray-800">Immobilien Rechner</h1>
+                  <h1 className="text-base font-bold text-gray-800 truncate">Immobilien Rechner</h1>
                 </div>
 
                 {/* Desktop: Show Page Title */}
@@ -607,20 +607,20 @@ export default function InvestmentFormWithSave({ userId, userEmail, onSignOut }:
         </nav>
 
         {/* Main Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto bg-gray-50">
-          <div className="max-w-7xl mx-auto p-4 md:p-6">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50">
+          <div className="w-full max-w-7xl mx-auto p-3 md:p-6">
             {/* Responsive Grid: Stacked on mobile, 2-column on desktop */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
               
               {/* Left Column - Input Form */}
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <div className="bg-white rounded-lg shadow border border-gray-200">
-                  <div className="p-4 md:p-5">
-                    <h2 className="text-base md:text-lg font-semibold text-gray-800 mb-4 md:mb-5 pb-3 border-b border-gray-200">
+                  <div className="p-3 md:p-5">
+                    <h2 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-5 pb-3 border-b border-gray-200">
                       Immobilien-Daten
                     </h2>
 
-                    <div className="space-y-5 md:space-y-6">
+                    <div className="space-y-4 md:space-y-6">
                       
                       {/* ========== KATEGORIE 1: IMMOBILIE ========== */}
                       <div>
