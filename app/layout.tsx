@@ -85,7 +85,7 @@ export default function RootLayout({
       <head>
         <link rel="canonical" href="https://immo-rechner.net" />
         <meta name="theme-color" content="#7199a2" />
-        <meta name="viewport" content="width=device-width, initial-scale=0.9" />
+        <meta name="viewport" content="width=device-width, initial-scale=0.8" />
       </head>
       <body className="overflow-x-hidden">
         {children}
