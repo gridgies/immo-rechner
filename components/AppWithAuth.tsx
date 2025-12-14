@@ -10,6 +10,7 @@ import InvestmentFormWithSave from './InvestmentFormWithSave';
 export default function AppWithAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const supabase = createClient();
 
@@ -23,9 +24,26 @@ export default function AppWithAuth() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        setShowAuth(false); // Hide auth when user logs in
+      if (session?.user && !user) {
+        // User just logged in - trigger transition
+        setIsTransitioning(true);
+        setTimeout(() => {
+          setUser(session.user);
+          setShowAuth(false);
+          setIsTransitioning(false);
+          // Reset viewport zoom after login
+          if (typeof window !== 'undefined') {
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+              viewport.setAttribute('content', 'width=device-width, initial-scale=1');
+            }
+          }
+        }, 50);
+      } else {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          setShowAuth(false);
+        }
       }
     });
 
@@ -36,6 +54,15 @@ export default function AppWithAuth() {
     await supabase.auth.signOut();
     setShowAuth(false); // Show landing page after sign out
   };
+
+  // Show brief loading during transition
+  if (isTransitioning) {
+    return (
+      <div className="flex h-screen bg-gray-50 items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#7099A3] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   // If user is logged in, show calculator
   if (user) {
