@@ -183,7 +183,7 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 h-11 px-4 text-sm border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900"
+                  className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900"
                   placeholder="ihre@email.de"
                 />
               </div>
@@ -206,7 +206,7 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 h-11 px-4 text-sm border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900"
+                  className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900"
                   placeholder="••••••••"
                 />
               </div>
@@ -231,7 +231,7 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                     required={!isLogin}
                     value={inviteCode}
                     onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-                    className="w-full pl-10 h-11 px-4 text-sm border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900 uppercase"
+                    className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900 uppercase"
                     placeholder="DEIN-CODE"
                   />
                 </div>
