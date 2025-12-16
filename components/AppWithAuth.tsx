@@ -5,17 +5,18 @@ import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import Auth from './Auth';
 import LandingPage from './LandingPage';
-import InvestmentFormWithSave from './InvestmentFormWithSave';
+import Calculator from './Calculator';
 
 export default function AppWithAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const supabase = createClient();
 
   useEffect(() => {
-    // Check current session (runs in background, doesn't block render)
+    // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
     });
@@ -25,11 +26,12 @@ export default function AppWithAuth() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user && !user) {
-        // User just logged in - trigger transition
+        // User just logged in
         setIsTransitioning(true);
         setTimeout(() => {
           setUser(session.user);
           setShowAuth(false);
+          setShowCalculator(true);
           setIsTransitioning(false);
           // Reset viewport zoom after login
           if (typeof window !== 'undefined') {
@@ -43,6 +45,7 @@ export default function AppWithAuth() {
         setUser(session?.user ?? null);
         if (session?.user) {
           setShowAuth(false);
+          setShowCalculator(true);
         }
       }
     });
@@ -52,7 +55,17 @@ export default function AppWithAuth() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    setShowAuth(false); // Show landing page after sign out
+    setShowCalculator(false);
+    setShowAuth(false);
+  };
+
+  const handleTryFree = () => {
+    setShowCalculator(true);
+    setShowAuth(false);
+  };
+
+  const handleLoginClick = () => {
+    setShowAuth(true);
   };
 
   // Show brief loading during transition
@@ -64,19 +77,31 @@ export default function AppWithAuth() {
     );
   }
 
-  // If user is logged in, show calculator
-  if (user) {
-    return (
-      <div className="flex h-screen bg-gray-50 overflow-hidden">
-        <InvestmentFormWithSave userId={user.id} userEmail={user.email || ''} onSignOut={handleSignOut} />
-      </div>
-    );
-  }
-
-  // Not logged in - show landing page immediately (no loading screen!)
+  // Show Auth screen
   if (showAuth) {
     return <Auth onAuthSuccess={() => {}} onBack={() => setShowAuth(false)} />;
   }
 
-  return <LandingPage onGetStarted={() => setShowAuth(true)} />;
+  // Show Calculator (logged in OR guest)
+  if (showCalculator || user) {
+    return (
+      <div className="flex h-screen bg-gray-50 overflow-hidden">
+        <Calculator 
+          userId={user?.id || null}
+          userEmail={user?.email || null}
+          onSignOut={handleSignOut}
+          onLoginClick={handleLoginClick}
+          isGuest={!user}
+        />
+      </div>
+    );
+  }
+
+  // Show Landing Page
+  return (
+    <LandingPage 
+      onGetStarted={handleLoginClick} 
+      onTryFree={handleTryFree}
+    />
+  );
 }

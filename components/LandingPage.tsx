@@ -7,9 +7,10 @@ import { createClient } from '@/lib/supabase/client';
 
 interface LandingPageProps {
   onGetStarted: () => void;
+  onTryFree: () => void;
 }
 
-export default function LandingPage({ onGetStarted }: LandingPageProps) {
+export default function LandingPage({ onGetStarted, onTryFree }: LandingPageProps) {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
   const [waitlistEmail, setWaitlistEmail] = useState('');
   const [waitlistName, setWaitlistName] = useState('');
@@ -127,17 +128,22 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button
-                onClick={onGetStarted}
+                onClick={onTryFree}
                 className="group px-8 py-4 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-all text-lg font-medium flex items-center gap-2 shadow-lg hover:shadow-xl"
               >
-                Kostenlos starten
+                Kostenlos testen
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <span>Einladungscode erforderlich</span>
-              </div>
+              <button
+                onClick={onGetStarted}
+                className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-lg font-medium"
+              >
+                Anmelden
+              </button>
             </div>
+            <p className="text-sm text-gray-500 mt-4">
+              Keine Anmeldung erforderlich zum Testen • Anmelden zum Speichern
+            </p>
           </div>
 
           {/* Stats Bar */}
