@@ -172,7 +172,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                  className="object-contain"
+                  className="object-cover object-top"
                   quality={85}
                 />
               </div>
