@@ -8,6 +8,7 @@ import { ScenarioWithMieterhoehungen } from '@/lib/types/database';
 import ResultsDisplay from './ResultsDisplay';
 import CashflowChart from './CashflowChart';
 import { Menu, X, ChevronDown, ChevronRight, ChevronLeft, Check, LogIn, Save } from 'lucide-react';
+import SteuerSection from './SteuerSection';
 
 // Grunderwerbsteuer nach Bundesland
 const GRUNDERWERBSTEUER_BUNDESLAENDER = [
@@ -40,13 +41,13 @@ interface CalculatorProps {
 export default function Calculator({ userId, userEmail, onSignOut, onLoginClick, isGuest = false }: CalculatorProps) {
   // Current tab state (1-4)
   const [currentTab, setCurrentTab] = useState(1);
-  
+
   // Form state - empty defaults (user must fill in)
   const [kaufpreis, setKaufpreis] = useState<string>('');
   const [wohnflaeche, setWohnflaeche] = useState<string>('');
   const [flaeche, setFlaeche] = useState<string>('');
   const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('11.57');
-  
+
   // Nebenkosten breakdown
   const [nebenkostenExpanded, setNebenkostenExpanded] = useState(true);
   const [selectedBundesland, setSelectedBundesland] = useState<string>('Hessen');
@@ -55,7 +56,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
   const [notar, setNotar] = useState<string>('1.5');
   const [grundbuch, setGrundbuch] = useState<string>('0.5');
   const [sonstigeNebenkosten, setSonstigeNebenkosten] = useState<string>('');
-  
+
   const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('');
   const [eigenkapitalAbsolut, setEigenkapitalAbsolut] = useState<string>('');
   const [eigenkapitalSource, setEigenkapitalSource] = useState<'prozent' | 'absolut'>('prozent');
@@ -117,7 +118,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
     const kp = parseFloat(kaufpreis) || 0;
     const sonstige = parseFloat(sonstigeNebenkosten) || 0;
     const sonstigeProzent = kp > 0 ? (sonstige / kp) * 100 : 0;
-    
+
     const total = (
       (parseFloat(grunderwerb) || 0) +
       (parseFloat(makler) || 0) +
@@ -144,7 +145,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
   useEffect(() => {
     const kp = parseFloat(kaufpreis) || 0;
     const nk = kp * ((parseFloat(nebenkostenProzent) || 0) / 100);
-    
+
     if (eigenkapitalSource === 'prozent' && eigenkapitalProzent) {
       const prozent = (parseFloat(eigenkapitalProzent) || 0) / 100;
       const absolut = kp * prozent + nk;
@@ -169,15 +170,15 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
       { value: tilgung, filled: tilgung && tilgung.trim() !== '' },
       { value: wertsteigerungProzent, filled: wertsteigerungProzent && wertsteigerungProzent.trim() !== '' },
     ];
-    
+
     const filledCount = requiredFields.filter(f => f.filled).length;
-    
+
     return Math.round((filledCount / requiredFields.length) * 100);
   };
 
   const loadScenarios = async () => {
     if (!userId) return;
-    
+
     try {
       setLoadingScenarios(true);
       const { data: scenariosData, error: scenariosError } = await supabase
@@ -251,7 +252,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
       onLoginClick?.();
       return;
     }
-    
+
     if (!scenarioName.trim()) {
       alert('Bitte gib einen Namen für das Szenario ein');
       return;
@@ -360,6 +361,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
     { id: 2, name: 'Miete', shortName: '2' },
     { id: 3, name: 'Finanzierung', shortName: '3' },
     { id: 4, name: 'Verkauf', shortName: '4' },
+    { id: 5, name: 'Steuer', shortName: '5' },
   ];
 
   // Tab content renderer
@@ -371,7 +373,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
             <h3 className="text-sm font-semibold text-gray-800 pb-2 border-b border-gray-200">
               Immobilie
             </h3>
-            
+
             {/* Kaufpreis */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -414,7 +416,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                   <ChevronDown className={`w-3 h-3 transition-transform ${nebenkostenExpanded ? 'rotate-180' : ''}`} />
                 </button>
               </div>
-              
+
               {!nebenkostenExpanded ? (
                 <input
                   type="number"
@@ -441,7 +443,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                       ))}
                     </select>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="block text-xs text-gray-600 mb-0.5">Makler (%)</label>
@@ -576,11 +578,10 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                       }
                       setAutoCalculateNichtUmlegbar(true);
                     }}
-                    className={`px-2 py-2 text-xs rounded-lg transition-colors ${
-                      autoCalculateNichtUmlegbar 
-                        ? 'bg-[#7099A3] text-white' 
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                    }`}
+                    className={`px-2 py-2 text-xs rounded-lg transition-colors ${autoCalculateNichtUmlegbar
+                      ? 'bg-[#7099A3] text-white'
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      }`}
                     title="Auto (~30%)"
                   >
                     Auto
@@ -779,11 +780,10 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                   <button
                     key={years}
                     onClick={() => setHaltedauer(years as 10 | 20 | 30)}
-                    className={`py-3 px-4 rounded-lg border-2 text-sm font-medium transition-all ${
-                      haltedauer === years
-                        ? 'border-[#7099A3] bg-[#7099A3]/10 text-[#7099A3]'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                    }`}
+                    className={`py-3 px-4 rounded-lg border-2 text-sm font-medium transition-all ${haltedauer === years
+                      ? 'border-[#7099A3] bg-[#7099A3]/10 text-[#7099A3]'
+                      : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                      }`}
                   >
                     {years} Jahre
                   </button>
@@ -823,11 +823,10 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                 </div>
                 <button
                   onClick={() => setAutoCalculateWertsteigerung(true)}
-                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${
-                    autoCalculateWertsteigerung 
-                      ? 'bg-[#7099A3] text-white' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  }`}
+                  className={`px-3 py-2 text-sm rounded-lg transition-colors ${autoCalculateWertsteigerung
+                    ? 'bg-[#7099A3] text-white'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    }`}
                 >
                   Auto
                 </button>
@@ -879,6 +878,22 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
           </div>
         );
 
+      case 5:
+        return (
+          <SteuerSection
+            kaufpreis={parseFloat(kaufpreis) || 0}
+            monatlicheKaltmiete={parseFloat(monatlicheKaltmiete) || 0}
+            wohngeldNichtUmlegbar={parseFloat(wohngeldNichtUmlegbar) || 0}
+            zinssatz={(parseFloat(zinssatz) || 0) / 100}
+            tilgung={(parseFloat(tilgung) || 0) / 100}
+            eigenkapitalAbsolut={parseFloat(eigenkapitalAbsolut) || 0}
+            nebenkostenProzent={(parseFloat(nebenkostenProzent) || 0) / 100}
+            haltedauer={haltedauer}
+            mietSteigerung={(parseFloat(mietSteigerungProzent) || 0) / 100}
+            hausgeldSteigerung={(parseFloat(hausgeldSteigerungProzent) || 0) / 100}
+          />
+        );
+
       default:
         return null;
     }
@@ -888,7 +903,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
     <>
       {/* Mobile Overlay for Menu */}
       {mobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
@@ -928,7 +943,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                 <span className="text-sm font-medium text-white">Gespeicherte Szenarien</span>
                 <ChevronDown className={`w-4 h-4 text-white transition-transform ${scenariosOpen ? 'rotate-180' : ''}`} />
               </button>
-              
+
               {scenariosOpen && (
                 <div className="pb-2">
                   {loadingScenarios ? (
@@ -995,7 +1010,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                 <span className="text-sm font-medium text-white">Gespeicherte Szenarien</span>
                 <ChevronDown className={`w-4 h-4 text-white transition-transform ${scenariosOpen ? 'rotate-180' : ''}`} />
               </button>
-              
+
               {scenariosOpen && (
                 <div className="pb-2">
                   {loadingScenarios ? (
@@ -1056,7 +1071,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                     <Menu className="w-5 h-5 text-gray-700" />
                   </button>
                 )}
-                
+
                 <div className="flex items-center gap-2 min-w-0">
                   <svg className="w-5 h-5 text-[#7099A3] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
@@ -1095,7 +1110,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
           <div className="w-full max-w-7xl mx-auto p-3 md:p-6">
             {/* Two-Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-              
+
               {/* Left Column - Input Form with Tabs */}
               <div className="space-y-4">
                 {/* Progress Bar - Only above input */}
@@ -1105,7 +1120,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                     <span className="text-sm text-gray-500">{getCompletionPercentage()}%</span>
                   </div>
                   <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className="h-full bg-[#7099A3] transition-all duration-300"
                       style={{ width: `${getCompletionPercentage()}%` }}
                     />
@@ -1119,11 +1134,10 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                       <button
                         key={tab.id}
                         onClick={() => setCurrentTab(tab.id)}
-                        className={`flex-1 py-3 px-2 text-xs sm:text-sm font-medium transition-colors relative ${
-                          currentTab === tab.id
-                            ? 'text-[#7099A3] bg-[#7099A3]/5'
-                            : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                        }`}
+                        className={`flex-1 py-3 px-2 text-xs sm:text-sm font-medium transition-colors relative ${currentTab === tab.id
+                          ? 'text-[#7099A3] bg-[#7099A3]/5'
+                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                          }`}
                       >
                         <span className="hidden sm:inline">{tab.name}</span>
                         <span className="sm:hidden">{tab.shortName}</span>
@@ -1144,17 +1158,16 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                     <button
                       onClick={() => setCurrentTab(Math.max(1, currentTab - 1))}
                       disabled={currentTab === 1}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors ${
-                        currentTab === 1
-                          ? 'text-gray-400 cursor-not-allowed'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors ${currentTab === 1
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : 'text-gray-700 hover:bg-gray-100'
+                        }`}
                     >
                       <ChevronLeft className="w-4 h-4" />
                       Zurück
                     </button>
-                    
-                    {currentTab < 4 ? (
+
+                    {currentTab < 5 ? (
                       <button
                         onClick={() => setCurrentTab(Math.min(4, currentTab + 1))}
                         className="px-4 py-2 bg-[#7099A3] text-white rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-[#5d7e87] transition-colors"
