@@ -117,7 +117,7 @@ const POI_CATEGORIES: POICategory[] = [
 
 export async function geocodeAddress(address: string): Promise<GeocodingResult | null> {
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&countrycodes=de&limit=1&addressdetails=1`;
-  
+
   const response = await fetch(url, {
     headers: {
       'User-Agent': 'ImmoRechner/1.0 (https://immo-rechner.net)',
@@ -148,78 +148,91 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 export async function fetchAllPOIs(lat: number, lng: number): Promise<POIResult[]> {
-  const results: POIResult[] = [];
+  // Multiple Overpass endpoints — fallback if one is overloaded
+  const OVERPASS_ENDPOINTS = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+  ];
 
-  // Build one combined Overpass query for efficiency (fewer API calls)
-  for (const category of POI_CATEGORIES) {
-    try {
-      const query = `[out:json][timeout:10];(${category.query}(around:${category.radius},${lat},${lng}););out center body 20;`;
-      
-      const response = await fetch('https://overpass-api.de/api/interpreter', {
-        method: 'POST',
-        body: `data=${encodeURIComponent(query)}`,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      });
+  const fetchWithRetry = async (query: string, retries = 2): Promise<any> => {
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const endpoint = OVERPASS_ENDPOINTS[attempt % OVERPASS_ENDPOINTS.length];
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
-      if (!response.ok) {
-        results.push({
-          category: category.name,
-          categoryKey: category.key,
-          count: 0,
-          weight: category.weight,
-          idealCount: category.idealCount,
-          radius: category.radius,
-          icon: category.icon,
-          items: [],
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: `data=${encodeURIComponent(query)}`,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          signal: controller.signal,
         });
-        continue;
+
+        clearTimeout(timeout);
+
+        if (response.status === 429 || response.status === 504) {
+          // Rate limited or timeout — wait and try next endpoint
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
+
+        if (!response.ok) continue;
+        return await response.json();
+      } catch {
+        if (attempt < retries) {
+          await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
+          continue;
+        }
       }
-
-      const data = await response.json();
-      const elements = data.elements || [];
-
-      const items: POIItem[] = elements
-        .map((el: any) => {
-          const elLat = el.lat || el.center?.lat;
-          const elLng = el.lon || el.center?.lon;
-          if (!elLat || !elLng) return null;
-          return {
-            name: el.tags?.name || category.name,
-            lat: elLat,
-            lng: elLng,
-            distance: Math.round(haversineDistance(lat, lng, elLat, elLng)),
-            type: el.tags?.amenity || el.tags?.shop || el.tags?.leisure || el.tags?.railway || el.tags?.highway || '',
-          };
-        })
-        .filter(Boolean)
-        .sort((a: POIItem, b: POIItem) => a.distance - b.distance)
-        .slice(0, 10); // max 10 items per category
-
-      results.push({
-        category: category.name,
-        categoryKey: category.key,
-        count: elements.length,
-        weight: category.weight,
-        idealCount: category.idealCount,
-        radius: category.radius,
-        icon: category.icon,
-        items,
-      });
-
-      // Rate limit: wait 200ms between requests
-      await new Promise(resolve => setTimeout(resolve, 200));
-    } catch (err) {
-      results.push({
-        category: category.name,
-        categoryKey: category.key,
-        count: 0,
-        weight: category.weight,
-        idealCount: category.idealCount,
-        radius: category.radius,
-        icon: category.icon,
-        items: [],
-      });
     }
+    return null; // All attempts failed
+  };
+
+  const fetchCategory = async (category: typeof POI_CATEGORIES[number]): Promise<POIResult> => {
+    const emptyResult: POIResult = {
+      category: category.name,
+      categoryKey: category.key,
+      count: 0,
+      weight: category.weight,
+      idealCount: category.idealCount,
+      radius: category.radius,
+      icon: category.icon,
+      items: [],
+    };
+
+    const query = `[out:json][timeout:15];(${category.query}(around:${category.radius},${lat},${lng}););out center body 20;`;
+    const data = await fetchWithRetry(query);
+
+    if (!data) return emptyResult;
+
+    const elements = data.elements || [];
+    const items: POIItem[] = elements
+      .map((el: any) => {
+        const elLat = el.lat || el.center?.lat;
+        const elLng = el.lon || el.center?.lon;
+        if (!elLat || !elLng) return null;
+        return {
+          name: el.tags?.name || category.name,
+          lat: elLat,
+          lng: elLng,
+          distance: Math.round(haversineDistance(lat, lng, elLat, elLng)),
+          type: el.tags?.amenity || el.tags?.shop || el.tags?.leisure || el.tags?.railway || el.tags?.highway || '',
+        };
+      })
+      .filter(Boolean)
+      .sort((a: POIItem, b: POIItem) => a.distance - b.distance)
+      .slice(0, 10);
+
+    return { ...emptyResult, count: elements.length, items };
+  };
+
+  // Fetch in batches of 3 to avoid overwhelming any single endpoint
+  const results: POIResult[] = [];
+  for (let i = 0; i < POI_CATEGORIES.length; i += 3) {
+    const batch = POI_CATEGORIES.slice(i, i + 3);
+    const batchResults = await Promise.all(batch.map(fetchCategory));
+    results.push(...batchResults);
   }
 
   return results;
@@ -262,8 +275,8 @@ export function calculateMikrolageScore(pois: POIResult[], address: string, lat:
         count: poi.count,
         assessment:
           fulfillment >= 1 ? 'Sehr gut' :
-          fulfillment >= 0.5 ? 'Gut' :
-          fulfillment > 0 ? 'Ausbaufähig' : 'Mangelhaft',
+            fulfillment >= 0.5 ? 'Gut' :
+              fulfillment > 0 ? 'Ausbaufähig' : 'Mangelhaft',
         icon: poi.icon,
         radius: poi.radius,
         items: poi.items,
