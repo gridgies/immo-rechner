@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import StructuredData from '@/components/StructuredData';
+import AnimatedHero from '@/components/AnimatedHero';
 
 // This is a SERVER COMPONENT - content is fully rendered as HTML for Google
 export const metadata = {
@@ -121,33 +121,8 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Screenshot */}
-            <div className="relative max-w-6xl mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#7099A3]/20 to-[#5d7e87]/20 blur-3xl transform -translate-y-12"></div>
-              <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-200 bg-white">
-                <div className="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center gap-2">
-                  <div className="flex gap-1.5">
-                    <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                  </div>
-                  <div className="flex-1 text-center text-sm text-gray-600 font-medium">
-                    immo-rechner.net
-                  </div>
-                </div>
-                <div className="relative w-full aspect-[16/10] bg-gradient-to-br from-gray-50 to-gray-100">
-                  <Image
-                    src="/screenshot.png"
-                    alt="Immobilien Rechner: Cashflow, IRR und Rendite berechnen für Kapitalanlage-Immobilien in Deutschland"
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-                    className="object-cover object-top"
-                    quality={85}
-                  />
-                </div>
-              </div>
-            </div>
+            {/* Animated Hero */}
+            <AnimatedHero />
           </div>
         </section>
 
