@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from 'next/script';
 import "./globals.css";
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -88,7 +89,19 @@ export default function RootLayout({
     <html lang="de">
       <head>
         <meta name="theme-color" content="#7199a2" />
-        {/* canonical is handled per-page via metadata.alternates */}
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-N9Q99YN3V0"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-N9Q99YN3V0');
+          `}
+        </Script>
       </head>
       <body className="overflow-x-hidden">
         {children}
