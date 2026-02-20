@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Home, Mail, Lock, ArrowRight } from 'lucide-react';
+import { Home, Mail, Lock, ArrowRight, User } from 'lucide-react';
 
 interface AuthProps {
   onAuthSuccess: () => void;
@@ -10,10 +10,10 @@ interface AuthProps {
 }
 
 export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
-  const [isLogin, setIsLogin] = useState(false); // Start with signup/register
+  const [isLogin, setIsLogin] = useState(true); // Start with login
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [inviteCode, setInviteCode] = useState('');
+  const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
@@ -34,50 +34,60 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
           password,
         });
 
-        if (error) throw error;
+        if (error) {
+          // Translate common error messages to German
+          if (error.message.includes('Invalid login credentials')) {
+            throw new Error('Ungültige Anmeldedaten. Bitte überprüfen Sie Ihre E-Mail und Ihr Passwort.');
+          }
+          if (error.message.includes('Email not confirmed')) {
+            throw new Error('Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse.');
+          }
+          throw error;
+        }
+        
         if (data.user) {
           onAuthSuccess();
         }
       } else {
-        // Sign up - validate invite code first (don't consume yet!)
-        if (!inviteCode.trim()) {
-          throw new Error('Bitte geben Sie einen Einladungscode ein');
+        // Sign up
+        if (password.length < 6) {
+          throw new Error('Das Passwort muss mindestens 6 Zeichen lang sein.');
         }
 
-        // Step 1: Validate invite code (doesn't consume it)
-        const { data: isValid, error: codeError } = await supabase.rpc('validate_invite_code', {
-          invite_code: inviteCode.trim().toUpperCase(),
-        });
-
-        if (codeError) {
-          throw new Error('Fehler bei der Validierung des Einladungscodes');
-        }
-
-        if (!isValid) {
-          throw new Error('Ungültiger oder bereits vollständig verwendeter Einladungscode');
-        }
-
-        // Step 2: Try to sign up
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              full_name: fullName,
+            },
+          },
         });
 
-        if (error) throw error;
-        
-        // Step 3: Only if signup successful, consume the code
-        if (data.user) {
-          const { error: consumeError } = await supabase.rpc('consume_invite_code', {
-            invite_code: inviteCode.trim().toUpperCase(),
-            user_email: email,
-          });
-
-          if (consumeError) {
-            console.error('Error consuming invite code:', consumeError);
-            // Don't throw - user is already created, just log the error
+        if (error) {
+          // Translate common error messages to German
+          if (error.message.includes('User already registered')) {
+            throw new Error('Diese E-Mail-Adresse ist bereits registriert.');
           }
+          if (error.message.includes('Password should be at least')) {
+            throw new Error('Das Passwort muss mindestens 6 Zeichen lang sein.');
+          }
+          throw error;
+        }
 
-          setMessage('Registrierung erfolgreich! Du kannst dich jetzt anmelden.');
+        if (data.user) {
+          // Check if email confirmation is required
+          if (data.user.identities && data.user.identities.length === 0) {
+            setMessage('Diese E-Mail-Adresse ist bereits registriert. Bitte melden Sie sich an.');
+            setIsLogin(true);
+          } else if (data.session) {
+            // User is automatically logged in (email confirmation disabled)
+            onAuthSuccess();
+          } else {
+            // Email confirmation required
+            setMessage('Registrierung erfolgreich! Bitte bestätigen Sie Ihre E-Mail-Adresse und melden Sie sich dann an.');
+            setIsLogin(true);
+          }
         }
       }
     } catch (error: any) {
@@ -85,6 +95,12 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const switchMode = (toLogin: boolean) => {
+    setIsLogin(toLogin);
+    setError(null);
+    setMessage(null);
   };
 
   return (
@@ -103,8 +119,8 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
         {/* Header with Icon */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <div className="bg-primary/10 p-4 rounded-2xl backdrop-blur-sm">
-              <Home className="h-12 w-12 text-primary" />
+            <div className="bg-[#7099A3]/10 p-4 rounded-2xl backdrop-blur-sm">
+              <Home className="h-12 w-12 text-[#7099A3]" />
             </div>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -113,7 +129,7 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
           <p className="text-gray-600">
             {isLogin
               ? 'Melden Sie sich an, um Ihre Szenarien zu speichern'
-              : 'Beta-Zugang mit Einladungscode'}
+              : 'Erstellen Sie ein kostenloses Konto'}
           </p>
         </div>
 
@@ -123,26 +139,7 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
           <div className="flex gap-2 mb-6 p-1 bg-gray-100 rounded-lg">
             <button
               type="button"
-              onClick={() => {
-                setIsLogin(false);
-                setError(null);
-                setMessage(null);
-              }}
-              className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
-                !isLogin
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Registrieren
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(true);
-                setError(null);
-                setMessage(null);
-              }}
+              onClick={() => switchMode(true)}
               className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
                 isLogin
                   ? 'bg-white text-gray-900 shadow-sm'
@@ -151,18 +148,53 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
             >
               Anmelden
             </button>
+            <button
+              type="button"
+              onClick={() => switchMode(false)}
+              className={`flex-1 py-2.5 px-4 rounded-md text-sm font-medium transition-all ${
+                !isLogin
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Registrieren
+            </button>
           </div>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
             {error && (
-              <div className="rounded-xl bg-red-50 border border-red-200 p-4 animate-fade-in">
+              <div className="rounded-xl bg-red-50 border border-red-200 p-4">
                 <p className="text-sm text-red-800 font-medium">{error}</p>
               </div>
             )}
 
             {message && (
-              <div className="rounded-xl bg-green-50 border border-green-200 p-4 animate-fade-in">
+              <div className="rounded-xl bg-green-50 border border-green-200 p-4">
                 <p className="text-sm text-green-800 font-medium">{message}</p>
+              </div>
+            )}
+
+            {/* Full Name Field - Only show during signup */}
+            {!isLogin && (
+              <div>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Name <span className="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    autoComplete="name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-[#7099A3] focus:ring-0 transition-colors bg-white text-gray-900"
+                    placeholder="Max Mustermann"
+                  />
+                </div>
               </div>
             )}
 
@@ -183,7 +215,7 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900"
+                  className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-[#7099A3] focus:ring-0 transition-colors bg-white text-gray-900"
                   placeholder="ihre@email.de"
                 />
               </div>
@@ -204,54 +236,31 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                   type="password"
                   autoComplete={isLogin ? 'current-password' : 'new-password'}
                   required
+                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900"
+                  className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-[#7099A3] focus:ring-0 transition-colors bg-white text-gray-900"
                   placeholder="••••••••"
                 />
               </div>
-            </div>
-
-            {/* Invite Code Field - Only show during signup */}
-            {!isLogin && (
-              <div>
-                <label htmlFor="inviteCode" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Einladungscode
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                    </svg>
-                  </div>
-                  <input
-                    id="inviteCode"
-                    name="inviteCode"
-                    type="text"
-                    required={!isLogin}
-                    value={inviteCode}
-                    onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-                    className="w-full pl-10 h-11 px-4 text-base border-2 border-gray-200 rounded-lg focus:border-secondary focus:ring-0 transition-colors bg-white text-gray-900 uppercase"
-                    placeholder="DEIN-CODE"
-                  />
-                </div>
+              {!isLogin && (
                 <p className="mt-1.5 text-xs text-gray-500">
-                  Nur für ausgewählte Beta-Tester. Noch keinen Code? Kontaktiere uns!
+                  Mindestens 6 Zeichen
                 </p>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
+              className="w-full h-11 bg-[#7099A3] hover:bg-[#5d7e87] text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <>
-                  {isLogin ? 'Anmelden' : 'Registrieren'}
+                  {isLogin ? 'Anmelden' : 'Konto erstellen'}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -265,12 +274,8 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                 Noch kein Konto?{' '}
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsLogin(false);
-                    setError(null);
-                    setMessage(null);
-                  }}
-                  className="text-[#7199a2] hover:text-[#5d7e87] font-medium"
+                  onClick={() => switchMode(false)}
+                  className="text-[#7099A3] hover:text-[#5d7e87] font-medium"
                 >
                   Jetzt registrieren
                 </button>
@@ -280,12 +285,8 @@ export default function Auth({ onAuthSuccess, onBack }: AuthProps) {
                 Bereits registriert?{' '}
                 <button
                   type="button"
-                  onClick={() => {
-                    setIsLogin(true);
-                    setError(null);
-                    setMessage(null);
-                  }}
-                  className="text-[#7199a2] hover:text-[#5d7e87] font-medium"
+                  onClick={() => switchMode(true)}
+                  className="text-[#7099A3] hover:text-[#5d7e87] font-medium"
                 >
                   Anmelden
                 </button>

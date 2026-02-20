@@ -1072,12 +1072,12 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                   </button>
                 )}
 
-                <div className="flex items-center gap-2 min-w-0">
+                <a href="/" className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
                   <svg className="w-5 h-5 text-[#7099A3] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
                   </svg>
                   <h1 className="text-base md:text-lg font-bold text-gray-800 truncate">Immobilien Rechner</h1>
-                </div>
+                </a>
               </div>
 
               <div className="flex items-center gap-2 md:gap-4">
@@ -1169,7 +1169,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
 
                     {currentTab < 5 ? (
                       <button
-                        onClick={() => setCurrentTab(Math.min(4, currentTab + 1))}
+                        onClick={() => setCurrentTab(Math.min(5, currentTab + 1))}
                         className="px-4 py-2 bg-[#7099A3] text-white rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-[#5d7e87] transition-colors"
                       >
                         Weiter
