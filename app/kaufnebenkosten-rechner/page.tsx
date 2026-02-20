@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import AppWithAuth from '@/components/AppWithAuth';
+import Navbar from '@/components/Navbar';
 
 const BUNDESLAENDER = [
   { name: 'Bayern', rate: 3.5, slug: 'bayern' },
@@ -34,28 +34,12 @@ export const metadata: Metadata = {
 export default function KaufnebenkostenRechnerPage() {
   return (
     <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#7099A3] to-[#5d7e87] rounded flex items-center justify-center">
-                <span className="text-white font-bold text-sm">IR</span>
-              </div>
-              <span className="text-xl font-semibold text-gray-900">Immobilien Rechner</span>
-            </Link>
-            <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-              <Link href="/cashflow-rechner" className="hover:text-gray-900">Cashflow</Link>
-              <Link href="/rendite-rechner" className="hover:text-gray-900">Rendite</Link>
-              <Link href="/mikrolage-analyse" className="hover:text-gray-900">Mikrolage</Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <nav className="mb-6 text-sm text-gray-500">
           <Link href="/" className="hover:text-gray-700">Startseite</Link>
-          <span className="mx-2">&rsaquo;</span>
+          <span className="mx-2">›</span>
           <span className="text-gray-900">Kaufnebenkosten Rechner</span>
         </nav>
 
@@ -65,20 +49,27 @@ export default function KaufnebenkostenRechnerPage() {
         <p className="text-lg text-gray-600 max-w-3xl mb-8">
           Beim Immobilienkauf fallen neben dem Kaufpreis erhebliche Nebenkosten an: 
           Grunderwerbsteuer, Notar, Grundbuch und ggf. Makler. In Summe können diese 
-          8,5 bis 15 Prozent des Kaufpreises ausmachen. Unser Rechner berechnet alle 
-          Kosten automatisch – inklusive der aktuellen Grunderwerbsteuersätze aller 16 Bundesländer.
+          8,5 bis 15 Prozent des Kaufpreises ausmachen.
         </p>
-      </div>
 
-      <div className="bg-gray-50 border-y border-gray-200">
-        <div className="h-[800px]">
-          <AppWithAuth />
+        {/* CTA to Calculator */}
+        <div className="bg-gradient-to-br from-[#7099A3]/10 to-[#5d7e87]/10 rounded-2xl p-8 mb-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Jetzt Kaufnebenkosten berechnen</h2>
+              <p className="text-gray-600">Nutze unseren kostenlosen Rechner mit allen Funktionen</p>
+            </div>
+            <Link
+              href="/rechner"
+              className="px-8 py-4 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-lg font-medium whitespace-nowrap"
+            >
+              Zum Rechner →
+            </Link>
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Grunderwerbsteuer Table */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-6">Grunderwerbsteuer alle 16 Bundesländer (Stand 2026)</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Grunderwerbsteuer alle 16 Bundesländer (Stand 2026)</h2>
         <div className="overflow-x-auto mb-12">
           <table className="min-w-full bg-white rounded-lg border border-gray-200">
             <thead className="bg-gray-50">
@@ -105,87 +96,70 @@ export default function KaufnebenkostenRechnerPage() {
             </tbody>
           </table>
         </div>
+      </div>
 
-        <div className="prose prose-lg max-w-none">
-          <h2>Welche Kaufnebenkosten fallen beim Immobilienkauf an?</h2>
-          <p>
-            Die Kaufnebenkosten setzen sich aus vier Hauptposten zusammen, von denen drei unvermeidbar sind 
-            und einer optional. Die Grunderwerbsteuer ist die größte Position und variiert je nach Bundesland 
-            zwischen 3,5 Prozent (Bayern) und 6,5 Prozent (Brandenburg, NRW, Saarland, Schleswig-Holstein). 
-            Sie wird fällig, sobald das Finanzamt den Steuerbescheid nach der notariellen Beurkundung erlässt. 
-            Erst nach Zahlung wird die Unbedenklichkeitsbescheinigung ausgestellt, die für den Grundbucheintrag 
-            erforderlich ist.
-          </p>
-          <p>
-            Die Notarkosten belaufen sich auf rund 1,5 Prozent des Kaufpreises. Der Notar beurkundet den 
-            Kaufvertrag, kümmert sich um die Grundschuldbestellung und wickelt den Eigentumsübergang ab. 
-            Diese Kosten sind gesetzlich geregelt (Gerichts- und Notarkostengesetz) und lassen sich nicht 
-            verhandeln. Die Grundbuchkosten betragen weitere 0,5 Prozent und fallen für die Eintragung 
-            des neuen Eigentümers und der Grundschuld an.
-          </p>
-          <p>
-            Die Maklerprovision ist seit der Reform von 2020 bei Wohnimmobilienkäufen in der Regel zwischen 
-            Käufer und Verkäufer geteilt. Die übliche Gesamtprovision beträgt 5,95 bis 7,14 Prozent des 
-            Kaufpreises inklusive Mehrwertsteuer, wobei der Käufer maximal die Hälfte tragen muss. 
-            Bei Direktkäufen vom Eigentümer oder bei Zwangsversteigerungen entfällt die Maklerprovision.
-          </p>
+      <div className="bg-gray-50 border-t border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="prose prose-lg max-w-none">
+            <h2>Welche Kaufnebenkosten fallen beim Immobilienkauf an?</h2>
+            <p>
+              Die Kaufnebenkosten setzen sich aus vier Hauptposten zusammen: Grunderwerbsteuer (3,5-6,5%), 
+              Notarkosten (~1,5%), Grundbuchkosten (~0,5%) und optional Maklerprovision (bis 3,57% Käuferanteil).
+            </p>
 
-          <h2>Warum sind Kaufnebenkosten so wichtig für die Rendite?</h2>
-          <p>
-            Die Kaufnebenkosten sind „verlorenes" Geld – sie steigern weder den Wert der Immobilie noch 
-            werden sie durch Mieteinnahmen gedeckt. Bei einem Kaufpreis von 300.000 Euro in NRW summieren 
-            sich die Nebenkosten schnell auf 35.000 bis 40.000 Euro. Diese Summe muss über die Haltedauer 
-            durch Mieteinnahmen und Wertsteigerung erst wieder erwirtschaftet werden, bevor ein Gewinn 
-            entsteht. Deshalb sollten Kaufnebenkosten idealerweise vollständig aus Eigenkapital finanziert 
-            werden – Banken finanzieren Nebenkosten in der Regel nicht oder nur zu deutlich schlechteren 
-            Konditionen.
-          </p>
+            <h2>Warum sind Kaufnebenkosten so wichtig für die Rendite?</h2>
+            <p>
+              Die Kaufnebenkosten sind „verlorenes" Geld – sie steigern weder den Wert der Immobilie noch 
+              werden sie durch Mieteinnahmen gedeckt. Diese Summe muss über die Haltedauer erst wieder 
+              erwirtschaftet werden, bevor ein Gewinn entsteht.
+            </p>
 
-          <h2>Nebenkosten sparen: Ist das möglich?</h2>
-          <p>
-            Bei der Grunderwerbsteuer gibt es keinen Verhandlungsspielraum – sie ist gesetzlich fixiert. 
-            Wer die Wahl hat, kann allerdings Bundesländer mit niedrigerem Steuersatz bevorzugen: 
-            Der Unterschied zwischen Bayern (3,5%) und NRW (6,5%) beträgt bei 400.000 Euro Kaufpreis 
-            immerhin 12.000 Euro. Die Notarkosten sind ebenfalls gesetzlich geregelt. 
-            Den größten Spielraum gibt es bei der Maklerprovision: Direktkäufe vom Eigentümer sparen 
-            die gesamte Provision. Und auch bei maklergestützten Käufen lohnt sich die Verhandlung – 
-            die Maklerprovision ist nicht gesetzlich festgelegt und kann verhandelt werden.
-          </p>
+            <h2>Häufig gestellte Fragen</h2>
 
-          <h2>Häufig gestellte Fragen</h2>
+            <h3>Kann ich die Kaufnebenkosten von der Steuer absetzen?</h3>
+            <p>
+              Bei vermieteten Immobilien ja – teilweise. Die Kosten werden dem Kaufpreis zugerechnet 
+              und über die AfA abgeschrieben. Bei selbstgenutzten Immobilien nicht absetzbar.
+            </p>
 
-          <h3>Kann ich die Kaufnebenkosten von der Steuer absetzen?</h3>
-          <p>
-            Bei vermieteten Immobilien ja – teilweise. Notarkosten für die Grundschuldbestellung und 
-            die Grunderwerbsteuer werden dem Kaufpreis zugerechnet und über die AfA abgeschrieben. 
-            Maklerkosten können als Werbungskosten sofort abgesetzt oder dem Kaufpreis zugeschlagen werden. 
-            Bei selbstgenutzten Immobilien sind Kaufnebenkosten nicht steuerlich absetzbar.
-          </p>
+            <h3>Wie hoch sind die Nebenkosten insgesamt?</h3>
+            <p>
+              Typischerweise zwischen 8,5% (Bayern, ohne Makler) und rund 15% (Schleswig-Holstein, mit Makler).
+            </p>
+          </div>
 
-          <h3>Wie hoch sind die Nebenkosten insgesamt?</h3>
-          <p>
-            Die Gesamtnebenkosten liegen typischerweise zwischen 8,5 Prozent (Bayern, ohne Makler) und 
-            rund 15 Prozent (Schleswig-Holstein, mit Makler) des Kaufpreises. Die genaue Höhe hängt vom 
-            Bundesland und davon ab, ob ein Makler involviert ist. Unser Rechner berechnet alle Posten 
-            individuell.
-          </p>
-        </div>
-
-        <div className="mt-12 grid md:grid-cols-3 gap-4">
-          <Link href="/rendite-rechner" className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
-            <div className="font-semibold text-gray-900">Rendite berechnen &rarr;</div>
-            <div className="text-sm text-gray-600">Mietrendite inkl. Nebenkosten</div>
-          </Link>
-          <Link href="/mikrolage-analyse" className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
-            <div className="font-semibold text-gray-900">KI Mikrolage &rarr;</div>
-            <div className="text-sm text-gray-600">Standort automatisch analysieren</div>
-          </Link>
-          <Link href="/ratgeber/eigenkapital-immobilie" className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
-            <div className="font-semibold text-gray-900">Eigenkapital Ratgeber &rarr;</div>
-            <div className="text-sm text-gray-600">Wie viel Eigenkapital brauchst du?</div>
-          </Link>
+          <div className="mt-12 grid md:grid-cols-3 gap-4">
+            <Link href="/rendite-rechner" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
+              <div className="font-semibold text-gray-900">Rendite berechnen →</div>
+              <div className="text-sm text-gray-600">Mietrendite inkl. Nebenkosten</div>
+            </Link>
+            <Link href="/mikrolage-analyse" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
+              <div className="font-semibold text-gray-900">KI Mikrolage →</div>
+              <div className="text-sm text-gray-600">Standort automatisch analysieren</div>
+            </Link>
+            <Link href="/ratgeber/eigenkapital-immobilie" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
+              <div className="font-semibold text-gray-900">Eigenkapital Ratgeber →</div>
+              <div className="text-sm text-gray-600">Wie viel Eigenkapital brauchst du?</div>
+            </Link>
+          </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-8 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-gradient-to-br from-[#7099A3] to-[#5d7e87] rounded flex items-center justify-center">
+              <span className="text-white font-bold text-xs">IR</span>
+            </div>
+            <span className="text-sm">Immobilien Rechner</span>
+          </div>
+          <div className="flex gap-6 text-sm text-gray-400">
+            <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
+            <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
