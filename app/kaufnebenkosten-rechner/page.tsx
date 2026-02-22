@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import KaufnebenkostenrechnerSimple from '@/components/KaufnebenkostenrechnerSimple';
 
 const BUNDESLAENDER = [
   { name: 'Bayern', rate: 3.5, slug: 'bayern' },
@@ -52,20 +53,9 @@ export default function KaufnebenkostenRechnerPage() {
           8,5 bis 15 Prozent des Kaufpreises ausmachen.
         </p>
 
-        {/* CTA to Calculator */}
-        <div className="bg-gradient-to-br from-[#7099A3]/10 to-[#5d7e87]/10 rounded-2xl p-8 mb-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Jetzt Kaufnebenkosten berechnen</h2>
-              <p className="text-gray-600">Nutze unseren kostenlosen Rechner mit allen Funktionen</p>
-            </div>
-            <Link
-              href="/rechner"
-              className="px-8 py-4 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-lg font-medium whitespace-nowrap"
-            >
-              Zum Rechner →
-            </Link>
-          </div>
+        {/* Calculator */}
+        <div className="mb-12">
+          <KaufnebenkostenrechnerSimple />
         </div>
 
         {/* Grunderwerbsteuer Table */}
@@ -103,15 +93,28 @@ export default function KaufnebenkostenRechnerPage() {
           <div className="prose prose-lg max-w-none">
             <h2>Welche Kaufnebenkosten fallen beim Immobilienkauf an?</h2>
             <p>
-              Die Kaufnebenkosten setzen sich aus vier Hauptposten zusammen: Grunderwerbsteuer (3,5-6,5%), 
-              Notarkosten (~1,5%), Grundbuchkosten (~0,5%) und optional Maklerprovision (bis 3,57% Käuferanteil).
+              Die Kaufnebenkosten setzen sich aus vier Hauptposten zusammen:
             </p>
+            <ul>
+              <li><strong>Grunderwerbsteuer</strong> (3,5% - 6,5%): Je nach Bundesland unterschiedlich, größter Posten</li>
+              <li><strong>Notarkosten</strong> (~1,5%): Beurkundung des Kaufvertrags, gesetzlich geregelt</li>
+              <li><strong>Grundbuchkosten</strong> (~0,5%): Eintragung des neuen Eigentümers</li>
+              <li><strong>Maklerkosten</strong> (bis 3,57%): Optional, Käuferanteil max. 50% der Gesamtprovision</li>
+            </ul>
 
             <h2>Warum sind Kaufnebenkosten so wichtig für die Rendite?</h2>
             <p>
               Die Kaufnebenkosten sind „verlorenes" Geld – sie steigern weder den Wert der Immobilie noch 
               werden sie durch Mieteinnahmen gedeckt. Diese Summe muss über die Haltedauer erst wieder 
-              erwirtschaftet werden, bevor ein Gewinn entsteht.
+              erwirtschaftet werden, bevor ein Gewinn entsteht. Deshalb sollten Kaufnebenkosten idealerweise 
+              vollständig aus Eigenkapital finanziert werden.
+            </p>
+
+            <h2>Nebenkosten sparen: Ist das möglich?</h2>
+            <p>
+              Bei der Grunderwerbsteuer und den Notarkosten gibt es keinen Verhandlungsspielraum – sie sind 
+              gesetzlich fixiert. Den größten Spielraum gibt es bei der Maklerprovision: Direktkäufe vom 
+              Eigentümer sparen die gesamte Provision.
             </p>
 
             <h2>Häufig gestellte Fragen</h2>
@@ -119,12 +122,13 @@ export default function KaufnebenkostenRechnerPage() {
             <h3>Kann ich die Kaufnebenkosten von der Steuer absetzen?</h3>
             <p>
               Bei vermieteten Immobilien ja – teilweise. Die Kosten werden dem Kaufpreis zugerechnet 
-              und über die AfA abgeschrieben. Bei selbstgenutzten Immobilien nicht absetzbar.
+              und über die AfA abgeschrieben. Bei selbstgenutzten Immobilien sind Kaufnebenkosten nicht absetzbar.
             </p>
 
             <h3>Wie hoch sind die Nebenkosten insgesamt?</h3>
             <p>
-              Typischerweise zwischen 8,5% (Bayern, ohne Makler) und rund 15% (Schleswig-Holstein, mit Makler).
+              Typischerweise zwischen 8,5% (Bayern, ohne Makler) und rund 15% (Schleswig-Holstein, mit Makler) 
+              des Kaufpreises.
             </p>
           </div>
 
@@ -133,9 +137,9 @@ export default function KaufnebenkostenRechnerPage() {
               <div className="font-semibold text-gray-900">Rendite berechnen →</div>
               <div className="text-sm text-gray-600">Mietrendite inkl. Nebenkosten</div>
             </Link>
-            <Link href="/mikrolage-analyse" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
-              <div className="font-semibold text-gray-900">KI Mikrolage →</div>
-              <div className="text-sm text-gray-600">Standort automatisch analysieren</div>
+            <Link href="/ratgeber/finanzierung" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
+              <div className="font-semibold text-gray-900">Ratgeber: Finanzierung →</div>
+              <div className="text-sm text-gray-600">Immobilienfinanzierung verstehen</div>
             </Link>
             <Link href="/ratgeber/eigenkapital-immobilie" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
               <div className="font-semibold text-gray-900">Eigenkapital Ratgeber →</div>
