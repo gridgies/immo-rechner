@@ -1,3 +1,4 @@
+import typography from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -9,23 +10,20 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            h2: {
+              fontWeight: "700",
+            },
+          },
+        },
+      },
       colors: {
-        primary: {
-          DEFAULT: "#7199a2", // Teal - your brand color
-          foreground: "#ffffff",
-        },
-        secondary: {
-          DEFAULT: "#7199a2", // Same as primary for consistency
-          foreground: "#ffffff",
-        },
-        accent: {
-          DEFAULT: "#5d7e87", // Darker teal
-          foreground: "#ffffff",
-        },
-        success: {
-          DEFAULT: "#6B9F7F",
-          foreground: "#ffffff",
-        },
+        primary: { DEFAULT: "#7199a2", foreground: "#ffffff" },
+        secondary: { DEFAULT: "#7199a2", foreground: "#ffffff" },
+        accent: { DEFAULT: "#5d7e87", foreground: "#ffffff" },
+        success: { DEFAULT: "#6B9F7F", foreground: "#ffffff" },
       },
       borderRadius: {
         lg: "0.75rem",
@@ -34,6 +32,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };
+
 export default config;
