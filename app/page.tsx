@@ -78,7 +78,7 @@ export default function HomePage() {
                 für deine Investition
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Berechne Cashflow, IRR, Mietrendite und Kaufnebenkosten für Immobilien in Deutschland. 
+                Berechne Cashflow, IRR, Mietrendite und Kaufnebenkosten für Immobilien in Deutschland.
                 Mit automatischer Standortanalyse und Steuerberechnung – kostenlos und ohne Anmeldung.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -116,7 +116,7 @@ export default function HomePage() {
                 <div className="text-sm text-gray-600">Bundesländer</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">KI</div>
+                <div className="text-2xl font-bold text-gray-900">Datenbasierte</div>
                 <div className="text-sm text-gray-600">Mikrolage-Analyse</div>
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function HomePage() {
                 Alle Rechner für deine Immobilieninvestition
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Von der ersten Cashflow-Analyse bis zur KI-gestützten Standortbewertung – kostenlos und ohne Anmeldung.
+                Von der ersten Cashflow-Analyse bis zur Standortbewertung – kostenlos und ohne Anmeldung.
               </p>
             </div>
 
@@ -205,43 +205,43 @@ export default function HomePage() {
           <div className="max-w-4xl mx-auto prose prose-lg">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Immobilien als Kapitalanlage berechnen</h2>
             <p className="text-gray-600 leading-relaxed">
-              Der Kauf einer Immobilie als Kapitalanlage ist eine der beliebtesten Formen der Vermögensbildung in Deutschland. 
-              Doch bevor du eine Investitionsentscheidung triffst, solltest du genau wissen, ob sich das Objekt finanziell lohnt. 
+              Der Kauf einer Immobilie als Kapitalanlage ist eine der beliebtesten Formen der Vermögensbildung in Deutschland.
+              Doch bevor du eine Investitionsentscheidung triffst, solltest du genau wissen, ob sich das Objekt finanziell lohnt.
               Unser kostenloser Immobilien Rechner hilft dir dabei, alle relevanten Kennzahlen auf einen Blick zu berechnen.
             </p>
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Was berechnet der Immobilien Rechner?</h3>
             <p className="text-gray-600 leading-relaxed">
-              Der Rechner analysiert deine Immobilieninvestition aus drei Perspektiven: Der <strong>Cashflow</strong> zeigt dir, 
-              wie viel Geld monatlich nach Abzug aller Kosten (Annuität, nicht umlegbares Hausgeld) übrig bleibt. 
-              Die <strong>Eigenkapitalrendite (IRR)</strong> berücksichtigt alle Zahlungsströme über die gesamte Haltedauer 
-              und berechnet, welche jährliche Rendite dein eingesetztes Eigenkapital erwirtschaftet. 
+              Der Rechner analysiert deine Immobilieninvestition aus drei Perspektiven: Der <strong>Cashflow</strong> zeigt dir,
+              wie viel Geld monatlich nach Abzug aller Kosten (Annuität, nicht umlegbares Hausgeld) übrig bleibt.
+              Die <strong>Eigenkapitalrendite (IRR)</strong> berücksichtigt alle Zahlungsströme über die gesamte Haltedauer
+              und berechnet, welche jährliche Rendite dein eingesetztes Eigenkapital erwirtschaftet.
               Der <strong>Vermögenszuwachs</strong> zeigt dir den Gesamtertrag inklusive Wertsteigerung und Tilgung.
             </p>
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Kaufnebenkosten nicht vergessen</h3>
             <p className="text-gray-600 leading-relaxed">
-              Ein häufiger Fehler bei der Immobilienkalkulation ist das Unterschätzen der Kaufnebenkosten. 
-              Diese setzen sich zusammen aus der Grunderwerbsteuer (3,5% in Bayern bis 6,5% in Brandenburg, NRW und Schleswig-Holstein), 
-              Notarkosten (~1,5%), Grundbuchkosten (~0,5%) und ggf. Maklergebühren (bis zu 3,57% inkl. MwSt). 
-              In Summe kommen schnell 10-13% des Kaufpreises zusammen. Unser Rechner berücksichtigt die aktuellen 
+              Ein häufiger Fehler bei der Immobilienkalkulation ist das Unterschätzen der Kaufnebenkosten.
+              Diese setzen sich zusammen aus der Grunderwerbsteuer (3,5% in Bayern bis 6,5% in Brandenburg, NRW und Schleswig-Holstein),
+              Notarkosten (~1,5%), Grundbuchkosten (~0,5%) und ggf. Maklergebühren (bis zu 3,57% inkl. MwSt).
+              In Summe kommen schnell 10-13% des Kaufpreises zusammen. Unser Rechner berücksichtigt die aktuellen
               Grunderwerbsteuersätze aller 16 Bundesländer automatisch.
             </p>
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Steuervorteile durch AfA nutzen</h3>
             <p className="text-gray-600 leading-relaxed">
-              Vermietete Immobilien bieten steuerliche Vorteile durch die Absetzung für Abnutzung (AfA). 
-              Bei Gebäuden, die nach dem 31.12.1924 errichtet wurden, beträgt der AfA-Satz 2% über 50 Jahre. 
-              Für Neubauten ab 2023 gilt ein erhöhter AfA-Satz von 3%. Diese Abschreibung mindert dein zu versteuerndes Einkommen 
-              und verbessert damit die effektive Rendite deiner Immobilieninvestition erheblich. 
+              Vermietete Immobilien bieten steuerliche Vorteile durch die Absetzung für Abnutzung (AfA).
+              Bei Gebäuden, die nach dem 31.12.1924 errichtet wurden, beträgt der AfA-Satz 2% über 50 Jahre.
+              Für Neubauten ab 2023 gilt ein erhöhter AfA-Satz von 3%. Diese Abschreibung mindert dein zu versteuerndes Einkommen
+              und verbessert damit die effektive Rendite deiner Immobilieninvestition erheblich.
               Unser Rechner berücksichtigt die AfA bei der Steuerberechnung.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">KI-Mikrolage-Analyse: Standort automatisch bewerten</h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Datenbasierte Mikrolage-Analyse: Standort automatisch bewerten</h3>
             <p className="text-gray-600 leading-relaxed">
-              Die Lage ist der wichtigste Faktor bei einer Immobilieninvestition. Unsere KI-gestützte Mikrolage-Analyse 
-              bewertet den Standort deiner Wunschimmobilie automatisch. Gib einfach die Adresse ein und erhalte eine 
-              detaillierte Auswertung zu ÖPNV-Anbindung, Nahversorgung, Schulen und Kitas, Grünflächen, 
+              Die Lage ist der wichtigste Faktor bei einer Immobilieninvestition. Unsere Mikrolage-Analyse
+              bewertet den Standort deiner Wunschimmobilie automatisch. Gib einfach die Adresse ein und erhalte eine
+              detaillierte Auswertung zu ÖPNV-Anbindung, Nahversorgung, Schulen und Kitas, Grünflächen,
               medizinischer Versorgung und potenziellen Lärmquellen – inklusive interaktiver Karte.
             </p>
           </div>

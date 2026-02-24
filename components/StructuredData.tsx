@@ -22,14 +22,14 @@ export default function StructuredData() {
           "price": "0",
           "priceCurrency": "EUR"
         },
-        "description": "Analysiere Immobilieninvestitionen: Berechne Cashflow, IRR, Mietrendite, Kaufnebenkosten und Steuervorteile. Mit KI-gestützter Mikrolage-Analyse.",
+        "description": "Analysiere Immobilieninvestitionen: Berechne Cashflow, IRR, Mietrendite, Kaufnebenkosten und Steuervorteile. Mit Mikrolage-Analyse.",
         "featureList": [
           "IRR Berechnung (Internal Rate of Return)",
           "Monatlicher Cashflow Analyse",
           "Vermögenszuwachs über 10-30 Jahre",
           "Kaufnebenkosten inkl. 16 Bundesländer",
           "AfA und Steuerberechnung",
-          "KI-gestützte Mikrolage-Analyse",
+          "Mikrolage-Analyse",
           "Eigenkapitalrendite",
           "Tilgungsplan und Annuität",
           "Mieterhöhungen und Kostensteigerungen",
