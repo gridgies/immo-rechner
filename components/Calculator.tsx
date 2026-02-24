@@ -1083,7 +1083,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                   >
                     <span className="flex items-center justify-center gap-1.5">
                       <span className={`
-                        w-5 h-5 rounded-full flex items-center justify-center text-xs
+                        w-5 h-5 flex-shrink-0 rounded-full flex items-center justify-center text-xs
                         ${currentTab === tab.num
                           ? 'bg-[#7099A3] text-white'
                           : 'bg-gray-200 text-gray-600'
