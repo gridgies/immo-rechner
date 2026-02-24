@@ -19,7 +19,7 @@ export default function MikrolagePage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumbs */}
         <nav className="mb-6 text-sm text-gray-500">
           <Link href="/" className="hover:text-gray-700">Startseite</Link>
@@ -41,7 +41,7 @@ export default function MikrolagePage() {
         <MikrolageClient />
 
         {/* SEO Content - server-rendered */}
-        <div className="mt-16 max-w-4xl">
+        <div className="mt-16 max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Was ist eine Mikrolage-Analyse?</h2>
           <div className="prose prose-lg text-gray-600">
             <p>
