@@ -13,6 +13,14 @@ export default function Navbar() {
     { href: '/mikrolage-analyse', label: 'Mikrolage' },
   ];
 
+  // Check if current path matches or starts with the link href
+  const isActive = (href: string) => {
+    if (pathname === href) return true;
+    // For ratgeber pages, highlight if we're on any ratgeber page
+    if (href.startsWith('/ratgeber') && pathname.startsWith('/ratgeber')) return true;
+    return false;
+  };
+
   return (
     <nav className="border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -28,7 +36,7 @@ export default function Navbar() {
               <Link 
                 key={link.href}
                 href={link.href} 
-                className={`hover:text-gray-900 transition-colors ${pathname === link.href ? 'text-[#7099A3] font-medium' : ''}`}
+                className={`hover:text-gray-900 transition-colors ${isActive(link.href) ? 'text-[#7099A3] font-medium' : ''}`}
               >
                 {link.label}
               </Link>
@@ -36,7 +44,11 @@ export default function Navbar() {
           </div>
           <Link
             href="/rechner"
-            className="px-4 py-2 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-sm font-medium"
+            className={`px-4 py-2 rounded-lg transition-colors text-sm font-medium ${
+              pathname === '/rechner' 
+                ? 'bg-[#5d7e87] text-white' 
+                : 'bg-[#7099A3] text-white hover:bg-[#5d7e87]'
+            }`}
           >
             Zum Rechner
           </Link>

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import MikrolageClient from './MikrolageClient';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: "Mikrolage-Analyse – Standort deiner Immobilie kostenlos bewerten | Immo-Rechner",
@@ -14,25 +16,10 @@ export const metadata: Metadata = {
 
 export default function MikrolagePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Nav */}
-      <nav className="border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#7099A3] to-[#5d7e87] rounded flex items-center justify-center">
-                <span className="text-white font-bold text-sm">IR</span>
-              </div>
-              <span className="text-xl font-semibold text-gray-900">Immobilien Rechner</span>
-            </Link>
-            <Link href="/rechner" className="px-4 py-2 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-sm font-medium">
-              Zum Rechner
-            </Link>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <nav className="mb-6 text-sm text-gray-500">
           <Link href="/" className="hover:text-gray-700">Startseite</Link>
@@ -109,6 +96,8 @@ export default function MikrolagePage() {
           </Link>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

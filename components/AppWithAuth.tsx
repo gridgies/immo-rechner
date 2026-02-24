@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import Auth from './Auth';
@@ -10,6 +10,9 @@ export default function AppWithAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  // Store calculator data to preserve across login
+  const calculatorDataRef = useRef<any>(null);
 
   const supabase = createClient();
 
@@ -55,6 +58,10 @@ export default function AppWithAuth() {
     setShowAuth(true);
   };
 
+  const handleDataChange = (data: any) => {
+    calculatorDataRef.current = data;
+  };
+
   if (isTransitioning) {
     return (
       <div className="flex h-screen bg-gray-50 items-center justify-center">
@@ -76,6 +83,8 @@ export default function AppWithAuth() {
         onSignOut={handleSignOut}
         onLoginClick={handleLoginClick}
         isGuest={!user}
+        initialData={calculatorDataRef.current}
+        onDataChange={handleDataChange}
       />
     </div>
   );

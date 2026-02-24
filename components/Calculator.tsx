@@ -36,39 +36,59 @@ interface CalculatorProps {
   onSignOut?: () => void;
   onLoginClick?: () => void;
   isGuest?: boolean;
+  initialData?: {
+    kaufpreis?: string;
+    wohnflaeche?: string;
+    flaeche?: string;
+    nebenkostenProzent?: string;
+    selectedBundesland?: string;
+    eigenkapitalProzent?: string;
+    eigenkapitalAbsolut?: string;
+    eigenkapitalSource?: 'prozent' | 'absolut';
+    zinssatz?: string;
+    tilgung?: string;
+    monatlicheKaltmiete?: string;
+    wohngeldUmlegbar?: string;
+    wohngeldNichtUmlegbar?: string;
+    haltedauer?: 10 | 20 | 30;
+    wertsteigerungProzent?: string;
+    mietSteigerungProzent?: string;
+    hausgeldSteigerungProzent?: string;
+  };
+  onDataChange?: (data: any) => void;
 }
 
-export default function Calculator({ userId, userEmail, onSignOut, onLoginClick, isGuest = false }: CalculatorProps) {
+export default function Calculator({ userId, userEmail, onSignOut, onLoginClick, isGuest = false, initialData, onDataChange }: CalculatorProps) {
   // Current tab state (1-4)
   const [currentTab, setCurrentTab] = useState(1);
 
-  // Form state - empty defaults (user must fill in)
-  const [kaufpreis, setKaufpreis] = useState<string>('');
-  const [wohnflaeche, setWohnflaeche] = useState<string>('');
-  const [flaeche, setFlaeche] = useState<string>('');
-  const [nebenkostenProzent, setNebenkostenProzent] = useState<string>('11.57');
+  // Form state - use initialData if provided
+  const [kaufpreis, setKaufpreis] = useState<string>(initialData?.kaufpreis || '');
+  const [wohnflaeche, setWohnflaeche] = useState<string>(initialData?.wohnflaeche || '');
+  const [flaeche, setFlaeche] = useState<string>(initialData?.flaeche || '');
+  const [nebenkostenProzent, setNebenkostenProzent] = useState<string>(initialData?.nebenkostenProzent || '11.57');
 
   // Nebenkosten breakdown
   const [nebenkostenExpanded, setNebenkostenExpanded] = useState(true);
-  const [selectedBundesland, setSelectedBundesland] = useState<string>('Hessen');
+  const [selectedBundesland, setSelectedBundesland] = useState<string>(initialData?.selectedBundesland || 'Hessen');
   const [grunderwerb, setGrunderwerb] = useState<string>('6.0');
   const [makler, setMakler] = useState<string>('3.57');
   const [notar, setNotar] = useState<string>('1.5');
   const [grundbuch, setGrundbuch] = useState<string>('0.5');
   const [sonstigeNebenkosten, setSonstigeNebenkosten] = useState<string>('');
 
-  const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>('');
-  const [eigenkapitalAbsolut, setEigenkapitalAbsolut] = useState<string>('');
-  const [eigenkapitalSource, setEigenkapitalSource] = useState<'prozent' | 'absolut'>('prozent');
-  const [zinssatz, setZinssatz] = useState<string>('');
-  const [tilgung, setTilgung] = useState<string>('2');
-  const [monatlicheKaltmiete, setMonatlicheKaltmiete] = useState<string>('');
-  const [wohngeldUmlegbar, setWohngeldUmlegbar] = useState<string>('');
-  const [wohngeldNichtUmlegbar, setWohngeldNichtUmlegbar] = useState<string>('');
-  const [haltedauer, setHaltedauer] = useState<10 | 20 | 30>(20);
-  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>('80');
-  const [mietSteigerungProzent, setMietSteigerungProzent] = useState<string>('2');
-  const [hausgeldSteigerungProzent, setHausgeldSteigerungProzent] = useState<string>('2.5');
+  const [eigenkapitalProzent, setEigenkapitalProzent] = useState<string>(initialData?.eigenkapitalProzent || '');
+  const [eigenkapitalAbsolut, setEigenkapitalAbsolut] = useState<string>(initialData?.eigenkapitalAbsolut || '');
+  const [eigenkapitalSource, setEigenkapitalSource] = useState<'prozent' | 'absolut'>(initialData?.eigenkapitalSource || 'prozent');
+  const [zinssatz, setZinssatz] = useState<string>(initialData?.zinssatz || '');
+  const [tilgung, setTilgung] = useState<string>(initialData?.tilgung || '2');
+  const [monatlicheKaltmiete, setMonatlicheKaltmiete] = useState<string>(initialData?.monatlicheKaltmiete || '');
+  const [wohngeldUmlegbar, setWohngeldUmlegbar] = useState<string>(initialData?.wohngeldUmlegbar || '');
+  const [wohngeldNichtUmlegbar, setWohngeldNichtUmlegbar] = useState<string>(initialData?.wohngeldNichtUmlegbar || '');
+  const [haltedauer, setHaltedauer] = useState<10 | 20 | 30>(initialData?.haltedauer || 20);
+  const [wertsteigerungProzent, setWertsteigerungProzent] = useState<string>(initialData?.wertsteigerungProzent || '80');
+  const [mietSteigerungProzent, setMietSteigerungProzent] = useState<string>(initialData?.mietSteigerungProzent || '2');
+  const [hausgeldSteigerungProzent, setHausgeldSteigerungProzent] = useState<string>(initialData?.hausgeldSteigerungProzent || '2.5');
 
   // Scenario save state (only for logged-in users)
   const [scenarioName, setScenarioName] = useState('');
@@ -87,6 +107,34 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
   const [autoCalculateWertsteigerung, setAutoCalculateWertsteigerung] = useState(true);
 
   const supabase = createClient();
+
+  // Report data changes to parent (for preserving data on login)
+  useEffect(() => {
+    if (onDataChange) {
+      onDataChange({
+        kaufpreis,
+        wohnflaeche,
+        flaeche,
+        nebenkostenProzent,
+        selectedBundesland,
+        eigenkapitalProzent,
+        eigenkapitalAbsolut,
+        eigenkapitalSource,
+        zinssatz,
+        tilgung,
+        monatlicheKaltmiete,
+        wohngeldUmlegbar,
+        wohngeldNichtUmlegbar,
+        haltedauer,
+        wertsteigerungProzent,
+        mietSteigerungProzent,
+        hausgeldSteigerungProzent,
+      });
+    }
+  }, [kaufpreis, wohnflaeche, flaeche, nebenkostenProzent, selectedBundesland, 
+      eigenkapitalProzent, eigenkapitalAbsolut, eigenkapitalSource, zinssatz, tilgung,
+      monatlicheKaltmiete, wohngeldUmlegbar, wohngeldNichtUmlegbar, haltedauer,
+      wertsteigerungProzent, mietSteigerungProzent, hausgeldSteigerungProzent]);
 
   // Load scenarios on mount (only for logged-in users)
   useEffect(() => {
@@ -880,18 +928,73 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
 
       case 5:
         return (
-          <SteuerSection
-            kaufpreis={parseFloat(kaufpreis) || 0}
-            monatlicheKaltmiete={parseFloat(monatlicheKaltmiete) || 0}
-            wohngeldNichtUmlegbar={parseFloat(wohngeldNichtUmlegbar) || 0}
-            zinssatz={(parseFloat(zinssatz) || 0) / 100}
-            tilgung={(parseFloat(tilgung) || 0) / 100}
-            eigenkapitalAbsolut={parseFloat(eigenkapitalAbsolut) || 0}
-            nebenkostenProzent={(parseFloat(nebenkostenProzent) || 0) / 100}
-            haltedauer={haltedauer}
-            mietSteigerung={(parseFloat(mietSteigerungProzent) || 0) / 100}
-            hausgeldSteigerung={(parseFloat(hausgeldSteigerungProzent) || 0) / 100}
-          />
+          <div className="space-y-4">
+            <SteuerSection
+              kaufpreis={parseFloat(kaufpreis) || 0}
+              monatlicheKaltmiete={parseFloat(monatlicheKaltmiete) || 0}
+              wohngeldNichtUmlegbar={parseFloat(wohngeldNichtUmlegbar) || 0}
+              zinssatz={(parseFloat(zinssatz) || 0) / 100}
+              tilgung={(parseFloat(tilgung) || 0) / 100}
+              eigenkapitalAbsolut={parseFloat(eigenkapitalAbsolut) || 0}
+              nebenkostenProzent={(parseFloat(nebenkostenProzent) || 0) / 100}
+              haltedauer={haltedauer}
+              mietSteigerung={(parseFloat(mietSteigerungProzent) || 0) / 100}
+              hausgeldSteigerung={(parseFloat(hausgeldSteigerungProzent) || 0) / 100}
+            />
+
+            {/* Save Section (for logged-in users) */}
+            {userId && (
+              <div className="pt-4 border-t border-gray-200">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {editingScenarioId ? 'Szenario aktualisieren' : 'Szenario speichern'}
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={scenarioName}
+                    onChange={(e) => setScenarioName(e.target.value)}
+                    placeholder="Name eingeben..."
+                    className="flex-1 px-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                  />
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="px-4 py-2 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] disabled:opacity-50 flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    {saving ? '...' : 'Speichern'}
+                  </button>
+                </div>
+                {editingScenarioId && (
+                  <button
+                    onClick={() => {
+                      setEditingScenarioId(null);
+                      setScenarioName('');
+                    }}
+                    className="mt-2 text-sm text-gray-600 hover:text-gray-800"
+                  >
+                    Abbrechen
+                  </button>
+                )}
+                {saveMessage && (
+                  <p className="mt-2 text-sm text-green-600">{saveMessage}</p>
+                )}
+              </div>
+            )}
+
+            {/* Login prompt for guests */}
+            {!userId && (
+              <div className="pt-4 border-t border-gray-200">
+                <button
+                  onClick={onLoginClick}
+                  className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Anmelden um Szenario zu speichern
+                </button>
+              </div>
+            )}
+          </div>
         );
 
       default:

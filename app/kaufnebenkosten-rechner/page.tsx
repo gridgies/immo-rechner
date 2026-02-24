@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import KaufnebenkostenrechnerSimple from '@/components/KaufnebenkostenrechnerSimple';
 
 const BUNDESLAENDER = [
@@ -149,21 +150,7 @@ export default function KaufnebenkostenRechnerPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gradient-to-br from-[#7099A3] to-[#5d7e87] rounded flex items-center justify-center">
-              <span className="text-white font-bold text-xs">IR</span>
-            </div>
-            <span className="text-sm">Immobilien Rechner</span>
-          </div>
-          <div className="flex gap-6 text-sm text-gray-400">
-            <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
-            <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
