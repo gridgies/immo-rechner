@@ -3,12 +3,12 @@ import MikrolageClient from './MikrolageClient';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: "KI Mikrolage-Analyse – Standort deiner Immobilie kostenlos bewerten | Immo-Rechner",
-  description: "Kostenlose KI-Standortanalyse für Immobilien in Deutschland. Bewerte ÖPNV, Nahversorgung, Schulen, Ärzte und Grünflächen – mit Score und interaktiver Karte.",
+  title: "Mikrolage-Analyse – Standort deiner Immobilie kostenlos bewerten | Immo-Rechner",
+  description: "Kostenlose Standortanalyse für Immobilien in Deutschland. Bewerte ÖPNV, Nahversorgung, Schulen, Ärzte und Grünflächen – mit Score und interaktiver Karte.",
   alternates: { canonical: "https://immo-rechner.net/mikrolage-analyse" },
   openGraph: {
-    title: "KI Mikrolage-Analyse – Standort bewerten",
-    description: "Kostenlose KI-Standortanalyse: ÖPNV, Nahversorgung, Schulen, Ärzte, Grünflächen und Lärmbelastung bewerten.",
+    title: "Mikrolage-Analyse – Standort bewerten",
+    description: "Kostenlose Standortanalyse: ÖPNV, Nahversorgung, Schulen, Ärzte, Grünflächen und Lärmbelastung bewerten.",
   },
 };
 
@@ -42,7 +42,7 @@ export default function MikrolagePage() {
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            KI Mikrolage-Analyse für Immobilien
+            Mikrolage-Analyse für Immobilien
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl">
             Gib die Adresse deiner Wunschimmobilie ein und erhalte eine automatische Bewertung der Mikrolage – 
@@ -66,7 +66,7 @@ export default function MikrolagePage() {
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Welche Faktoren werden bewertet?</h3>
             <p>
-              Unsere KI-gestützte Analyse bewertet automatisch acht Kategorien, die für Mieter und 
+              Unsere automatische Analyse bewertet acht Kategorien, die für Mieter und 
               Immobilieninvestoren besonders relevant sind: die Anbindung an den öffentlichen Nahverkehr 
               (Bushaltestellen, U-Bahn, S-Bahn), Einkaufsmöglichkeiten wie Supermärkte und Nahversorger, 
               Bildungseinrichtungen (Schulen und Kindertagesstätten), medizinische Versorgung 
@@ -103,9 +103,9 @@ export default function MikrolagePage() {
             <div className="font-semibold text-gray-900">Kaufnebenkosten →</div>
             <div className="text-sm text-gray-600">Alle Kosten im Überblick</div>
           </Link>
-          <Link href="/ratgeber/cashflow-immobilien" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
-            <div className="font-semibold text-gray-900">Ratgeber →</div>
-            <div className="text-sm text-gray-600">Cashflow bei Immobilien erklärt</div>
+          <Link href="/ratgeber/finanzierung" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
+            <div className="font-semibold text-gray-900">Ratgeber: Finanzierung →</div>
+            <div className="text-sm text-gray-600">Immobilienfinanzierung verstehen</div>
           </Link>
         </div>
       </div>

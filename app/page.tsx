@@ -5,7 +5,7 @@ import AnimatedHero from '@/components/AnimatedHero';
 // This is a SERVER COMPONENT - content is fully rendered as HTML for Google
 export const metadata = {
   title: "Immobilien Rechner – Cashflow, Rendite & IRR kostenlos berechnen (2026)",
-  description: "Kostenloser Immobilien-Rechner für Deutschland: Berechne Cashflow, Mietrendite, IRR und Kaufnebenkosten in Minuten. Inkl. Grunderwerbsteuer für alle 16 Bundesländer und KI-Mikrolage-Analyse.",
+  description: "Kostenloser Immobilien-Rechner für Deutschland: Berechne Cashflow, Mietrendite, IRR und Kaufnebenkosten in Minuten. Inkl. Grunderwerbsteuer für alle 16 Bundesländer und Mikrolage-Analyse.",
   alternates: { canonical: "https://immo-rechner.net" },
 };
 
@@ -15,7 +15,7 @@ export default function HomePage() {
     { href: '/rendite-rechner', title: 'Rendite Rechner', desc: 'Eigenkapitalrendite und Mietrendite ermitteln' },
     { href: '/irr-rechner', title: 'IRR Rechner', desc: 'Internal Rate of Return über 10-30 Jahre' },
     { href: '/kaufnebenkosten-rechner', title: 'Kaufnebenkosten Rechner', desc: 'Grunderwerbsteuer, Notar, Makler berechnen' },
-    { href: '/mikrolage-analyse', title: 'KI Mikrolage-Analyse', desc: 'Standort mit KI analysieren – Infrastruktur, ÖPNV, Nahversorgung' },
+    { href: '/mikrolage-analyse', title: 'Mikrolage-Analyse', desc: 'Standort analysieren – Infrastruktur, ÖPNV, Nahversorgung' },
   ];
 
   const features = [
@@ -26,7 +26,7 @@ export default function HomePage() {
     'AfA-Berechnung und Steuervorteile',
     'Mieterhöhungen und Kostensteigerungen einplanen',
     'Wertsteigerung und Verkaufserlös berechnen',
-    'KI-gestützte Mikrolage-Analyse mit Karte',
+    'Automatische Mikrolage-Analyse mit Karte',
   ];
 
   const bundeslaender = [
@@ -79,7 +79,7 @@ export default function HomePage() {
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 Berechne Cashflow, IRR, Mietrendite und Kaufnebenkosten für Immobilien in Deutschland. 
-                Mit KI-gestützter Standortanalyse und Steuerberechnung – kostenlos und ohne Anmeldung.
+                Mit automatischer Standortanalyse und Steuerberechnung – kostenlos und ohne Anmeldung.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link
@@ -93,7 +93,7 @@ export default function HomePage() {
                   href="/mikrolage-analyse"
                   className="px-8 py-4 border-2 border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all text-lg font-medium"
                 >
-                  KI Standort-Analyse
+                  Standort-Analyse
                 </Link>
               </div>
               <p className="text-sm text-gray-500 mt-4">
@@ -309,7 +309,7 @@ export default function HomePage() {
                   <li><Link href="/rendite-rechner" className="text-gray-400 hover:text-white transition-colors">Rendite Rechner</Link></li>
                   <li><Link href="/irr-rechner" className="text-gray-400 hover:text-white transition-colors">IRR Rechner</Link></li>
                   <li><Link href="/kaufnebenkosten-rechner" className="text-gray-400 hover:text-white transition-colors">Kaufnebenkosten</Link></li>
-                  <li><Link href="/mikrolage-analyse" className="text-gray-400 hover:text-white transition-colors">KI Mikrolage</Link></li>
+                  <li><Link href="/mikrolage-analyse" className="text-gray-400 hover:text-white transition-colors">Mikrolage-Analyse</Link></li>
                 </ul>
               </div>
               <div>
@@ -318,6 +318,7 @@ export default function HomePage() {
                   <li><Link href="/ratgeber/cashflow-immobilien" className="text-gray-400 hover:text-white transition-colors">Cashflow bei Immobilien</Link></li>
                   <li><Link href="/ratgeber/irr-erklaert" className="text-gray-400 hover:text-white transition-colors">IRR einfach erklärt</Link></li>
                   <li><Link href="/ratgeber/eigenkapital-immobilie" className="text-gray-400 hover:text-white transition-colors">Eigenkapital für Immobilien</Link></li>
+                  <li><Link href="/ratgeber/finanzierung" className="text-gray-400 hover:text-white transition-colors">Immobilienfinanzierung</Link></li>
                 </ul>
               </div>
               <div>
