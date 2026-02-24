@@ -54,7 +54,7 @@ export default function FinanzierungRatgeberPage() {
           </ul>
         </div>
 
-        <div className="prose prose-lg max-w-none prose-headings:font-bold">
+        <div className="prose prose-lg max-w-none prose-h2:!font-bold">
           <h2 id="grundlagen">1. Grundlagen der Immobilienfinanzierung</h2>
           <p>
             Die Finanzierung einer Kapitalanlage-Immobilie unterscheidet sich grundlegend von der Finanzierung
