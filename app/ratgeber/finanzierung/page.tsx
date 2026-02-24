@@ -32,8 +32,8 @@ export default function FinanzierungRatgeberPage() {
             Immobilienfinanzierung: Der komplette Ratgeber für Kapitalanleger
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed">
-            Die richtige Finanzierung entscheidet maßgeblich über den Erfolg deiner Immobilieninvestition. 
-            In diesem Ratgeber erfährst du alles über Zinsen, Tilgung, Eigenkapital und die optimale 
+            Die richtige Finanzierung entscheidet maßgeblich über den Erfolg deiner Immobilieninvestition.
+            In diesem Ratgeber erfährst du alles über Zinsen, Tilgung, Eigenkapital und die optimale
             Finanzierungsstrategie für Kapitalanlage-Immobilien.
           </p>
         </header>
@@ -54,25 +54,25 @@ export default function FinanzierungRatgeberPage() {
           </ul>
         </div>
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none prose-headings:font-bold">
           <h2 id="grundlagen">1. Grundlagen der Immobilienfinanzierung</h2>
           <p>
-            Die Finanzierung einer Kapitalanlage-Immobilie unterscheidet sich grundlegend von der Finanzierung 
-            eines Eigenheims. Während bei der Eigennutzung emotionale Faktoren eine große Rolle spielen, 
-            steht bei der Kapitalanlage die Rendite im Vordergrund. Das hat direkte Auswirkungen auf die 
+            Die Finanzierung einer Kapitalanlage-Immobilie unterscheidet sich grundlegend von der Finanzierung
+            eines Eigenheims. Während bei der Eigennutzung emotionale Faktoren eine große Rolle spielen,
+            steht bei der Kapitalanlage die Rendite im Vordergrund. Das hat direkte Auswirkungen auf die
             optimale Finanzierungsstrategie.
           </p>
           <p>
-            Bei vermieteten Immobilien sind die Finanzierungskosten (Zinsen) als Werbungskosten steuerlich 
-            absetzbar. Das bedeutet: Je nach persönlichem Steuersatz übernimmt das Finanzamt einen Teil 
-            der Zinskosten. Bei einem Grenzsteuersatz von 42% reduzieren sich die effektiven Zinskosten 
+            Bei vermieteten Immobilien sind die Finanzierungskosten (Zinsen) als Werbungskosten steuerlich
+            absetzbar. Das bedeutet: Je nach persönlichem Steuersatz übernimmt das Finanzamt einen Teil
+            der Zinskosten. Bei einem Grenzsteuersatz von 42% reduzieren sich die effektiven Zinskosten
             um fast die Hälfte.
           </p>
 
           <h2 id="annuitaetendarlehen">2. Das Annuitätendarlehen erklärt</h2>
           <p>
-            Das Annuitätendarlehen ist die mit Abstand häufigste Finanzierungsform für Immobilien. 
-            Die „Annuität" ist die gleichbleibende monatliche Rate, die du an die Bank zahlst. 
+            Das Annuitätendarlehen ist die mit Abstand häufigste Finanzierungsform für Immobilien.
+            Die „Annuität" ist die gleichbleibende monatliche Rate, die du an die Bank zahlst.
             Sie setzt sich aus zwei Teilen zusammen:
           </p>
           <ul>
@@ -80,8 +80,8 @@ export default function FinanzierungRatgeberPage() {
             <li><strong>Tilgungsanteil:</strong> Der Teil, der deine Schulden tatsächlich reduziert</li>
           </ul>
           <p>
-            Das Besondere: Während die Gesamtrate konstant bleibt, verschiebt sich das Verhältnis von 
-            Zins zu Tilgung über die Laufzeit. Am Anfang zahlst du viel Zinsen und wenig Tilgung. 
+            Das Besondere: Während die Gesamtrate konstant bleibt, verschiebt sich das Verhältnis von
+            Zins zu Tilgung über die Laufzeit. Am Anfang zahlst du viel Zinsen und wenig Tilgung.
             Mit jeder Rate sinkt die Restschuld, und damit auch der Zinsanteil – der Tilgungsanteil steigt entsprechend.
           </p>
 
@@ -115,41 +115,41 @@ export default function FinanzierungRatgeberPage() {
           </div>
 
           <h2 id="zinsen-tilgung">3. Zinsen und Tilgung verstehen</h2>
-          
+
           <h3>Die Zinsen</h3>
           <p>
-            Der Zinssatz ist der Preis für das geliehene Geld. Er wird als jährlicher Prozentsatz 
-            (p.a. = per annum) angegeben und auf die aktuelle Restschuld berechnet. Der 
-            <strong> Sollzins</strong> ist der reine Zinssatz, während der <strong>Effektivzins</strong> 
+            Der Zinssatz ist der Preis für das geliehene Geld. Er wird als jährlicher Prozentsatz
+            (p.a. = per annum) angegeben und auf die aktuelle Restschuld berechnet. Der
+            <strong> Sollzins</strong> ist der reine Zinssatz, während der <strong>Effektivzins</strong>
             zusätzlich Nebenkosten wie Bearbeitungsgebühren einbezieht.
           </p>
           <p>
-            Die aktuellen Bauzinsen hängen von vielen Faktoren ab: dem allgemeinen Zinsniveau, 
-            deiner Bonität, dem Beleihungsauslauf (Verhältnis von Darlehen zu Immobilienwert) 
+            Die aktuellen Bauzinsen hängen von vielen Faktoren ab: dem allgemeinen Zinsniveau,
+            deiner Bonität, dem Beleihungsauslauf (Verhältnis von Darlehen zu Immobilienwert)
             und der Zinsbindungsdauer.
           </p>
 
           <h3>Die Tilgung</h3>
           <p>
-            Die Tilgung bestimmt, wie schnell du schuldenfrei wirst. Eine höhere anfängliche Tilgung 
-            bedeutet eine höhere monatliche Rate, aber auch eine kürzere Gesamtlaufzeit und weniger 
+            Die Tilgung bestimmt, wie schnell du schuldenfrei wirst. Eine höhere anfängliche Tilgung
+            bedeutet eine höhere monatliche Rate, aber auch eine kürzere Gesamtlaufzeit und weniger
             Zinskosten insgesamt.
           </p>
           <p>
-            Für Kapitalanleger gilt: Die optimale Tilgung ist ein Balanceakt. Einerseits möchtest du 
-            die Schulden irgendwann loswerden, andererseits drückt eine hohe Tilgung auf den Cashflow. 
-            Viele Investoren wählen daher eine anfängliche Tilgung von 2% und nutzen Sondertilgungen, 
+            Für Kapitalanleger gilt: Die optimale Tilgung ist ein Balanceakt. Einerseits möchtest du
+            die Schulden irgendwann loswerden, andererseits drückt eine hohe Tilgung auf den Cashflow.
+            Viele Investoren wählen daher eine anfängliche Tilgung von 2% und nutzen Sondertilgungen,
             um flexibel zu bleiben.
           </p>
 
           <h2 id="eigenkapital">4. Wie viel Eigenkapital brauchst du?</h2>
           <p>
-            Die klassische Faustregel lautet: Mindestens die Kaufnebenkosten (8-15% des Kaufpreises) 
-            solltest du aus eigener Tasche zahlen. Warum? Weil Banken diese Kosten ungern finanzieren – 
+            Die klassische Faustregel lautet: Mindestens die Kaufnebenkosten (8-15% des Kaufpreises)
+            solltest du aus eigener Tasche zahlen. Warum? Weil Banken diese Kosten ungern finanzieren –
             sie stellen schließlich keinen Gegenwert dar.
           </p>
           <p>
-            Je mehr Eigenkapital du einbringst, desto besser sind in der Regel die Zinskonditionen. 
+            Je mehr Eigenkapital du einbringst, desto besser sind in der Regel die Zinskonditionen.
             Die wichtigen Schwellenwerte:
           </p>
           <ul>
@@ -159,16 +159,16 @@ export default function FinanzierungRatgeberPage() {
             <li><strong>100%+ Finanzierung:</strong> Deutlicher Aufschlag, schwer zu bekommen</li>
           </ul>
           <p>
-            Für eine detaillierte Berechnung, wie viel Eigenkapital du für deine Situation benötigst, 
+            Für eine detaillierte Berechnung, wie viel Eigenkapital du für deine Situation benötigst,
             nutze unseren <Link href="/rechner" className="text-[#7099A3] hover:underline">Immobilienrechner</Link>.
           </p>
 
           <h2 id="zinsbindung">5. Zinsbindung: 10, 15 oder 20 Jahre?</h2>
           <p>
-            Die Zinsbindung legt fest, wie lange dein Zinssatz garantiert bleibt. Längere Zinsbindungen 
+            Die Zinsbindung legt fest, wie lange dein Zinssatz garantiert bleibt. Längere Zinsbindungen
             kosten in der Regel einen Zinsaufschlag, bieten aber Planungssicherheit.
           </p>
-          
+
           <div className="bg-gray-50 rounded-xl p-6 my-8 not-prose border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Zinsbindung im Vergleich</h3>
             <div className="space-y-4">
@@ -197,31 +197,31 @@ export default function FinanzierungRatgeberPage() {
           </div>
 
           <p>
-            Wichtig zu wissen: Nach 10 Jahren Zinsbindung hast du laut §489 BGB ein Sonderkündigungsrecht 
-            mit 6 Monaten Frist – unabhängig von der vereinbarten Zinsbindung. Das reduziert das Risiko 
+            Wichtig zu wissen: Nach 10 Jahren Zinsbindung hast du laut §489 BGB ein Sonderkündigungsrecht
+            mit 6 Monaten Frist – unabhängig von der vereinbarten Zinsbindung. Das reduziert das Risiko
             langer Zinsbindungen erheblich.
           </p>
 
           <h2 id="sondertilgung">6. Sondertilgung und Flexibilität</h2>
           <p>
-            Sondertilgungen ermöglichen es dir, außerplanmäßig Schulden zu tilgen – etwa wenn du einen 
-            Bonus erhältst oder eine andere Immobilie verkaufst. Üblich sind Sondertilgungsrechte von 
+            Sondertilgungen ermöglichen es dir, außerplanmäßig Schulden zu tilgen – etwa wenn du einen
+            Bonus erhältst oder eine andere Immobilie verkaufst. Üblich sind Sondertilgungsrechte von
             5-10% der ursprünglichen Darlehenssumme pro Jahr.
           </p>
           <p>
-            Für Kapitalanleger sind Sondertilgungsrechte besonders wertvoll: Sie erlauben eine niedrige 
-            Regelttilgung (besserer Cashflow) bei gleichzeitiger Flexibilität, Schulden schneller 
+            Für Kapitalanleger sind Sondertilgungsrechte besonders wertvoll: Sie erlauben eine niedrige
+            Regelttilgung (besserer Cashflow) bei gleichzeitiger Flexibilität, Schulden schneller
             abzubauen, wenn es die Liquidität erlaubt.
           </p>
 
           <h2 id="leverage">7. Der Leverage-Effekt</h2>
           <p>
-            Der Leverage-Effekt (Hebelwirkung) ist das mächtigste Werkzeug des Immobilieninvestors. 
+            Der Leverage-Effekt (Hebelwirkung) ist das mächtigste Werkzeug des Immobilieninvestors.
             Er beschreibt, wie Fremdkapital die Eigenkapitalrendite steigern kann.
           </p>
           <p>
-            Die Formel ist einfach: Solange die Gesamtrendite der Immobilie über dem Kreditzins liegt, 
-            profitierst du von jedem Euro Fremdkapital. Je höher der Fremdkapitalanteil, desto stärker 
+            Die Formel ist einfach: Solange die Gesamtrendite der Immobilie über dem Kreditzins liegt,
+            profitierst du von jedem Euro Fremdkapital. Je höher der Fremdkapitalanteil, desto stärker
             der Hebel – aber auch das Risiko.
           </p>
 
@@ -247,29 +247,29 @@ export default function FinanzierungRatgeberPage() {
           <h2 id="fehler">8. Häufige Fehler vermeiden</h2>
           <ul>
             <li>
-              <strong>Nur auf den Zinssatz schauen:</strong> Der Effektivzins ist wichtiger. 
+              <strong>Nur auf den Zinssatz schauen:</strong> Der Effektivzins ist wichtiger.
               Achte auch auf Sondertilgungsrechte und Flexibilität.
             </li>
             <li>
-              <strong>Zu knapp kalkulieren:</strong> Plane Puffer für Leerstand, Reparaturen 
+              <strong>Zu knapp kalkulieren:</strong> Plane Puffer für Leerstand, Reparaturen
               und Zinserhöhungen nach der Zinsbindung ein.
             </li>
             <li>
-              <strong>Zu kurze Zinsbindung in Niedrigzinsphasen:</strong> Wenn die Zinsen 
+              <strong>Zu kurze Zinsbindung in Niedrigzinsphasen:</strong> Wenn die Zinsen
               historisch niedrig sind, sichere dir den Zins länger.
             </li>
             <li>
-              <strong>Tilgung zu hoch ansetzen:</strong> Bei Kapitalanlagen kann eine niedrige 
+              <strong>Tilgung zu hoch ansetzen:</strong> Bei Kapitalanlagen kann eine niedrige
               Tilgung sinnvoll sein – die ersparten Zinsen sind steuerlich absetzbar.
             </li>
             <li>
-              <strong>Keine Vergleichsangebote einholen:</strong> Die Konditionen zwischen 
+              <strong>Keine Vergleichsangebote einholen:</strong> Die Konditionen zwischen
               Banken können erheblich variieren. Hole mindestens 3-5 Angebote ein.
             </li>
           </ul>
 
           <h2 id="checkliste">9. Checkliste für die Finanzierung</h2>
-          
+
           <div className="bg-gray-50 rounded-xl p-6 my-8 not-prose border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Vor dem Bankgespräch</h3>
             <ul className="space-y-2">
@@ -317,7 +317,7 @@ export default function FinanzierungRatgeberPage() {
         <div className="bg-gradient-to-br from-[#7099A3] to-[#5d7e87] rounded-2xl p-8 mt-12 text-white">
           <h2 className="text-2xl font-bold mb-4">Jetzt deine Finanzierung durchrechnen</h2>
           <p className="text-white/80 mb-6">
-            Nutze unseren kostenlosen Rechner, um Cashflow, Rendite und die Auswirkungen 
+            Nutze unseren kostenlosen Rechner, um Cashflow, Rendite und die Auswirkungen
             verschiedener Finanzierungsszenarien zu berechnen.
           </p>
           <Link
