@@ -19,10 +19,8 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Rechner</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/rechner" className="text-gray-400 hover:text-white transition-colors">Komplett-Rechner</Link></li>
-              <li><Link href="/cashflow-rechner" className="text-gray-400 hover:text-white transition-colors">Cashflow Rechner</Link></li>
+              <li><Link href="/cashflow-rechner" className="text-gray-400 hover:text-white transition-colors">Cashflow Rechner (inkl. IRR)</Link></li>
               <li><Link href="/rendite-rechner" className="text-gray-400 hover:text-white transition-colors">Rendite Rechner</Link></li>
-              <li><Link href="/irr-rechner" className="text-gray-400 hover:text-white transition-colors">IRR Rechner</Link></li>
               <li><Link href="/kaufnebenkosten-rechner" className="text-gray-400 hover:text-white transition-colors">Kaufnebenkosten</Link></li>
               <li><Link href="/mikrolage-analyse" className="text-gray-400 hover:text-white transition-colors">Mikrolage-Analyse</Link></li>
             </ul>

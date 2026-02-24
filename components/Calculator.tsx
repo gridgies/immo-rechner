@@ -1002,338 +1002,175 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
     }
   };
 
+
   return (
-    <>
-      {/* Mobile Overlay for Menu */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Mobile Slide-in Menu */}
-      {userId && (
-        <div className={`
-          fixed md:hidden
-          top-0 left-0 h-full
-          w-72
-          bg-[#7099A3]
-          transform transition-transform duration-300 ease-in-out
-          ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-          z-50
-          flex flex-col
-          overflow-hidden
-        `}>
-          <div className="p-4 border-b border-white/20 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-lg">IR</span>
-              </div>
-              <h1 className="text-base font-semibold text-white">Immobilien Rechner</h1>
-            </div>
-            <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-white/10 rounded-lg">
-              <X className="w-5 h-5 text-white" />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto">
-            <div className="mt-4 border-t border-white/20 pt-4">
-              <button
-                onClick={() => setScenariosOpen(!scenariosOpen)}
-                className="w-full px-4 py-2.5 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
-              >
-                <span className="text-sm font-medium text-white">Gespeicherte Szenarien</span>
-                <ChevronDown className={`w-4 h-4 text-white transition-transform ${scenariosOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {scenariosOpen && (
-                <div className="pb-2">
-                  {loadingScenarios ? (
-                    <div className="px-4 py-2 text-xs text-white/60">Lädt...</div>
-                  ) : scenarios.length === 0 ? (
-                    <div className="px-4 py-2 text-xs text-white/60">Keine Szenarien gespeichert</div>
-                  ) : (
-                    <div className="space-y-1 px-2">
-                      {scenarios.map((scenario) => (
-                        <div key={scenario.id} className="group hover:bg-white/5 rounded">
-                          <div className="flex items-start justify-between gap-2 px-2 py-2">
-                            <button onClick={() => handleLoadScenario(scenario)} className="flex-1 text-left">
-                              <div className="text-xs font-medium text-white truncate">{scenario.name}</div>
-                              <div className="text-[10px] text-white/60 mt-0.5">
-                                €{scenario.kaufpreis.toLocaleString('de-DE')}
-                              </div>
-                            </button>
-                            <button
-                              onClick={() => handleDeleteScenario(scenario.id)}
-                              className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/10 rounded transition-opacity"
-                            >
-                              <X className="w-3 h-3 text-white" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+    <div className="w-full max-w-7xl mx-auto p-3 md:p-6">
+      {/* Saved Scenarios Panel for logged-in users */}
+      {userId && scenarios.length > 0 && (
+        <div className="mb-4 bg-white rounded-lg shadow border border-gray-200 p-4">
+          <button
+            onClick={() => setScenariosOpen(!scenariosOpen)}
+            className="w-full flex items-center justify-between text-left"
+          >
+            <span className="text-sm font-medium text-gray-700">Gespeicherte Szenarien ({scenarios.length})</span>
+            <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${scenariosOpen ? 'rotate-180' : ''}`} />
+          </button>
+          
+          {scenariosOpen && (
+            <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
+              {scenarios.map((scenario) => (
+                <div key={scenario.id} className="group relative p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <button onClick={() => handleLoadScenario(scenario)} className="w-full text-left">
+                    <div className="text-sm font-medium text-gray-900 truncate">{scenario.name}</div>
+                    <div className="text-xs text-gray-500 mt-0.5">
+                      €{scenario.kaufpreis.toLocaleString('de-DE')}
                     </div>
-                  )}
+                  </button>
+                  <button
+                    onClick={() => handleDeleteScenario(scenario.id)}
+                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded transition-opacity"
+                  >
+                    <X className="w-3 h-3 text-gray-500" />
+                  </button>
                 </div>
-              )}
+              ))}
             </div>
-          </div>
-
-          <div className="p-4 border-t border-white/20 space-y-3">
-            <div className="text-xs text-white/80 truncate">{userEmail}</div>
-            <button
-              onClick={() => { onSignOut?.(); setMobileMenuOpen(false); }}
-              className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm rounded-lg transition-colors"
-            >
-              Abmelden
-            </button>
-          </div>
+          )}
         </div>
       )}
 
-      {/* Desktop Sidebar (only for logged-in users) */}
-      {userId && (
-        <div className="hidden md:flex md:w-56 bg-[#7099A3] flex-col h-full overflow-hidden flex-shrink-0">
-          <div className="p-4 border-b border-white/20">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-white/20 rounded flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-bold text-lg">IR</span>
-              </div>
-              <h1 className="text-base font-semibold text-white">Immobilien Rechner</h1>
+      {/* Two-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+
+        {/* Left Column - Input Form with Tabs */}
+        <div className="space-y-4">
+          {/* Progress Bar */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 p-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-700">Fortschritt</span>
+              <span className="text-sm text-gray-500">{getCompletionPercentage()}%</span>
+            </div>
+            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#7099A3] transition-all duration-300"
+                style={{ width: `${getCompletionPercentage()}%` }}
+              />
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            <div className="mt-4 border-t border-white/20 pt-4">
-              <button
-                onClick={() => setScenariosOpen(!scenariosOpen)}
-                className="w-full px-4 py-2.5 flex items-center justify-between hover:bg-white/5 transition-colors text-left"
-              >
-                <span className="text-sm font-medium text-white">Gespeicherte Szenarien</span>
-                <ChevronDown className={`w-4 h-4 text-white transition-transform ${scenariosOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {scenariosOpen && (
-                <div className="pb-2">
-                  {loadingScenarios ? (
-                    <div className="px-4 py-2 text-xs text-white/60">Lädt...</div>
-                  ) : scenarios.length === 0 ? (
-                    <div className="px-4 py-2 text-xs text-white/60">Keine Szenarien gespeichert</div>
-                  ) : (
-                    <div className="space-y-1 px-2">
-                      {scenarios.map((scenario) => (
-                        <div key={scenario.id} className="group hover:bg-white/5 rounded">
-                          <div className="flex items-start justify-between gap-2 px-2 py-2">
-                            <button onClick={() => handleLoadScenario(scenario)} className="flex-1 text-left">
-                              <div className="text-xs font-medium text-white truncate">{scenario.name}</div>
-                              <div className="text-[10px] text-white/60 mt-0.5">
-                                €{scenario.kaufpreis.toLocaleString('de-DE')}
-                              </div>
-                            </button>
-                            <button
-                              onClick={() => handleDeleteScenario(scenario.id)}
-                              className="opacity-0 group-hover:opacity-100 p-1 hover:bg-white/10 rounded transition-opacity"
-                            >
-                              <X className="w-3 h-3 text-white" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="p-3 border-t border-white/20">
-            <div className="text-xs text-white/80 mb-2 truncate">{userEmail}</div>
-            <button
-              onClick={onSignOut}
-              className="w-full px-3 py-2 bg-white/10 hover:bg-white/20 text-white text-xs rounded transition-colors"
-            >
-              Abmelden
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden w-full">
-        {/* Top Navbar */}
-        <nav className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm w-full">
-          <div className="px-3 md:px-6 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 md:gap-3 min-w-0">
-                {userId && (
+          {/* Tabs Navigation */}
+          <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+            {/* Tab Headers */}
+            <div className="border-b border-gray-200 overflow-x-auto">
+              <div className="flex min-w-max">
+                {[
+                  { num: 1, label: 'Objekt' },
+                  { num: 2, label: 'Finanzierung' },
+                  { num: 3, label: 'Miete' },
+                  { num: 4, label: 'Verkauf' },
+                  { num: 5, label: 'Steuern' },
+                ].map((tab) => (
                   <button
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
+                    key={tab.num}
+                    onClick={() => setCurrentTab(tab.num as 1 | 2 | 3 | 4 | 5)}
+                    className={`
+                      flex-1 min-w-[80px] px-4 py-3 text-sm font-medium transition-colors relative
+                      ${currentTab === tab.num
+                        ? 'text-[#7099A3] bg-[#7099A3]/5'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      }
+                    `}
                   >
-                    <Menu className="w-5 h-5 text-gray-700" />
-                  </button>
-                )}
-
-                <a href="/" className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity">
-                  <svg className="w-5 h-5 text-[#7099A3] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-                  </svg>
-                  <h1 className="text-base md:text-lg font-bold text-gray-800 truncate">Immobilien Rechner</h1>
-                </a>
-              </div>
-
-              <div className="flex items-center gap-2 md:gap-4">
-                {userId ? (
-                  <>
-                    <span className="hidden md:block text-sm text-gray-600">{userEmail}</span>
-                    <button
-                      onClick={onSignOut}
-                      className="hidden md:block px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                    >
-                      Abmelden
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={onLoginClick}
-                    className="px-4 py-2 text-sm bg-[#7099A3] text-white hover:bg-[#5d7e87] rounded-lg transition-colors flex items-center gap-2"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span className="hidden sm:inline">Anmelden</span>
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        {/* Main Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-50">
-          <div className="w-full max-w-7xl mx-auto p-3 md:p-6">
-            {/* Two-Column Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-
-              {/* Left Column - Input Form with Tabs */}
-              <div className="space-y-4">
-                {/* Progress Bar - Only above input */}
-                <div className="bg-white rounded-lg shadow border border-gray-200 p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Fortschritt</span>
-                    <span className="text-sm text-gray-500">{getCompletionPercentage()}%</span>
-                  </div>
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#7099A3] transition-all duration-300"
-                      style={{ width: `${getCompletionPercentage()}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
-                  {/* Tab Navigation */}
-                  <div className="flex border-b border-gray-200">
-                    {tabs.map((tab) => (
-                      <button
-                        key={tab.id}
-                        onClick={() => setCurrentTab(tab.id)}
-                        className={`flex-1 py-3 px-2 text-xs sm:text-sm font-medium transition-colors relative ${currentTab === tab.id
-                          ? 'text-[#7099A3] bg-[#7099A3]/5'
-                          : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                          }`}
-                      >
-                        <span className="hidden sm:inline">{tab.name}</span>
-                        <span className="sm:hidden">{tab.shortName}</span>
-                        {currentTab === tab.id && (
-                          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#7099A3]" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Tab Content */}
-                  <div className="p-4 md:p-5">
-                    {renderTabContent()}
-                  </div>
-
-                  {/* Navigation Buttons */}
-                  <div className="px-4 md:px-5 pb-4 md:pb-5 flex justify-between">
-                    <button
-                      onClick={() => setCurrentTab(Math.max(1, currentTab - 1))}
-                      disabled={currentTab === 1}
-                      className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors ${currentTab === 1
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-700 hover:bg-gray-100'
-                        }`}
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                      Zurück
-                    </button>
-
-                    {currentTab < 5 ? (
-                      <button
-                        onClick={() => setCurrentTab(Math.min(5, currentTab + 1))}
-                        className="px-4 py-2 bg-[#7099A3] text-white rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-[#5d7e87] transition-colors"
-                      >
-                        Weiter
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    ) : (
-                      <div className="flex items-center gap-2 text-sm text-green-600">
-                        <Check className="w-4 h-4" />
-                        Fertig
-                      </div>
+                    <span className="flex items-center justify-center gap-1.5">
+                      <span className={`
+                        w-5 h-5 rounded-full flex items-center justify-center text-xs
+                        ${currentTab === tab.num
+                          ? 'bg-[#7099A3] text-white'
+                          : 'bg-gray-200 text-gray-600'
+                        }
+                      `}>
+                        {tab.num}
+                      </span>
+                      <span className="hidden sm:inline">{tab.label}</span>
+                    </span>
+                    {currentTab === tab.num && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#7099A3]" />
                     )}
-                  </div>
-                </div>
-
-                {/* Guest Banner */}
-                {isGuest && (
-                  <div className="bg-gradient-to-r from-[#7099A3]/10 to-[#5d7e87]/10 rounded-lg p-4 border border-[#7099A3]/20">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-800">Szenarien speichern?</p>
-                        <p className="text-xs text-gray-600">Melde dich an, um deine Berechnungen zu speichern.</p>
-                      </div>
-                      <button
-                        onClick={onLoginClick}
-                        className="px-4 py-2 bg-[#7099A3] text-white rounded-lg text-sm font-medium hover:bg-[#5d7e87] transition-colors flex items-center gap-2"
-                      >
-                        <LogIn className="w-4 h-4" />
-                        Anmelden
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Right Column - Results */}
-              <div className="space-y-4">
-                {result ? (
-                  <>
-                    <ResultsDisplay result={result} />
-                    <CashflowChart result={result} />
-                  </>
-                ) : (
-                  <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center">
-                    <div className="text-gray-400 mb-3">
-                      <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-500 text-sm">
-                      Fülle die Pflichtfelder aus, um die Berechnung zu sehen
-                    </p>
-                    <p className="text-gray-400 text-xs mt-1">
-                      Kaufpreis und Kaltmiete sind erforderlich
-                    </p>
-                  </div>
-                )}
+                  </button>
+                ))}
               </div>
             </div>
+
+            {/* Tab Content */}
+            <div className="p-4">
+              {renderTabContent()}
+            </div>
+
+            {/* Tab Navigation Buttons */}
+            <div className="px-4 pb-4 flex justify-between">
+              <button
+                onClick={() => setCurrentTab(Math.max(1, currentTab - 1) as 1 | 2 | 3 | 4 | 5)}
+                disabled={currentTab === 1}
+                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                Zurück
+              </button>
+              <button
+                onClick={() => setCurrentTab(Math.min(5, currentTab + 1) as 1 | 2 | 3 | 4 | 5)}
+                disabled={currentTab === 5}
+                className="px-4 py-2 text-sm bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+              >
+                Weiter
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
+
+          {/* Login Prompt for Guests */}
+          {!userId && (
+            <div className="bg-gradient-to-br from-[#7099A3]/10 to-[#5d7e87]/10 rounded-lg border border-[#7099A3]/20 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-gray-900 text-sm">Szenarien speichern?</p>
+                  <p className="text-xs text-gray-600 mt-0.5">Melde dich an, um deine Berechnungen zu speichern.</p>
+                </div>
+                <button
+                  onClick={onLoginClick}
+                  className="px-4 py-2 bg-[#7099A3] text-white rounded-lg text-sm font-medium hover:bg-[#5d7e87] transition-colors flex items-center gap-2"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Anmelden
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column - Results */}
+        <div className="space-y-4">
+          {result ? (
+            <>
+              <ResultsDisplay result={result} />
+              <CashflowChart result={result} />
+            </>
+          ) : (
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center">
+              <div className="text-gray-400 mb-3">
+                <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p className="text-gray-500 text-sm">
+                Fülle die Pflichtfelder aus, um die Berechnung zu sehen
+              </p>
+              <p className="text-gray-400 text-xs mt-1">
+                Kaufpreis und Kaltmiete sind erforderlich
+              </p>
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

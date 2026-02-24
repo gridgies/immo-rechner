@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';
 import Auth from './Auth';
 import Calculator from './Calculator';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 export default function AppWithAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -64,28 +66,49 @@ export default function AppWithAuth() {
 
   if (isTransitioning) {
     return (
-      <div className="flex h-screen bg-gray-50 items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#7099A3] border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-[#7099A3] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        <Footer />
       </div>
     );
   }
 
   if (showAuth) {
-    return <Auth onAuthSuccess={() => { }} onBack={() => setShowAuth(false)} />;
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navbar />
+        <div className="flex-1">
+          <Auth onAuthSuccess={() => { }} onBack={() => setShowAuth(false)} />
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
-  // Immer Calculator anzeigen — Gast oder eingeloggt
+  // Calculator with shared Navbar and Footer
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <Calculator
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Navbar 
         userId={user?.id || null}
         userEmail={user?.email || null}
         onSignOut={handleSignOut}
         onLoginClick={handleLoginClick}
-        isGuest={!user}
-        initialData={calculatorDataRef.current}
-        onDataChange={handleDataChange}
       />
+      <div className="flex-1 overflow-auto">
+        <Calculator
+          userId={user?.id || null}
+          userEmail={user?.email || null}
+          onSignOut={handleSignOut}
+          onLoginClick={handleLoginClick}
+          isGuest={!user}
+          initialData={calculatorDataRef.current}
+          onDataChange={handleDataChange}
+        />
+      </div>
+      <Footer />
     </div>
   );
 }

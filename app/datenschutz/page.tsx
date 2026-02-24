@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Datenschutzerklärung | Immobilien Rechner',
@@ -10,8 +12,10 @@ export const metadata: Metadata = {
 
 export default function DatenschutzPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
+      <Navbar />
+
+      <div className="flex-1 max-w-4xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
         <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-12">
           {/* Header */}
           <div className="mb-8 pb-6 border-b border-slate-200">
@@ -357,6 +361,8 @@ export default function DatenschutzPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
