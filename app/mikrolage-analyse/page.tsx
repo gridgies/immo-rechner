@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function MikrolagePage() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
       <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -32,7 +32,7 @@ export default function MikrolagePage() {
             Mikrolage-Analyse für Immobilien
           </h1>
           <p className="text-lg text-gray-600 max-w-3xl">
-            Gib die Adresse deiner Wunschimmobilie ein und erhalte eine automatische Bewertung der Mikrolage – 
+            Gib die Adresse deiner Wunschimmobilie ein und erhalte eine automatische Bewertung der Mikrolage –
             mit ÖPNV-Anbindung, Nahversorgung, Bildungseinrichtungen und mehr. Kostenlos und ohne Anmeldung.
           </p>
         </div>
@@ -45,36 +45,36 @@ export default function MikrolagePage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Was ist eine Mikrolage-Analyse?</h2>
           <div className="prose prose-lg text-gray-600">
             <p>
-              Die Mikrolage beschreibt das unmittelbare Umfeld einer Immobilie und ist einer der wichtigsten 
-              Faktoren für die Bewertung und Vermietbarkeit eines Objekts. Im Gegensatz zur Makrolage 
-              (Stadt, Region, Wirtschaftsstruktur) betrachtet die Mikrolage einen Radius von wenigen hundert 
+              Die Mikrolage beschreibt das unmittelbare Umfeld einer Immobilie und ist einer der wichtigsten
+              Faktoren für die Bewertung und Vermietbarkeit eines Objekts. Im Gegensatz zur Makrolage
+              (Stadt, Region, Wirtschaftsstruktur) betrachtet die Mikrolage einen Radius von wenigen hundert
               Metern bis zwei Kilometern um die Immobilie.
             </p>
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Welche Faktoren werden bewertet?</h3>
             <p>
-              Unsere automatische Analyse bewertet acht Kategorien, die für Mieter und 
-              Immobilieninvestoren besonders relevant sind: die Anbindung an den öffentlichen Nahverkehr 
-              (Bushaltestellen, U-Bahn, S-Bahn), Einkaufsmöglichkeiten wie Supermärkte und Nahversorger, 
-              Bildungseinrichtungen (Schulen und Kindertagesstätten), medizinische Versorgung 
-              (Arztpraxen, Apotheken, Kliniken), gastronomisches Angebot, Grünflächen und Parks, 
+              Unsere automatische Analyse bewertet acht Kategorien, die für Mieter und
+              Immobilieninvestoren besonders relevant sind: die Anbindung an den öffentlichen Nahverkehr
+              (Bushaltestellen, U-Bahn, S-Bahn), Einkaufsmöglichkeiten wie Supermärkte und Nahversorger,
+              Bildungseinrichtungen (Schulen und Kindertagesstätten), medizinische Versorgung
+              (Arztpraxen, Apotheken, Kliniken), gastronomisches Angebot, Grünflächen und Parks,
               die Nähe zu Bahnhöfen sowie potenzielle Lärmquellen durch Hauptverkehrsstraßen.
             </p>
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Wie funktioniert der Score?</h3>
             <p>
-              Jede Kategorie wird anhand der Anzahl der gefundenen Einrichtungen im relevanten Radius 
-              bewertet und gewichtet. Der Gesamtscore von 1-10 gibt eine schnelle Orientierung über die 
-              Qualität der Mikrolage. Dabei fließen positive Faktoren (gute Infrastruktur) ebenso ein 
+              Jede Kategorie wird anhand der Anzahl der gefundenen Einrichtungen im relevanten Radius
+              bewertet und gewichtet. Der Gesamtscore von 1-10 gibt eine schnelle Orientierung über die
+              Qualität der Mikrolage. Dabei fließen positive Faktoren (gute Infrastruktur) ebenso ein
               wie negative Faktoren (Lärmbelastung durch Hauptstraßen).
             </p>
 
             <h3 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">Warum ist die Mikrolage so wichtig?</h3>
             <p>
-              Die Mikrolage beeinflusst maßgeblich die Vermietbarkeit, die erzielbare Miete und die 
-              langfristige Wertentwicklung einer Immobilie. Eine Wohnung in einer Straße mit guter 
-              ÖPNV-Anbindung und Nahversorgung kann deutlich höhere Mieten erzielen als ein vergleichbares 
-              Objekt wenige hundert Meter entfernt ohne diese Vorteile. Für Kapitalanleger ist die 
+              Die Mikrolage beeinflusst maßgeblich die Vermietbarkeit, die erzielbare Miete und die
+              langfristige Wertentwicklung einer Immobilie. Eine Wohnung in einer Straße mit guter
+              ÖPNV-Anbindung und Nahversorgung kann deutlich höhere Mieten erzielen als ein vergleichbares
+              Objekt wenige hundert Meter entfernt ohne diese Vorteile. Für Kapitalanleger ist die
               Mikrolage-Analyse daher ein unverzichtbarer Bestandteil der Investitionsentscheidung.
             </p>
           </div>
