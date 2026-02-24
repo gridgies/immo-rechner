@@ -131,10 +131,10 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
         hausgeldSteigerungProzent,
       });
     }
-  }, [kaufpreis, wohnflaeche, flaeche, nebenkostenProzent, selectedBundesland, 
-      eigenkapitalProzent, eigenkapitalAbsolut, eigenkapitalSource, zinssatz, tilgung,
-      monatlicheKaltmiete, wohngeldUmlegbar, wohngeldNichtUmlegbar, haltedauer,
-      wertsteigerungProzent, mietSteigerungProzent, hausgeldSteigerungProzent]);
+  }, [kaufpreis, wohnflaeche, flaeche, nebenkostenProzent, selectedBundesland,
+    eigenkapitalProzent, eigenkapitalAbsolut, eigenkapitalSource, zinssatz, tilgung,
+    monatlicheKaltmiete, wohngeldUmlegbar, wohngeldNichtUmlegbar, haltedauer,
+    wertsteigerungProzent, mietSteigerungProzent, hausgeldSteigerungProzent]);
 
   // Load scenarios on mount (only for logged-in users)
   useEffect(() => {
@@ -1015,7 +1015,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
             <span className="text-sm font-medium text-gray-700">Gespeicherte Szenarien ({scenarios.length})</span>
             <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${scenariosOpen ? 'rotate-180' : ''}`} />
           </button>
-          
+
           {scenariosOpen && (
             <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-2">
               {scenarios.map((scenario) => (
@@ -1065,8 +1065,8 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
               <div className="flex min-w-max">
                 {[
                   { num: 1, label: 'Objekt' },
-                  { num: 2, label: 'Finanzierung' },
-                  { num: 3, label: 'Miete' },
+                  { num: 2, label: 'Miete' },
+                  { num: 3, label: 'Finanzierung' },
                   { num: 4, label: 'Verkauf' },
                   { num: 5, label: 'Steuern' },
                 ].map((tab) => (
