@@ -23,6 +23,12 @@ export default function Footer() {
               <li><Link href="/rendite-rechner" className="text-gray-400 hover:text-white transition-colors">Rendite Rechner</Link></li>
               <li><Link href="/kaufnebenkosten-rechner" className="text-gray-400 hover:text-white transition-colors">Kaufnebenkosten</Link></li>
               <li><Link href="/mikrolage-analyse" className="text-gray-400 hover:text-white transition-colors">Mikrolage-Analyse</Link></li>
+              <li>
+                <Link href="/deal-agent" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+                  Deal Agent
+                  <span className="px-1.5 py-0.5 bg-orange-500/20 text-orange-400 text-xs font-semibold rounded-full leading-none">bald</span>
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
