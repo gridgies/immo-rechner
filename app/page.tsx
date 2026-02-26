@@ -75,6 +75,20 @@ export default function HomePage() {
               <p className="text-sm text-gray-500 mt-4">
                 Keine Anmeldung erforderlich • Komplett kostenlos • Für den deutschen Markt
               </p>
+
+              {/* Deal Agent Teaser */}
+              <div className="mt-6 inline-flex items-center gap-3 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
+                <span>🤖</span>
+                <span>
+                  <strong className="text-gray-800">Bald verfügbar:</strong> Der Immo-Deal-Agent findet rentable Immobilien automatisch.
+                </span>
+                <Link
+                  href="/deal-agent"
+                  className="text-[#7099A3] hover:text-[#5d7e87] font-medium whitespace-nowrap transition-colors"
+                >
+                  Frühzugang sichern →
+                </Link>
+              </div>
             </div>
 
             {/* Stats Bar */}
@@ -128,6 +142,27 @@ export default function HomePage() {
                   <p className="text-gray-600">{rechner.desc}</p>
                 </Link>
               ))}
+            </div>
+          </div>
+          {/* Deal Agent Callout – under the tool grid */}
+          <div className="mt-10 max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-[#7099A3]/8 to-[#5d7e87]/8 border border-[#7099A3]/20 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#7099A3]/10 rounded-full text-xs font-medium text-[#5d7e87] mb-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#7099A3]" />
+                  Demnächst verfügbar
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Keine Lust mehr, Deals manuell zu suchen?</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Unser neuer Agent scannt Immobilienportale, filtert rentable Objekte und bereitet die Analyse automatisch für dich vor.
+                </p>
+              </div>
+              <Link
+                href="/deal-agent"
+                className="flex-shrink-0 px-6 py-3 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors font-medium text-sm whitespace-nowrap"
+              >
+                Zur Warteliste →
+              </Link>
             </div>
           </div>
         </section>
@@ -220,6 +255,52 @@ export default function HomePage() {
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#7099A3]">Finanzierung</h3>
                 <p className="text-sm text-gray-600">Zinsen, Tilgung und die optimale Finanzierungsstrategie.</p>
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Deal Agent Section */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900 text-white">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full text-xs font-medium text-gray-300 mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#7099A3] animate-pulse" />
+                  In Entwicklung · Frühzugang verfügbar
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-4 leading-tight">
+                  Der nächste Schritt für Immobilieninvestoren
+                </h2>
+                <p className="text-gray-400 mb-8 leading-relaxed">
+                  Vom Analysieren zum automatischen Finden profitabler Deals.
+                </p>
+                <Link
+                  href="/deal-agent"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors font-medium"
+                >
+                  Frühzugang sichern
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  'scannt Immobilienportale automatisch',
+                  'filtert nach Rendite & Kriterien',
+                  'fragt fehlende Daten bei Maklern an',
+                  'erstellt Rentabilitätsanalysen',
+                  'vergleicht Deals objektiv',
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-3">
+                    <svg className="w-5 h-5 text-[#7099A3] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-200 text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>

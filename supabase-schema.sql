@@ -115,6 +115,33 @@ CREATE POLICY "Users can delete rent increases for their scenarios"
     )
   );
 
+-- Deal Agent Waitlist table
+CREATE TABLE IF NOT EXISTS public.deal_agent_waitlist (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  email TEXT NOT NULL,
+  investitionsregion TEXT,
+  budget TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  CONSTRAINT deal_agent_waitlist_email_key UNIQUE (email)
+);
+
+ALTER TABLE public.deal_agent_waitlist ENABLE ROW LEVEL SECURITY;
+
+-- Allow anonymous users to join the waitlist
+CREATE POLICY "Anyone can join the waitlist"
+  ON public.deal_agent_waitlist
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Only authenticated service role can view entries (handled server-side)
+CREATE POLICY "No direct select for anon"
+  ON public.deal_agent_waitlist
+  FOR SELECT
+  USING (false);
+
+CREATE INDEX deal_agent_waitlist_email_idx ON public.deal_agent_waitlist(email);
+CREATE INDEX deal_agent_waitlist_created_at_idx ON public.deal_agent_waitlist(created_at DESC);
+
 -- Function to automatically update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
