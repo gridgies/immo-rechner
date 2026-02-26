@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function RenditerechnerSimple() {
   const [kaufpreis, setKaufpreis] = useState<string>('300000');
@@ -155,6 +156,25 @@ export default function RenditerechnerSimple() {
             )}
           </div>
         </div>
+
+        {/* Deal Agent Hint – shown after results are available */}
+        {bruttomietrendite !== null && (
+          <div className="mt-6 flex items-start gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+            <span className="text-2xl leading-none mt-0.5">🤖</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-gray-700">
+                <strong>Stell dir vor, du würdest automatisch nur solche Deals finden.</strong>{' '}
+                Der Immo-Deal-Agent scannt Portale, filtert nach deinen Rendite-Kriterien und bereitet die Analyse vor – vollautomatisch.
+              </p>
+            </div>
+            <Link
+              href="/deal-agent"
+              className="flex-shrink-0 text-sm font-medium text-[#7099A3] hover:text-[#5d7e87] transition-colors whitespace-nowrap"
+            >
+              Warteliste →
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
