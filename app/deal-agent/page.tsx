@@ -32,6 +32,10 @@ const features = [
     title: 'Objektiver Deal-Vergleich',
     desc: 'Deals werden nach Rentabilität eingestuft und priorisiert – ohne Bias.',
   },
+  {
+    title: 'Mikrolage-Check inklusive',
+    desc: 'Infrastruktur, ÖPNV und Nahversorgung werden automatisch mitbewertet.',
+  },
 ];
 
 const bullets = [
@@ -71,7 +75,7 @@ export default function DealAgentPage() {
           </p>
 
           {/* Bullets */}
-          <ul className="text-left inline-flex flex-col gap-3 mb-10">
+          <ul className="text-left inline-flex flex-col gap-3 mb-8">
             {bullets.map((b) => (
               <li key={b} className="flex items-center gap-3 text-gray-700">
                 <svg className="w-5 h-5 text-[#7099A3] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,15 +86,17 @@ export default function DealAgentPage() {
             ))}
           </ul>
 
-          <a
-            href="#warteliste"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-lg font-medium shadow-lg hover:shadow-xl"
-          >
-            Frühzugang sichern
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </a>
+          <div className="flex justify-center">
+            <a
+              href="#warteliste"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#7099A3] text-white rounded-lg hover:bg-[#5d7e87] transition-colors text-lg font-medium shadow-lg hover:shadow-xl"
+            >
+              Frühzugang sichern
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
+          </div>
         </div>
       </section>
 

@@ -77,14 +77,14 @@ export default function HomePage() {
               </p>
 
               {/* Deal Agent Teaser */}
-              <div className="mt-6 inline-flex items-center gap-3 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
+              <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-3 px-5 py-3 bg-orange-50 border border-orange-200 rounded-xl text-sm text-gray-700">
                 <span>🤖</span>
                 <span>
-                  <strong className="text-gray-800">Bald verfügbar:</strong> Der Immo-Deal-Agent findet rentable Immobilien automatisch.
+                  <strong className="text-gray-900">Bald verfügbar:</strong> Der Immo-Deal-Agent findet rentable Immobilien automatisch.
                 </span>
                 <Link
                   href="/deal-agent"
-                  className="text-[#7099A3] hover:text-[#5d7e87] font-medium whitespace-nowrap transition-colors"
+                  className="px-4 py-1.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg whitespace-nowrap transition-colors shadow-sm"
                 >
                   Frühzugang sichern →
                 </Link>

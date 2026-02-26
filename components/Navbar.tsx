@@ -15,10 +15,11 @@ export default function Navbar({ userId, userEmail, onSignOut, onLoginClick }: N
   const pathname = usePathname();
   
   const links = [
-    { href: '/cashflow-rechner', label: 'Cashflow' },
-    { href: '/rendite-rechner', label: 'Rendite' },
-    { href: '/kaufnebenkosten-rechner', label: 'Nebenkosten' },
-    { href: '/mikrolage-analyse', label: 'Mikrolage' },
+    { href: '/cashflow-rechner', label: 'Cashflow', badge: false },
+    { href: '/rendite-rechner', label: 'Rendite', badge: false },
+    { href: '/kaufnebenkosten-rechner', label: 'Nebenkosten', badge: false },
+    { href: '/mikrolage-analyse', label: 'Mikrolage', badge: false },
+    { href: '/deal-agent', label: 'Deal Agent', badge: true },
   ];
 
   // Check if current path matches or starts with the link href
@@ -42,13 +43,28 @@ export default function Navbar({ userId, userEmail, onSignOut, onLoginClick }: N
           
           <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
             {links.map((link) => (
-              <Link 
-                key={link.href}
-                href={link.href} 
-                className={`hover:text-gray-900 transition-colors ${isActive(link.href) ? 'text-[#7099A3] font-medium' : ''}`}
-              >
-                {link.label}
-              </Link>
+              link.badge ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+                >
+                  <span className={isActive(link.href) ? 'font-medium text-orange-600' : 'text-gray-700 font-medium'}>
+                    {link.label}
+                  </span>
+                  <span className="px-1.5 py-0.5 bg-orange-100 text-orange-600 text-xs font-semibold rounded-full leading-none">
+                    bald
+                  </span>
+                </Link>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`hover:text-gray-900 transition-colors ${isActive(link.href) ? 'text-[#7099A3] font-medium' : ''}`}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
 
