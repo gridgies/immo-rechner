@@ -7,6 +7,8 @@ import { createClient } from '@/lib/supabase/client';
 import { ScenarioWithMieterhoehungen } from '@/lib/types/database';
 import ResultsDisplay from './ResultsDisplay';
 import CashflowChart from './CashflowChart';
+import InvestmentRating from './InvestmentRating';
+import MikrolageEmbed from './MikrolageEmbed';
 import { Menu, X, ChevronDown, ChevronRight, ChevronLeft, Check, LogIn, Save } from 'lucide-react';
 import SteuerSection from './SteuerSection';
 
@@ -99,6 +101,9 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
   const [scenariosOpen, setScenariosOpen] = useState(true);
   const [loadingScenarios, setLoadingScenarios] = useState(false);
 
+  // Address for Mikrolage analysis (optional)
+  const [address, setAddress] = useState('');
+
   // Mobile states
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -189,6 +194,13 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
     }
   }, [haltedauer, autoCalculateWertsteigerung]);
 
+  // Pre-fill scenario name from address (only when name is still empty)
+  useEffect(() => {
+    if (address.trim() && !scenarioName) {
+      setScenarioName(address.trim());
+    }
+  }, [address]);
+
   // Bidirectional eigenkapital syncing
   useEffect(() => {
     const kp = parseFloat(kaufpreis) || 0;
@@ -270,6 +282,7 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
     setHausgeldSteigerungProzent(((scenario.hausgeld_steigerung_prozent ?? 0.02) * 100).toFixed(1));
     setScenarioName(scenario.name);
     setEditingScenarioId(scenario.id);
+    setAddress('');
     setMobileMenuOpen(false);
     setCurrentTab(1);
   };
@@ -448,6 +461,23 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
                 className="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
                 placeholder="z.B. 70"
               />
+            </div>
+
+            {/* Adresse (optional – für Mikrolage) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Adresse <span className="text-gray-400 font-normal">optional</span>
+              </label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7099A3] focus:border-[#7099A3] outline-none"
+                placeholder="z.B. Musterstraße 1, Berlin"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Für die automatische Mikrolage-Analyse nach der Berechnung
+              </p>
             </div>
 
             {/* Nebenkosten */}
@@ -1151,8 +1181,32 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
         <div className="space-y-4">
           {result ? (
             <>
+              {/* Investment Rating */}
+              <InvestmentRating result={result} />
+
               <ResultsDisplay result={result} />
               <CashflowChart result={result} />
+
+              {/* PDF Export Button */}
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    sessionStorage.setItem('immo_pdf_data', JSON.stringify({ result, address }));
+                    window.open('/cashflow-rechner/pdf', '_blank');
+                  }}
+                  className="flex items-center gap-2 px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-400 transition-colors text-sm font-medium"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                  </svg>
+                  PDF exportieren
+                </button>
+              </div>
+
+              {/* Mikrolage (only when address is entered) */}
+              {address.trim() && (
+                <MikrolageEmbed initialAddress={address.trim()} />
+              )}
             </>
           ) : (
             <div className="bg-white rounded-lg shadow border border-gray-200 p-8 text-center">
