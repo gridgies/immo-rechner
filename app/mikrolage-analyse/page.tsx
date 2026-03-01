@@ -3,6 +3,68 @@ import MikrolageClient from './MikrolageClient';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://immo-rechner.net/mikrolage-analyse#app",
+      "name": "Mikrolage-Analyse für Immobilien",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Web",
+      "url": "https://immo-rechner.net/mikrolage-analyse",
+      "description": "Kostenlose KI-gestützte Standortanalyse für Immobilien in Deutschland: ÖPNV, Nahversorgung, Schulen, Ärzte, Grünflächen und Lärmbelastung.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "inLanguage": "de-DE"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "Mikrolage-Analyse", "item": "https://immo-rechner.net/mikrolage-analyse" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was ist eine Mikrolage-Analyse bei Immobilien?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Mikrolage-Analyse bewertet das unmittelbare Umfeld einer Immobilie in einem Radius von wenigen hundert Metern bis zwei Kilometern. Sie analysiert ÖPNV-Anbindung, Einkaufsmöglichkeiten, Schulen, Ärzte, Gastronomie, Grünflächen und Lärmquellen – und gibt einen Score von 1–10."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Welche Faktoren werden bei der Mikrolage bewertet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unsere Analyse bewertet acht Kategorien: ÖPNV-Anbindung (Bus, U-Bahn, S-Bahn), Nahversorgung (Supermärkte), Bildungseinrichtungen (Schulen, Kitas), medizinische Versorgung (Ärzte, Apotheken), Gastronomie, Grünflächen, Bahnhofsnähe und potenzielle Lärmbelastung durch Hauptverkehrsstraßen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Warum ist die Mikrolage für Immobilieninvestoren wichtig?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Mikrolage beeinflusst direkt die Vermietbarkeit und die erzielbare Miete. Eine Wohnung mit guter ÖPNV-Anbindung und Nahversorgung erzielt höhere Mieten und hat geringeres Leerstandsrisiko als ein vergleichbares Objekt ohne diese Vorteile. Für die Renditeberechnung ist die Mikrolage daher unverzichtbar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist der Unterschied zwischen Mikrolage und Makrolage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Makrolage beschreibt die übergeordnete Lage: Stadt, Region, Wirtschaftsstruktur, Einwohnerentwicklung. Die Mikrolage betrachtet das direkte Umfeld der Immobilie: konkrete Straße, Stadtteil, Infrastruktur im Umkreis von 500 m bis 2 km. Beide Ebenen sind wichtig für eine vollständige Standortbewertung."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 export const metadata: Metadata = {
   title: "Mikrolage-Analyse – Standort deiner Immobilie kostenlos bewerten | Immo-Rechner",
@@ -11,12 +73,21 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Mikrolage-Analyse – Standort bewerten",
     description: "Kostenlose Standortanalyse: ÖPNV, Nahversorgung, Schulen, Ärzte, Grünflächen und Lärmbelastung bewerten.",
+    images: [
+      {
+        url: "/api/og?title=Mikrolage-Analyse+f%C3%BCr+Immobilien&subtitle=Standort+kostenlos+bewerten+%E2%80%93+%C3%96PNV%2C+Infrastruktur%2C+Score",
+        width: 1200,
+        height: 630,
+        alt: "Mikrolage-Analyse für Immobilien – Standort kostenlos bewerten",
+      },
+    ],
   },
 };
 
 export default function MikrolagePage() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

@@ -3,6 +3,69 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import RenditerechnerSimple from '@/components/RenditerechnerSimple';
+import JsonLd from '@/components/JsonLd';
+import QuickAnswer from '@/components/QuickAnswer';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://immo-rechner.net/rendite-rechner#app",
+      "name": "Rendite Rechner Immobilien",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "url": "https://immo-rechner.net/rendite-rechner",
+      "description": "Kostenloser Rechner für Bruttomietrendite, Nettomietrendite und Mietmultiplikator. Für den deutschen Immobilienmarkt.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "inLanguage": "de-DE"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "Rendite Rechner", "item": "https://immo-rechner.net/rendite-rechner" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was ist die Bruttomietrendite bei Immobilien?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Bruttomietrendite berechnet sich als Jahreskaltmiete geteilt durch den Kaufpreis, multipliziert mit 100. Beispiel: Jahreskaltmiete 9.600 € ÷ Kaufpreis 200.000 € × 100 = 4,8% Bruttomietrendite. Sie eignet sich für schnelle Vergleiche, berücksichtigt aber keine Kaufnebenkosten oder laufende Kosten."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist der Unterschied zwischen Brutto- und Nettomietrendite?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Bruttomietrendite setzt nur Jahreskaltmiete und Kaufpreis ins Verhältnis. Die Nettomietrendite ist realistischer: Sie zieht nicht umlegbare Kosten (Verwaltung, Instandhaltung) von der Miete ab und addiert die Kaufnebenkosten zum Kaufpreis. Typischerweise liegt die Nettomietrendite 0,5–1,5 Prozentpunkte unter der Bruttomietrendite."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist ein guter Mietmultiplikator bei Immobilien?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Der Mietmultiplikator gibt an, nach wie vielen Jahren sich der Kaufpreis durch Mieteinnahmen amortisiert. Unter 20 gilt als günstig, 20–25 als marktgerecht, über 25 als teuer. In Ballungsgebieten wie München liegt der Multiplikator oft bei 30–40, in B- und C-Lagen eher bei 15–22."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ab welcher Mietrendite lohnt sich eine Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Als Faustregel gilt: Eine Bruttomietrendite unter 3% macht einen positiven Cashflow nach Finanzierungskosten schwierig. Ab 4–5% Bruttomietrendite sind positive Cashflows in B-Lagen realistisch. Die reine Mietrendite sollte jedoch nicht das einzige Kriterium sein – der IRR (Gesamtrendite inkl. Wertsteigerung) ist aussagekräftiger."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 export const metadata: Metadata = {
   title: "Rendite Rechner Immobilien – Mietrendite & Nettomietrendite berechnen (2026) | Immo-Rechner",
@@ -11,12 +74,21 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Rendite Rechner für Immobilien – Mietrendite kostenlos berechnen",
     description: "Bruttomietrendite, Nettomietrendite und Mietmultiplikator berechnen. Kostenloser Rechner inkl. aller Kaufnebenkosten.",
+    images: [
+      {
+        url: "/api/og?title=Rendite+Rechner+Immobilien&subtitle=Mietrendite+%26+Nettomietrendite+kostenlos+berechnen",
+        width: 1200,
+        height: 630,
+        alt: "Rendite Rechner für Immobilien – Mietrendite kostenlos berechnen",
+      },
+    ],
   },
 };
 
 export default function RenditeRechnerPage() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -29,10 +101,21 @@ export default function RenditeRechnerPage() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Rendite Rechner für Immobilien
         </h1>
-        <p className="text-lg text-gray-600 max-w-3xl mb-8">
-          Berechne Bruttomietrendite, Nettomietrendite und Mietmultiplikator deiner Immobilieninvestition. 
+        <p className="text-lg text-gray-600 max-w-3xl mb-6">
+          Berechne Bruttomietrendite, Nettomietrendite und Mietmultiplikator deiner Immobilieninvestition.
           Für eine vollständige Analyse inklusive IRR (Internal Rate of Return) nutze unseren erweiterten Cashflow-Rechner.
         </p>
+
+        <QuickAnswer
+          question="Was ist die Bruttomietrendite und wie berechne ich sie?"
+          answer="Die Bruttomietrendite berechnet sich als Jahreskaltmiete geteilt durch den Kaufpreis, multipliziert mit 100. Beispiel: 800 € Kaltmiete × 12 = 9.600 € ÷ 200.000 € × 100 = 4,8 % Bruttomietrendite. Ab 4 % gelten positive Cashflows als realistisch – vorausgesetzt, die Finanzierungskonditionen stimmen."
+          keyFacts={[
+            "Bruttomietrendite = (Jahreskaltmiete ÷ Kaufpreis) × 100",
+            "Nettomietrendite liegt 0,5–1,5 Prozentpunkte darunter (nach Kosten + Nebenkosten)",
+            "Mietmultiplikator = Kaufpreis ÷ Jahreskaltmiete (unter 20 gilt als günstig)",
+            "Für Gesamtrendite inkl. Wertsteigerung: IRR-Rechner verwenden",
+          ]}
+        />
 
         {/* Calculator */}
         <div className="mb-12">
@@ -88,6 +171,42 @@ export default function RenditeRechnerPage() {
                   <div className="font-medium text-gray-900">Kaufpreis ÷ Jahreskaltmiete</div>
                 </div>
               </div>
+            </div>
+
+            {/* Comparison table — optimized for AI extraction and featured snippets */}
+            <div className="not-prose my-8 overflow-x-auto">
+              <p className="text-sm font-semibold text-gray-700 mb-3">Renditenkennzahlen im Vergleich</p>
+              <table className="w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+                <thead>
+                  <tr className="bg-gray-100 text-left">
+                    <th className="px-4 py-2 font-semibold text-gray-700">Kennzahl</th>
+                    <th className="px-4 py-2 font-semibold text-gray-700">Formel</th>
+                    <th className="px-4 py-2 font-semibold text-gray-700">Berücksichtigt</th>
+                    <th className="px-4 py-2 font-semibold text-gray-700">Wann verwenden?</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  <tr className="bg-white">
+                    <td className="px-4 py-3 font-medium text-gray-800">Bruttomietrendite</td>
+                    <td className="px-4 py-3 text-gray-600 font-mono text-xs">(Jahreskaltmiete ÷ Kaufpreis) × 100</td>
+                    <td className="px-4 py-3 text-gray-600">Kaltmiete, Kaufpreis</td>
+                    <td className="px-4 py-3 text-gray-600">Schnellvergleich, erste Einschätzung</td>
+                  </tr>
+                  <tr className="bg-gray-50">
+                    <td className="px-4 py-3 font-medium text-gray-800">Nettomietrendite</td>
+                    <td className="px-4 py-3 text-gray-600 font-mono text-xs">(Nettomiete ÷ Gesamtinvestition) × 100</td>
+                    <td className="px-4 py-3 text-gray-600">+ Bewirtschaftungskosten, Kaufnebenkosten</td>
+                    <td className="px-4 py-3 text-gray-600">Realistischer Renditevergleich</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-4 py-3 font-medium text-gray-800">IRR</td>
+                    <td className="px-4 py-3 text-gray-600 font-mono text-xs">Diskontierungsrate bei NPV = 0</td>
+                    <td className="px-4 py-3 text-gray-600">+ Wertsteigerung, Tilgung, Steuer, Verkauf</td>
+                    <td className="px-4 py-3 text-gray-600">Gesamtrendite über Haltedauer (10–30 J.)</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p className="text-xs text-gray-400 mt-2">Quelle: Eigene Berechnungen auf Basis gängiger Immobilienbewertungsstandards (gif e.V., DIN 277).</p>
             </div>
 
             <h3>Nettomietrendite – die realistischere Kennzahl</h3>

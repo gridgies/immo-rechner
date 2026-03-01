@@ -2,16 +2,129 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
+import QuickAnswer from '@/components/QuickAnswer';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://immo-rechner.net/ratgeber/cashflow-immobilien#article",
+      "headline": "Cashflow bei Immobilien: Berechnung, Beispiele und Tipps für Investoren",
+      "description": "Was ist der Cashflow bei Immobilien? Lerne die Berechnung, typische Werte und häufige Fehler. Mit Praxisbeispielen und kostenlosem Cashflow-Rechner.",
+      "url": "https://immo-rechner.net/ratgeber/cashflow-immobilien",
+      "datePublished": "2025-06-01",
+      "dateModified": "2026-02-28",
+      "inLanguage": "de",
+      "wordCount": 1200,
+      "author": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://immo-rechner.net/favicon.svg"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://immo-rechner.net/ratgeber/cashflow-immobilien"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "Ratgeber", "item": "https://immo-rechner.net/ratgeber/immobilie-als-kapitalanlage" },
+        { "@type": "ListItem", "position": 3, "name": "Cashflow bei Immobilien", "item": "https://immo-rechner.net/ratgeber/cashflow-immobilien" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was ist der Cashflow bei einer Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Der Cashflow einer Immobilie ist die Differenz zwischen den monatlichen Mieteinnahmen und allen laufenden Kosten: Annuität (Zins + Tilgung), nicht umlegbares Hausgeld und Instandhaltungsrücklage. Ein positiver Cashflow bedeutet, dass die Immobilie nach Abzug aller Kosten monatlich Überschüsse erwirtschaftet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie berechnet man den Cashflow einer Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Formel: Monatlicher Cashflow = Kaltmiete − Annuität − nicht umlegbares Hausgeld. Beispiel: Kaltmiete 750 € − Annuität 660 € − Hausgeld 60 € = 30 € monatlicher Cashflow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist ein guter Cashflow bei einer Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In B- und C-Lagen (Leipzig, Dresden, Magdeburg) sind positive Cashflows von 50–200 € pro Monat realistisch. In A-Lagen (München, Hamburg) ist es aktuell schwierig, einen positiven Cashflow zu erzielen – hier investiert man primär wegen der Wertsteigerung."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist der Unterschied zwischen Cashflow und Rendite?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Der Cashflow zeigt den monatlichen Geldfluss einer Immobilie. Die Rendite (z.B. IRR) berechnet die Gesamtrentabilität über die gesamte Haltedauer inkl. Wertsteigerung und Verkaufserlös. Eine Immobilie kann negativen Cashflow haben, aber trotzdem eine gute Gesamtrendite erzielen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie verbessere ich den Cashflow meiner Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die 5 wichtigsten Hebel: (1) Kaufpreis verhandeln – jeder Euro weniger senkt die Kreditrate. (2) Günstigere Finanzierung finden – 0,3% weniger Zins spart 30–50 € / Monat. (3) Marktgerechte Miete ausschöpfen. (4) Nicht umlegbares Hausgeld minimieren durch WEG-Wahl und Verwaltung. (5) Eigenkapital optimieren, um Fremdkapitalbedarf zu senken."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 export const metadata: Metadata = {
   title: "Cashflow bei Immobilien: Berechnung, Beispiele & Tipps (2026) | Immo-Rechner",
   description: "Was ist der Cashflow bei Immobilien? Lerne die Berechnung, typische Werte und häufige Fehler. Mit Praxisbeispielen und kostenlosem Cashflow-Rechner.",
   alternates: { canonical: "https://immo-rechner.net/ratgeber/cashflow-immobilien" },
+  openGraph: {
+    title: "Cashflow bei Immobilien: Berechnung, Beispiele & Tipps (2026)",
+    description: "Was ist der Cashflow bei Immobilien? Lerne die Berechnung, typische Werte und häufige Fehler. Mit Praxisbeispielen und kostenlosem Cashflow-Rechner.",
+    url: "https://immo-rechner.net/ratgeber/cashflow-immobilien",
+    siteName: "Immo-Rechner.net",
+    locale: "de_DE",
+    type: "article",
+    images: [
+      {
+        url: "/api/og?title=Cashflow+bei+Immobilien%3A+Berechnung+%26+Tipps&subtitle=Ratgeber+mit+Praxisbeispielen+f%C3%BCr+Investoren",
+        width: 1200,
+        height: 630,
+        alt: "Cashflow bei Immobilien – Berechnung, Beispiele und Tipps",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cashflow bei Immobilien: Berechnung, Beispiele & Tipps (2026)",
+    description: "Formel, Beispielrechnung und 5 Hebel für positiven Cashflow.",
+    images: ["/api/og?title=Cashflow+bei+Immobilien%3A+Berechnung+%26+Tipps&subtitle=Ratgeber+mit+Praxisbeispielen+f%C3%BCr+Investoren"],
+  },
 };
 
 export default function CashflowRatgeber() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -35,6 +148,17 @@ export default function CashflowRatgeber() {
             <span>8 Min. Lesezeit</span>
           </div>
         </header>
+
+        <QuickAnswer
+          question="Was ist der Cashflow bei einer Immobilie und wann ist er positiv?"
+          answer="Der Cashflow ist die Differenz zwischen monatlichen Mieteinnahmen und allen laufenden Kosten (Annuität, nicht umlagefähiges Hausgeld). Ist er größer als 0, trägt sich die Immobilie selbst. In A-Lagen (München, Frankfurt) ist positiver Cashflow bei aktuellen Zinsen kaum noch erreichbar; in B- und C-Lagen (Leipzig, Magdeburg) sind +50 bis +200 € / Monat realistisch."
+          keyFacts={[
+            "Formel: Kaltmiete − Annuität − nicht umlagefähiges Hausgeld",
+            "Positiver Cashflow: Immobilie trägt sich selbst",
+            "Negativer Cashflow ist akzeptabel, wenn Wertsteigerung + Tilgungseffekt kompensieren",
+            "Liquiditätsreserve von 3–6 Monatskaltmieten empfohlen",
+          ]}
+        />
 
         {/* CTA Box */}
         <div className="bg-gradient-to-br from-[#7099A3]/10 to-[#5d7e87]/10 rounded-xl p-6 mb-10 border border-[#7099A3]/20">

@@ -2,16 +2,129 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
+import QuickAnswer from '@/components/QuickAnswer';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://immo-rechner.net/ratgeber/eigenkapital-immobilie#article",
+      "headline": "Eigenkapital für Immobilien: Wie viel brauchst du wirklich?",
+      "description": "Wie viel Eigenkapital brauchst du für eine Immobilie als Kapitalanlage? Aktuelle Anforderungen der Banken, Leverage-Effekt, Beispielrechnungen und Tipps zum Eigenkapitalaufbau.",
+      "url": "https://immo-rechner.net/ratgeber/eigenkapital-immobilie",
+      "datePublished": "2025-06-01",
+      "dateModified": "2026-02-28",
+      "inLanguage": "de",
+      "wordCount": 1300,
+      "author": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://immo-rechner.net/favicon.svg"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://immo-rechner.net/ratgeber/eigenkapital-immobilie"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "Ratgeber", "item": "https://immo-rechner.net/ratgeber/immobilie-als-kapitalanlage" },
+        { "@type": "ListItem", "position": 3, "name": "Eigenkapital für Immobilien", "item": "https://immo-rechner.net/ratgeber/eigenkapital-immobilie" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Wie viel Eigenkapital brauche ich für eine Immobilie als Kapitalanlage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Faustregel lautet: mindestens 20–30% des Kaufpreises plus die Kaufnebenkosten (8–15% des Kaufpreises). Bei einem Kaufpreis von 300.000 € bedeutet das typischerweise 93.000 bis 123.000 € Eigenkapital insgesamt."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist der Leverage-Effekt bei Immobilien?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Der Leverage-Effekt (Hebelwirkung) beschreibt, wie Fremdkapital die Eigenkapitalrendite steigern kann. Solange die Gesamtrendite der Immobilie über dem Darlehenszins liegt, verbessert jeder fremdfinanzierte Euro die Eigenkapitalrendite. Bei einer Immobilie mit 5% Nettomietrendite und 3,5% Darlehenszins steigt die Eigenkapitalrendite durch Hebel deutlich."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Zählen Wertpapiere als Eigenkapital bei der Bank?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja, viele Banken akzeptieren Wertpapiere als Eigenkapital – allerdings mit einem Abschlag auf den aktuellen Kurswert (meist 70–80%). Auch Bausparverträge, Lebensversicherungen und schuldenfreie Immobilien können als Eigenkapital eingebracht werden."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kann ich eine Immobilie ohne Eigenkapital kaufen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vollfinanzierungen (100%+ des Kaufpreises) sind nach dem Zinsanstieg ab 2022 selten geworden und mit deutlichen Zinsaufschlägen verbunden. Die meisten Banken verlangen heute mindestens die Kaufnebenkosten aus eigenen Mitteln. Empfehlenswert sind 20–30% Eigenkapital für gute Konditionen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie baue ich schnell Eigenkapital für eine Immobilie auf?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Effektive Methoden: (1) Sparplan aufbauen — 1.000 €/Monat über 5 Jahre = 60.000 € + Zinsen. (2) ETF-Sparplan — historisch 7–9% p.a., aber Kursrisiko beachten. (3) Bausparvertrag — steuerbegünstigt in einigen Bundesländern. (4) Eigenleistungen bei bestehender Immobilie. (5) Schenkung/Darlehen von Familie."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 export const metadata: Metadata = {
   title: "Eigenkapital für Immobilien: Wie viel brauchst du wirklich? (2026) | Immo-Rechner",
   description: "Wie viel Eigenkapital brauchst du für eine Immobilie als Kapitalanlage? Aktuelle Anforderungen der Banken, Leverage-Effekt, Beispielrechnungen und Tipps zum Eigenkapitalaufbau.",
   alternates: { canonical: "https://immo-rechner.net/ratgeber/eigenkapital-immobilie" },
+  openGraph: {
+    title: "Eigenkapital für Immobilien: Wie viel brauchst du wirklich?",
+    description: "Aktuelle Anforderungen der Banken, Leverage-Effekt, Beispielrechnungen und Tipps zum Eigenkapitalaufbau für Kapitalanleger.",
+    url: "https://immo-rechner.net/ratgeber/eigenkapital-immobilie",
+    siteName: "Immo-Rechner.net",
+    locale: "de_DE",
+    type: "article",
+    images: [
+      {
+        url: "/api/og?title=Eigenkapital+f%C3%BCr+Immobilien%3A+Wie+viel+brauchst+du%3F&subtitle=Leverage-Effekt%2C+Bankkonditionen+%26+Beispiele",
+        width: 1200,
+        height: 630,
+        alt: "Eigenkapital für Immobilien – Wie viel brauchst du wirklich?",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Eigenkapital für Immobilien: Wie viel brauchst du wirklich?",
+    description: "Leverage-Effekt, Bankanforderungen und Beispielrechnungen für Kapitalanleger.",
+    images: ["/api/og?title=Eigenkapital+f%C3%BCr+Immobilien%3A+Wie+viel+brauchst+du%3F&subtitle=Leverage-Effekt%2C+Bankkonditionen+%26+Beispiele"],
+  },
 };
 
 export default function EigenkapitalRatgeber() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -35,6 +148,17 @@ export default function EigenkapitalRatgeber() {
             <span>9 Min. Lesezeit</span>
           </div>
         </header>
+
+        <QuickAnswer
+          question="Wie viel Eigenkapital brauche ich für eine Immobilien-Kapitalanlage?"
+          answer="Als Faustregel gilt: mindestens 20–30 % des Kaufpreises plus alle Kaufnebenkosten (10–15 % des Kaufpreises) aus Eigenkapital. Bei einem Kaufpreis von 300.000 € ergibt das einen Eigenkapitalbedarf von 93.000 bis 123.000 €. Weniger Eigenkapital erhöht den IRR durch den Leverage-Effekt — aber nur, wenn die Nettomietrendite den Darlehenszins übersteigt."
+          keyFacts={[
+            "Minimum: Kaufnebenkosten (10–15 %) müssen aus EK bezahlt werden",
+            "Empfehlung: 20–30 % EK auf den Kaufpreis für gute Konditionen",
+            "Leverage-Effekt: Weniger EK → höherer IRR (bei Nettomietrendite > Zinssatz)",
+            "Negativer Hebel: Bei Zinssatz > Nettomietrendite schadet mehr Fremdkapital",
+          ]}
+        />
 
         {/* CTA Box */}
         <div className="bg-gradient-to-br from-[#7099A3]/10 to-[#5d7e87]/10 rounded-xl p-6 mb-10 border border-[#7099A3]/20">

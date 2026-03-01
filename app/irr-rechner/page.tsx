@@ -2,6 +2,68 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://immo-rechner.net/irr-rechner#app",
+      "name": "IRR Rechner Immobilien",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "url": "https://immo-rechner.net/irr-rechner",
+      "description": "Lerne den IRR (Internal Rate of Return) bei Immobilien und berechne ihn kostenlos. Erklärt mit Beispielen und Richtwerten.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "inLanguage": "de-DE"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "IRR Rechner", "item": "https://immo-rechner.net/irr-rechner" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was ist der IRR bei Immobilien?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Der IRR (Internal Rate of Return, Interner Zinsfuß) ist die durchschnittliche jährliche Rendite auf das eingesetzte Eigenkapital über die gesamte Haltedauer der Immobilie. Er berücksichtigt alle Zahlungsströme: Eigenkapitaleinsatz, monatliche Cashflows, Mieterhöhungen, Kostensteigerungen und den Verkaufserlös abzüglich Restschuld."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist ein guter IRR für eine Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Richtwerte: Unter 3% = unattraktiv. 3–6% = akzeptabel (vergleichbar mit Aktien-ETF). 6–10% = gut bis sehr gut. Über 10% = exzellent, typischerweise nur bei günstigem Einkauf oder starker Wertsteigerung erreichbar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie berechne ich den IRR einer Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Der IRR wird durch iterative Berechnung ermittelt: Man sucht den Zinssatz, bei dem der Kapitalwert (NPV) aller Zahlungsströme gleich null ist. Praktisch: Nutze unseren kostenlosen Cashflow-Rechner unter immo-rechner.net/cashflow-rechner, der den IRR automatisch berechnet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was beeinflusst den IRR einer Immobilie am stärksten?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die größten Hebel sind: (1) Kaufpreis – günstiger Einkauf verbessert den IRR direkt. (2) Wertsteigerung beim Verkauf – der Verkaufserlös hat erheblichen Anteil. (3) Eigenkapitalquote – weniger EK erhöht durch den Leverage-Effekt den IRR, solange Objektrendite über Darlehenszins liegt."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 export const metadata: Metadata = {
   title: "IRR Rechner Immobilien – Internal Rate of Return verstehen (2026) | Immo-Rechner",
@@ -10,12 +72,21 @@ export const metadata: Metadata = {
   openGraph: {
     title: "IRR bei Immobilien – Internal Rate of Return verstehen",
     description: "Der IRR ist die wichtigste Renditekennzahl für Immobilieninvestitionen. Erfahre, warum und berechne deinen IRR kostenlos.",
+    images: [
+      {
+        url: "/api/og?title=IRR+Rechner+Immobilien&subtitle=Internal+Rate+of+Return+verstehen+%26+berechnen",
+        width: 1200,
+        height: 630,
+        alt: "IRR Rechner Immobilien – Internal Rate of Return berechnen",
+      },
+    ],
   },
 };
 
 export default function IRRRechnerPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <main className="flex-1">

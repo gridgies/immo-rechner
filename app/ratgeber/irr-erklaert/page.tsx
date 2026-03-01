@@ -2,16 +2,129 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
+import QuickAnswer from '@/components/QuickAnswer';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://immo-rechner.net/ratgeber/irr-erklaert#article",
+      "headline": "IRR einfach erklärt: Was der Internal Rate of Return bei Immobilien wirklich aussagt",
+      "description": "Was ist der IRR bei Immobilien? Verständliche Erklärung mit Beispielen, Formel, Berechnung und Interpretation. Lerne, warum der IRR die beste Renditekennzahl ist.",
+      "url": "https://immo-rechner.net/ratgeber/irr-erklaert",
+      "datePublished": "2025-06-01",
+      "dateModified": "2026-02-28",
+      "inLanguage": "de",
+      "wordCount": 1400,
+      "author": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://immo-rechner.net/favicon.svg"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://immo-rechner.net/ratgeber/irr-erklaert"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "Ratgeber", "item": "https://immo-rechner.net/ratgeber/immobilie-als-kapitalanlage" },
+        { "@type": "ListItem", "position": 3, "name": "IRR einfach erklärt", "item": "https://immo-rechner.net/ratgeber/irr-erklaert" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was ist der IRR bei Immobilien?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "IRR steht für Internal Rate of Return (Interner Zinsfuß). Es ist die durchschnittliche jährliche Rendite auf das eingesetzte Eigenkapital über die gesamte Haltedauer der Immobilie. Der IRR berücksichtigt alle Zahlungsströme: Eigenkapital, monatliche Cashflows, Mieterhöhungen und den Verkaufserlös."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist ein guter IRR für eine Immobilie?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unter 3% ist der IRR unattraktiv. 3–6% gelten als akzeptabel, 6–10% als gut bis sehr gut. Über 10% ist exzellent und typischerweise nur bei günstigem Einkauf oder starker Wertsteigerung erreichbar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist der Unterschied zwischen IRR und Mietrendite?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Mietrendite ist eine Momentaufnahme und zeigt nur das Verhältnis von Jahreskaltmiete zu Kaufpreis. Der IRR hingegen berücksichtigt den Zeitwert des Geldes, alle laufenden Cashflows über die Haltedauer, Mieterhöhungen und den Verkaufserlös – und ist damit die aussagekräftigere Gesamtrendite."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Welche Faktoren beeinflussen den IRR bei Immobilien am stärksten?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Den IRR beeinflussen vor allem: der Kaufpreis (größter Hebel), die erwartete Wertsteigerung beim Verkauf, die Eigenkapitalquote (Leverage-Effekt) und die laufenden Cashflows aus Miete minus Kosten."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kann eine Immobilie mit negativem Cashflow einen guten IRR haben?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Wenn die Wertsteigerung beim Verkauf den negativen monatlichen Cashflow überkompensiert, kann der IRR trotzdem attraktiv sein. Beispiel: Eine Wohnung in München mit −200 € / Monat Cashflow, aber 80 % Wertsteigerung in 15 Jahren kann einen IRR von 6–8 % erzielen."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 export const metadata: Metadata = {
   title: "IRR einfach erklärt: Internal Rate of Return bei Immobilien verstehen (2026) | Immo-Rechner",
   description: "Was ist der IRR bei Immobilien? Verständliche Erklärung mit Beispielen, Formel, Berechnung und Interpretation. Lerne, warum der IRR die beste Renditekennzahl ist.",
   alternates: { canonical: "https://immo-rechner.net/ratgeber/irr-erklaert" },
+  openGraph: {
+    title: "IRR einfach erklärt: Internal Rate of Return bei Immobilien",
+    description: "Was ist der IRR bei Immobilien? Verständliche Erklärung mit Beispielen, Formel, Berechnung und Interpretation.",
+    url: "https://immo-rechner.net/ratgeber/irr-erklaert",
+    siteName: "Immo-Rechner.net",
+    locale: "de_DE",
+    type: "article",
+    images: [
+      {
+        url: "/api/og?title=IRR+einfach+erkl%C3%A4rt%3A+Internal+Rate+of+Return&subtitle=Ratgeber+mit+Beispielrechnung+%26+Richtwerten",
+        width: 1200,
+        height: 630,
+        alt: "IRR einfach erklärt – Internal Rate of Return bei Immobilien",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IRR einfach erklärt: Internal Rate of Return bei Immobilien",
+    description: "Was ist der IRR, was ist ein guter Wert und wie berechnest du ihn?",
+    images: ["/api/og?title=IRR+einfach+erkl%C3%A4rt%3A+Internal+Rate+of+Return&subtitle=Ratgeber+mit+Beispielrechnung+%26+Richtwerten"],
+  },
 };
 
 export default function IRRRatgeber() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -35,6 +148,18 @@ export default function IRRRatgeber() {
             <span>10 Min. Lesezeit</span>
           </div>
         </header>
+
+        <QuickAnswer
+          question="Was ist der IRR bei Immobilien und was ist ein guter Wert?"
+          answer="Der IRR (Interner Zinsfuß) ist die durchschnittliche jährliche Rendite auf das eingesetzte Eigenkapital über die gesamte Haltedauer einer Immobilie — inklusive aller Cashflows und des Verkaufserlöses. Er ist die aussagekräftigste Renditekennzahl, weil er den Zeitwert des Geldes berücksichtigt."
+          keyFacts={[
+            "IRR unter 3 %: Unattraktiv — schlechter als Festgeld",
+            "IRR 3–6 %: Akzeptabel",
+            "IRR 6–10 %: Gut bis sehr gut — Zielbereich erfahrener Investoren",
+            "IRR über 10 %: Exzellent — nur mit günstigem Einkauf oder starker Wertsteigerung",
+            "Unterschied zur Mietrendite: IRR berücksichtigt Haltedauer und Verkauf",
+          ]}
+        />
 
         {/* CTA Box */}
         <div className="bg-gradient-to-br from-[#7099A3]/10 to-[#5d7e87]/10 rounded-xl p-6 mb-10 border border-[#7099A3]/20">

@@ -3,6 +3,68 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import KaufnebenkostenrechnerSimple from '@/components/KaufnebenkostenrechnerSimple';
+import JsonLd from '@/components/JsonLd';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://immo-rechner.net/kaufnebenkosten-rechner#app",
+      "name": "Kaufnebenkosten Rechner Immobilien",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "url": "https://immo-rechner.net/kaufnebenkosten-rechner",
+      "description": "Kostenloser Rechner für alle Kaufnebenkosten beim Immobilienkauf: Grunderwerbsteuer für alle 16 Bundesländer, Notar, Grundbuch und Makler.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "inLanguage": "de-DE"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "Kaufnebenkosten Rechner", "item": "https://immo-rechner.net/kaufnebenkosten-rechner" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Wie hoch sind die Kaufnebenkosten beim Immobilienkauf?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Kaufnebenkosten liegen je nach Bundesland und Makler zwischen 8,5% (Bayern, ohne Makler) und rund 15% (Schleswig-Holstein, mit Makler) des Kaufpreises. Bei 300.000 € Kaufpreis sind das 25.500 € bis 45.000 € an Nebenkosten."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Welche Kaufnebenkosten gibt es beim Immobilienkauf?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die vier Hauptposten sind: Grunderwerbsteuer (3,5–6,5% je nach Bundesland), Notarkosten (~1,5%), Grundbuchkosten (~0,5%) und ggf. Maklercourtage (bis 3,57% Käuferanteil). Grunderwerbsteuer und Notar sind gesetzlich fixiert und nicht verhandelbar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie hoch ist die Grunderwerbsteuer in Deutschland?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Die Grunderwerbsteuer variiert je nach Bundesland: Bayern und Sachsen erheben 3,5%, Baden-Württemberg, Bremen, Niedersachsen, Rheinland-Pfalz, Sachsen-Anhalt und Thüringen 5,0%, Hamburg 5,5%, Berlin und Hessen 6,0%, sowie Brandenburg, Nordrhein-Westfalen, Saarland und Schleswig-Holstein 6,5%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kann ich Kaufnebenkosten bei Immobilien von der Steuer absetzen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bei vermieteten Immobilien werden Kaufnebenkosten dem Kaufpreis zugerechnet und über die AfA (Abschreibung für Abnutzung) über 50 Jahre abgeschrieben. Bei selbstgenutzten Immobilien sind Kaufnebenkosten grundsätzlich nicht steuerlich absetzbar."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 const BUNDESLAENDER = [
   { name: 'Bayern', rate: 3.5, slug: 'bayern' },
@@ -30,12 +92,21 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kaufnebenkosten Rechner – alle Kosten beim Immobilienkauf",
     description: "Grunderwerbsteuer, Notar, Grundbuch und Makler: Berechne die kompletten Kaufnebenkosten für alle 16 Bundesländer.",
+    images: [
+      {
+        url: "/api/og?title=Kaufnebenkosten+Rechner+2026&subtitle=Grunderwerbsteuer%2C+Notar+%26+Makler+f%C3%BCr+alle+16+Bundesl%C3%A4nder",
+        width: 1200,
+        height: 630,
+        alt: "Kaufnebenkosten Rechner – Grunderwerbsteuer, Notar und Makler berechnen",
+      },
+    ],
   },
 };
 
 export default function KaufnebenkostenRechnerPage() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

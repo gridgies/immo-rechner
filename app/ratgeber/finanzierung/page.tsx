@@ -2,6 +2,96 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import JsonLd from '@/components/JsonLd';
+import QuickAnswer from '@/components/QuickAnswer';
+
+const jsonLdData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://immo-rechner.net/ratgeber/finanzierung#article",
+      "headline": "Immobilienfinanzierung: Der komplette Ratgeber für Kapitalanleger",
+      "description": "Alles über Immobilienfinanzierung: Zinsen, Tilgung, Eigenkapital, Annuitätendarlehen und Sondertilgung. Tipps für die optimale Finanzierung deiner Kapitalanlage-Immobilie.",
+      "url": "https://immo-rechner.net/ratgeber/finanzierung",
+      "datePublished": "2025-06-01",
+      "dateModified": "2026-02-28",
+      "inLanguage": "de",
+      "wordCount": 1800,
+      "author": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Immobilien Rechner",
+        "url": "https://immo-rechner.net",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://immo-rechner.net/favicon.svg"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://immo-rechner.net/ratgeber/finanzierung"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://immo-rechner.net" },
+        { "@type": "ListItem", "position": 2, "name": "Ratgeber", "item": "https://immo-rechner.net/ratgeber/immobilie-als-kapitalanlage" },
+        { "@type": "ListItem", "position": 3, "name": "Immobilienfinanzierung", "item": "https://immo-rechner.net/ratgeber/finanzierung" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Was ist ein Annuitätendarlehen bei Immobilien?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Das Annuitätendarlehen ist die häufigste Finanzierungsform für Immobilien. Die monatliche Rate (Annuität) bleibt konstant, setzt sich aber aus einem sinkenden Zinsanteil und einem steigenden Tilgungsanteil zusammen. Beispiel: Bei 200.000 € Darlehen mit 3,5% Zins und 2% Tilgung beträgt die Rate 916,67 € pro Monat."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wie lange sollte die Zinsbindung bei einem Immobilienkredit sein?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "10 Jahre ist der Standard mit dem niedrigsten Zinssatz, bietet aber höheres Anschlussrisiko. 15 Jahre ist ein guter Kompromiss. 20 Jahre bietet maximale Planungssicherheit mit leichtem Zinsaufschlag. Wichtig: Nach 10 Jahren besteht laut §489 BGB ein gesetzliches Sonderkündigungsrecht."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was ist eine Sondertilgung und lohnt sie sich?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sondertilgungen ermöglichen außerplanmäßige Schuldenrückzahlungen ohne Vorfälligkeitsentschädigung. Üblich sind 5–10% der ursprünglichen Darlehenssumme pro Jahr. Für Kapitalanleger sind sie besonders wertvoll, da sie niedrige Regelttilgung (besserer Cashflow) mit Flexibilität kombinieren."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kann ich Zinsen bei einer Kapitalanlage-Immobilie von der Steuer absetzen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Bei vermieteten Immobilien sind die Darlehenszinsen als Werbungskosten vollständig steuerlich absetzbar. Bei einem Grenzsteuersatz von 42% übernimmt das Finanzamt damit fast die Hälfte der Zinskosten."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Was passiert am Ende der Zinsbindung?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Nach Ablauf der Zinsbindung muss die Restschuld neu finanziert werden (Anschlussfinanzierung). Du kannst bei der Hausbank verlängern (Prolongation) oder zu einer anderen Bank wechseln (Umschuldung). Vergleiche mindestens 3 Angebote. Ein Forward-Darlehen ermöglicht es, den Zinssatz bereits 12–36 Monate vorab festzuschreiben."
+          }
+        }
+      ]
+    }
+  ]
+};
 
 export const metadata: Metadata = {
   title: "Immobilienfinanzierung: Der komplette Ratgeber für Kapitalanleger (2026) | Immo-Rechner",
@@ -10,12 +100,31 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Immobilienfinanzierung: Der komplette Ratgeber",
     description: "Alles über Zinsen, Tilgung, Eigenkapital und die optimale Finanzierungsstrategie für Immobilieninvestoren.",
+    url: "https://immo-rechner.net/ratgeber/finanzierung",
+    siteName: "Immo-Rechner.net",
+    locale: "de_DE",
+    type: "article",
+    images: [
+      {
+        url: "/api/og?title=Immobilienfinanzierung%3A+Der+komplette+Ratgeber&subtitle=Zinsen%2C+Tilgung%2C+Zinsbindung+%26+Leverage-Effekt",
+        width: 1200,
+        height: 630,
+        alt: "Immobilienfinanzierung – Der komplette Ratgeber für Kapitalanleger",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Immobilienfinanzierung: Der komplette Ratgeber für Kapitalanleger",
+    description: "Zinsen, Tilgung, Zinsbindung, Sondertilgung und Steuervorteile erklärt.",
+    images: ["/api/og?title=Immobilienfinanzierung%3A+Der+komplette+Ratgeber&subtitle=Zinsen%2C+Tilgung%2C+Zinsbindung+%26+Leverage-Effekt"],
   },
 };
 
 export default function FinanzierungRatgeberPage() {
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd data={jsonLdData} />
       <Navbar />
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -37,6 +146,18 @@ export default function FinanzierungRatgeberPage() {
             Finanzierungsstrategie für Kapitalanlage-Immobilien.
           </p>
         </header>
+
+        <QuickAnswer
+          question="Wie finanziere ich eine Immobilien-Kapitalanlage optimal?"
+          answer="Die optimale Finanzierung verbindet günstigen Zinssatz, ausreichende Zinsbindung und eine Tilgungsrate, die den Cashflow schont. Als Kapitalanleger profitierst du von der steuerlichen Absetzbarkeit der Zinsen als Werbungskosten — Tilgungsanteile sind nicht absetzbar."
+          keyFacts={[
+            "Mindest-EK: 20 % Kaufpreis + alle Kaufnebenkosten",
+            "Zinsbindung: 15–20 Jahre empfohlen bei aktuellem Zinsniveau (2026)",
+            "Tilgung: 2 % Anfangstilgung als guter Kompromiss",
+            "Zinsen als Werbungskosten absetzbar (nicht Tilgung)",
+            "Nach 10 Jahren: gesetzliches Sonderkündigungsrecht (§ 489 BGB)",
+          ]}
+        />
 
         {/* Table of Contents */}
         <div className="bg-gray-50 rounded-xl p-6 mb-12 border border-gray-200">
