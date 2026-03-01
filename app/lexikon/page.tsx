@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { GLOSSARY_TERMS } from '@/data/glossary';
 
 export const metadata: Metadata = {
@@ -11,7 +13,9 @@ export const metadata: Metadata = {
 
 export default function LexikonIndexPage() {
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      <main className="max-w-3xl mx-auto px-4 py-8">
       <nav className="text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
         <ol className="flex flex-wrap gap-1">
           <li><Link href="/" className="hover:text-teal-600">Startseite</Link></li>
@@ -40,5 +44,7 @@ export default function LexikonIndexPage() {
         ))}
       </ul>
     </main>
+    <Footer />
+    </div>
   );
 }

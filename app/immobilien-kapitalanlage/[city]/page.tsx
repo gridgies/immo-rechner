@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import JsonLd from '@/components/JsonLd';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import RenditerechnerSimple from '@/components/RenditerechnerSimple';
 import { CITIES, CITY_SLUGS, getCityBySlug } from '@/data/cities';
 
@@ -142,8 +144,9 @@ export default async function CityPage({ params }: Props) {
   ).slice(0, 4);
 
   return (
-    <>
+    <div className="min-h-screen bg-white">
       <JsonLd data={jsonLdData} />
+      <Navbar />
       <main className="max-w-3xl mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <nav className="text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
@@ -350,6 +353,7 @@ export default async function CityPage({ params }: Props) {
           </ul>
         </section>
       </main>
-    </>
+      <Footer />
+    </div>
   );
 }
