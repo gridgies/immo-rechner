@@ -240,10 +240,14 @@ export default function RenditeRechnerPage() {
           </div>
 
           {/* Internal Links */}
-          <div className="mt-12 grid md:grid-cols-3 gap-4">
+          <div className="mt-12 grid md:grid-cols-2 gap-4">
+            <Link href="/ratgeber/rendite-immobilien-realistisch" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
+              <div className="font-semibold text-gray-900">Welche Rendite ist realistisch? →</div>
+              <div className="text-sm text-gray-600">Richtwerte 2026 für A-, B- und C-Lagen</div>
+            </Link>
             <Link href="/irr-rechner" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
               <div className="font-semibold text-gray-900">IRR Rechner →</div>
-              <div className="text-sm text-gray-600">Eigenkapitalrendite über 10-30 Jahre</div>
+              <div className="text-sm text-gray-600">Gesamtrendite über 10–30 Jahre</div>
             </Link>
             <Link href="/kaufnebenkosten-rechner" className="p-4 bg-white rounded-lg border border-gray-200 hover:border-[#7099A3] transition-colors">
               <div className="font-semibold text-gray-900">Kaufnebenkosten →</div>

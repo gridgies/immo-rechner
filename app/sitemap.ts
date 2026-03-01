@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/mikrolage-analyse`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/deal-agent`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
     // Ratgeber
+    { url: `${baseUrl}/ratgeber`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/ratgeber/rendite-immobilien-realistisch`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/ratgeber/immobilie-als-kapitalanlage`, lastModified: now, changeFrequency: 'monthly', priority: 0.85 },
     { url: `${baseUrl}/ratgeber/wohnung-kaufen-vermieten`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
