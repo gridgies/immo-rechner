@@ -220,18 +220,16 @@ export default function Calculator({ userId, userEmail, onSignOut, onLoginClick,
   }, [kaufpreis, nebenkostenProzent, eigenkapitalProzent, eigenkapitalAbsolut, eigenkapitalSource]);
 
   // Calculate completion percentage for progress bar
+  // Only count fields the user must explicitly enter (exclude pre-filled defaults like tilgung/wertsteigerung)
   const getCompletionPercentage = () => {
-    // All fields that should be filled for a complete calculation
     const requiredFields = [
-      { value: kaufpreis, filled: kaufpreis && kaufpreis.trim() !== '' },
-      { value: monatlicheKaltmiete, filled: monatlicheKaltmiete && monatlicheKaltmiete.trim() !== '' },
-      { value: 'ek', filled: (eigenkapitalProzent && eigenkapitalProzent.trim() !== '') || (eigenkapitalAbsolut && eigenkapitalAbsolut.trim() !== '') },
-      { value: zinssatz, filled: zinssatz && zinssatz.trim() !== '' },
-      { value: tilgung, filled: tilgung && tilgung.trim() !== '' },
-      { value: wertsteigerungProzent, filled: wertsteigerungProzent && wertsteigerungProzent.trim() !== '' },
+      kaufpreis && kaufpreis.trim() !== '',
+      monatlicheKaltmiete && monatlicheKaltmiete.trim() !== '',
+      (eigenkapitalProzent && eigenkapitalProzent.trim() !== '') || (eigenkapitalAbsolut && eigenkapitalAbsolut.trim() !== ''),
+      zinssatz && zinssatz.trim() !== '',
     ];
 
-    const filledCount = requiredFields.filter(f => f.filled).length;
+    const filledCount = requiredFields.filter(Boolean).length;
 
     return Math.round((filledCount / requiredFields.length) * 100);
   };

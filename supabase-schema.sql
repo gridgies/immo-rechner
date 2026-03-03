@@ -14,20 +14,25 @@ CREATE TABLE public.scenarios (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   name TEXT NOT NULL,
-  
+
   -- Input parameters
   kaufpreis NUMERIC NOT NULL,
-  wohnflaeche NUMERIC NOT NULL,
+  wohnflaeche NUMERIC,
+  flaeche NUMERIC,
   nebenkosten_prozent NUMERIC NOT NULL,
   eigenkapital_prozent NUMERIC NOT NULL,
+  eigenkapital_absolut NUMERIC NOT NULL DEFAULT 0,
+  eigenkapital_source TEXT NOT NULL DEFAULT 'prozent' CHECK (eigenkapital_source IN ('prozent', 'absolut')),
   zinssatz NUMERIC NOT NULL,
   tilgung NUMERIC NOT NULL,
   monatliche_kaltmiete NUMERIC NOT NULL,
-  wohngeld_umlegbar NUMERIC NOT NULL,
-  wohngeld_nicht_umlegbar NUMERIC NOT NULL,
+  wohngeld_umlegbar NUMERIC NOT NULL DEFAULT 0,
+  wohngeld_nicht_umlegbar NUMERIC NOT NULL DEFAULT 0,
   haltedauer INTEGER NOT NULL CHECK (haltedauer IN (10, 20, 30)),
   wertsteigerung_prozent NUMERIC NOT NULL,
-  
+  miet_steigerung_prozent NUMERIC NOT NULL DEFAULT 0,
+  hausgeld_steigerung_prozent NUMERIC NOT NULL DEFAULT 0,
+
   -- Metadata
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
