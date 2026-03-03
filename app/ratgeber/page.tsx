@@ -12,6 +12,12 @@ export const metadata: Metadata = {
 
 const GUIDES = [
   {
+    href: '/ratgeber/mietrendite-berechnen',
+    title: 'Mietrendite berechnen: Formel, Beispiel & Rechner',
+    description: 'Bruttomietrendite und Nettomietrendite berechnen: Formeln, Rechenbeispiele, Kaufpreisfaktor-Tabelle und Richtwerte für 2026.',
+    tag: 'Rendite',
+  },
+  {
     href: '/ratgeber/rendite-immobilien-realistisch',
     title: 'Welche Rendite ist bei Immobilien realistisch?',
     description: 'Bruttomietrendite, Nettomietrendite und IRR: Konkrete Richtwerte 2026 für A-, B- und C-Lagen mit Rechenbeispiel Leipzig vs. München.',
