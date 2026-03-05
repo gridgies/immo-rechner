@@ -23,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/deal-agent`, lastModified: now, changeFrequency: 'monthly', priority: 0.75 },
     // Ratgeber
     { url: `${baseUrl}/ratgeber`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/ratgeber/kaufnebenkosten-uebersicht`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/ratgeber/mietrendite-berechnen`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/ratgeber/rendite-immobilien-realistisch`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/ratgeber/immobilie-als-kapitalanlage`, lastModified: now, changeFrequency: 'monthly', priority: 0.85 },

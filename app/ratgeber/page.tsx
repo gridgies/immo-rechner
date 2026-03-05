@@ -12,6 +12,12 @@ export const metadata: Metadata = {
 
 const GUIDES = [
   {
+    href: '/ratgeber/kaufnebenkosten-uebersicht',
+    title: 'Kaufnebenkosten beim Immobilienkauf: Alle Kosten im Überblick',
+    description: 'Grunderwerbsteuer aller 16 Bundesländer, Notarkosten, Maklerprovision und Gesamtberechnung — alle Kaufnebenkosten auf einen Blick.',
+    tag: 'Finanzierung',
+  },
+  {
     href: '/ratgeber/mietrendite-berechnen',
     title: 'Mietrendite berechnen: Formel, Beispiel & Rechner',
     description: 'Bruttomietrendite und Nettomietrendite berechnen: Formeln, Rechenbeispiele, Kaufpreisfaktor-Tabelle und Richtwerte für 2026.',

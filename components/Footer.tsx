@@ -37,6 +37,7 @@ export default function Footer() {
             <h3 className="font-semibold mb-4">Ratgeber</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/ratgeber" className="text-gray-400 hover:text-white transition-colors">Alle Ratgeber →</Link></li>
+              <li><Link href="/ratgeber/kaufnebenkosten-uebersicht" className="text-gray-400 hover:text-white transition-colors">Kaufnebenkosten Übersicht</Link></li>
               <li><Link href="/ratgeber/mietrendite-berechnen" className="text-gray-400 hover:text-white transition-colors">Mietrendite berechnen</Link></li>
               <li><Link href="/ratgeber/rendite-immobilien-realistisch" className="text-gray-400 hover:text-white transition-colors">Rendite realistisch 2026</Link></li>
               <li><Link href="/ratgeber/immobilie-als-kapitalanlage" className="text-gray-400 hover:text-white transition-colors">Immobilie als Kapitalanlage</Link></li>
